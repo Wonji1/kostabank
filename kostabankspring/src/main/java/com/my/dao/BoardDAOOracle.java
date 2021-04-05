@@ -16,7 +16,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class BoardDAOOracle implements BoardDAO{
@@ -43,52 +45,25 @@ public class BoardDAOOracle implements BoardDAO{
 
     @Override
     public List<Board> BoardAll(int page, int num) throws FindException {
-        Connection con =null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            Map<String, Object> map = new HashMap<String, Object>();
+            System.out.println(page);
+            System.out.println(num);
+            map.put("page", page*num);
+            map.put("num", (page-1)*num +1);
+            List<Board> list =session.selectList("mybatis.boardMapper.BoardAll",map);
+            if (list.size() == 0) {
+                throw new FindException("게시글이 없습니다.");
+             }
+            return list;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new FindException(e.getMessage());
-        }
-
-        String selectByIdSQL = "select B.rnum, B.* , (select count(*) from board) qa from\n" +
-                "    (select rownum as rnum, A.* from (\n" +
-                "        select * from board b join users u on b.user_id = u.user_id \n" +
-                "        order by b.board_wdate desc ) A where rownum <=?) B where B.rnum >= ?";
-        List<Board> all = new ArrayList<>();
-        try {
-            pstmt = con.prepareStatement(selectByIdSQL);
-            pstmt.setInt(1,page*num);
-            pstmt.setInt(2,(page-1)*num +1);
-            rs = pstmt.executeQuery();
-            while(rs.next()){
-                User user = new User();
-                user.setUser_nickname(rs.getString("user_nickname"));
-                Board board = new Board();
-                board.setUser(user);
-                board.setBoard_id(rs.getString("board_id"));
-                board.setBoard_subtitle(rs.getString("board_subtitle"));
-                board.setBoard_title(rs.getString("board_title"));
-                board.setBoard_wdate(rs.getString("board_wdate"));
-                board.setBoard_view(rs.getInt("board_view"));
-                board.setBoard_file(rs.getString("board_file"));
-                board.setBoard_total(rs.getInt("qa"));
-                board.setUser(user);
-                all.add(board);
-            }
-            if(all.size() == 0){
-                throw new FindException("정보가 하나도 없습니다.");
-            }
-            return all;
-        } catch (SQLException e) {
-            e.printStackTrace();
             throw  new FindException(e.getMessage());
         }finally {
-            MyConnection.close(con,pstmt,rs);
+            if(session != null) session.close();
         }
+
     }
 
     @Override

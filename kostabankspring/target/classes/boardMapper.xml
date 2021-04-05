@@ -13,8 +13,10 @@
       SELECT b.*, u.*, (SELECT COUNT(*) FROM board_up WHERE board_id = #{board_id}) AS board_up
       FROM board b join users u on (b.user_id = u.user_id) WHERE b.board_id = #{board_id}
    </select>
-       <select id="BoardAll" resultMap="boardMap">
-      SELECT b.*, u.*, (SELECT COUNT(*) FROM board_up WHERE board_id = #{board_id}) AS board_up
-      FROM board b join users u on (b.user_id = u.user_id) WHERE b.board_id = #{board_id}
+   
+    <select id="BoardAll" parameterType="map" resultMap="boardMap">
+      select B.rnum, B.* , (select count(*) from board) board_total from (select rownum as rnum, A.* from 
+      (select * from board b join users u on b.user_id = u.user_id order by b.board_wdate desc ) 
+      A where rownum <![CDATA[ <= ]]> #{page}) B where B.rnum <![CDATA[ >= ]]> #{num}
    </select>
 </mapper>

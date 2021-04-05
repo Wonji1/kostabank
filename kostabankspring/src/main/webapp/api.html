@@ -331,7 +331,7 @@
 
             $('.boardlist>input[type=submit]').click(function () {
                 $.ajax({
-                    url: './boardlist',
+                    url: './board/boardlist',
                     method: 'post',
                     data: {"page": $('.boardlist>label>.page').val(),
                         "num": $('.boardlist>label>.num').val()},
