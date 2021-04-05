@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset ="utf-8"/>
+        <title>KostaBank</title>
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">        
+        <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+        
+        <script>
+        
+            $(function(){
+                //메뉴 article
+                $(".login-Info .login-btn").click(function(event){
+                    location.href='login.html'; 
+                });
+
+                $("#menu .board").click(function(event){
+                	location.href='userboard.html'; 
+                });
+                
+                $("#menu .mypage").click(function(event){
+                    location.href='myinfo.html'; 
+                });
+                
+                $("#menu .qawrite").click(function(event){
+                	location.href='qawrite.html'; 
+                });
+                
+                $("#menu>li>ul a.EIP").click(function(event){
+                	location.href='randomorquestions.html';
+                });
+
+
+                
+                $(".header-icon .mainlogo").click(function(evnet){
+                	location.href='testlist.html';
+                });
+                
+                $.ajax({
+                	url: './header',
+                    method: 'post',
+                    success:function(data){
+                    	//로그인에 따른 메뉴와 알람
+                    	if(data.user_adm == 0){//사용자계정
+                    		
+                    		$('.login-btn').css("display", "none");
+                    		$('.loginInfo-box').css("display","block");
+                    		$('.mypage').css("display", "block");
+                    		$('.qawrite').css("display","block");
+                    		
+                    		$('.loginInfo-box>.infoId').append(data.user_nickname);
+                    		$('.infoId').attr('id', data.user_nickname);
+                            $('.loginInfo-box>.infoEmail').html(data.user_email);
+                    	} else if (data.user_adm == 1){//관리자계정
+                    	    $('.alarm-btn').hide();
+                            $('.infoId').attr('id', 'admin');
+                    		$('.loginInfo-box>.infoId').append("관리자 계정입니다");
+                    		$('.login-btn').css("display", "none");
+                    		$('.loginInfo-box').css("display","block");
+                    		
+                    		//관리자용 메뉴
+                    		$('.exam-btn').css("display", "none");                    		
+                    		$('.mypage').css("display", "none");
+                    		$('.admqa').css("display", "block");
+                			$('.admreport').css("display", "block");
+                    		
+                    		$("#menu .board").click(function(event){
+                                location.href='adminboard.html';
+                            });
+                    		
+                    		$("#menu .admqa").click(function(event){
+                                location.href='adminqa.html';
+                    		});
+                    		
+                    		$("#menu .admreport").click(function(event){
+                                location.href='adminreport.html';
+                    		});
+                            $(".header-icon .mainlogo").click(function(evnet){
+                                location.href='managermain.html';
+                            });
+                    	}
+                        
+                    }
+                })
+                
+                $.ajax({
+                    url: './header',
+                    method: 'post',
+                    success:function(data){
+                    	if(data.status == undefined) {
+                    	    $('#alarm-logo').css('color','red');
+                    		var $tableObj = $("#alarmTable");
+                    		var tableData  ="<tr><th>문의/신고</th><th>날짜</th></tr>";
+                    		var arr = data.feedbacks;
+                    		$(arr).each(function(index, element){
+                    			tableData += '<tr>';
+
+            					tableData += '<td class ="'+element.feedback_sort+'" style=\'cursor: pointer\'>';
+            					tableData += element.feedback_title;
+            					tableData += '</td>';
+
+            					tableData += '<td class ="'+element.feedback_id+'">';
+            					tableData += moment(element.feedback_date).format("MM-DD HH:MM");
+            					tableData += '</td>';
+
+            					tableData += '</tr>';
+                    		});
+                    		$tableObj.append(tableData);
+                    		$('.alarmInfo').html($tableObj);
+
+                    		//목록 클릭시
+                    		$("#alarmTable tr").click(function(event){
+                    			var tr = $(this);
+                    			var td = tr.children();
+
+                                let feedback_td_sort = td.eq(0).attr('class');
+                                let feedback_td_id = td.eq(1).attr('class');
+                                if(feedback_td_sort == 0){
+                                    $.ajax({
+                                        url: './qa',
+                                        method: 'post',
+                                        data: {"qa_id": feedback_td_id,
+                                            "n": 0,
+                                            "s": 2,},
+                                        success(data){
+                                            $('.feedbackInfo').html("<div class=\"qa\">제목 : "+data.qa_title  + "<br>"+
+                                                                            data.qa_content+ "<hr><br>" +
+                                                                            "답변 : " + data.qa_sol_content + "<br>" +
+                                                                            "답변날짜 " + data.qa_sol_wdate +"</div>");
+                                        }
+                                    });
+                                } else {
+                                    $.ajax({
+                                        url: './report',
+                                        method: 'post',
+                                        data: {"report_id": feedback_td_id,
+                                            "n": 0,
+                                            "s": 2},
+                                        success(data){
+                                            $('.feedbackInfo').html("<div class=\"qa\">제목:"+data.report_title +"<br>" +
+                                                                            data.report_content+ "<hr><br>" +
+                                                                            "답변 : " + data.report_sol_content + "<br>" +
+                                                                            "답변날짜 " +data.report_sol_wdate+"</div>");
+                                        }
+                                    });
+                                }
+
+                    		});
+                    	} else if (data.status === -1){
+                            location.href = 'login.html';
+                        }
+                        else if(data.status === -2){
+                            $('.alarmInfo').html("답변이 존재하지 않습니다.");
+                        }
+                    }
+                });
+                
+                let timer = setInterval(function () {
+                	$.ajax({
+                        url: './header',
+                        method: 'post',
+                        success:function(data){                        	
+                        	$('.loginInfo-box>.infoId').append(data.user_nickname);
+                            $('.loginInfo-box>.infoEmail').html(data.user_email);
+                        	
+                        	if(data.status == undefined) {
+                        	    $('#alarm-logo').css('color','red');
+                        		var $tableObj = $("#alarmTable");
+                        		var tableData  ="<tr><th>문의/신고</th><th>날짜</th></tr>";
+                        		var arr = data.feedbacks;
+                        		$(arr).each(function(index, element){
+                        			tableData += '<tr>';
+                        			
+                					tableData += '<td class ="'+element.feedback_sort+'" style=\'cursor: pointer\'>';
+                					tableData += element.feedback_title;
+                					tableData += '</td>';
+                					
+                					tableData += '<td class ="'+element.feedback_id+'">';
+                					tableData += moment(element.feedback_date).format("MM-DD HH:MM");
+                					tableData += '</td>';
+                					
+                					tableData += '</tr>';
+
+                        		});
+                        		$tableObj.append(tableData);
+                        		$('.alarmInfo').html($tableObj);
+                        		
+                        		//목록 클릭시
+                        		$("#alarmTable tr").click(function(event){         
+
+                        			var tr = $(this);
+                        			var td = tr.children();
+
+                        			console.log("클릭한 row의 데이터:" + td.eq(1).attr('class'));
+                        		});
+                        	}
+                        	else if (data.status === -1){
+                        	    location.href = 'login.html';
+                            }
+                        	else if(data.status === -2){
+                        		$('.alarmInfo').html("답변이 존재하지 않습니다.");
+                        	}
+
+                        }
+                    });
+                },31*60*1000);
+	                
+                $('.loginInfo-box>a[href=logout]').click(function () {
+                    $.ajax({
+                        url: './logout',
+                        method: 'post',
+                        success:function(data){
+                       		location.href='login.html';
+                        }
+                    
+                    });
+                    return false;
+                });
+
+                $('.close-btn').click(function () {
+                    $(".header").load("headernmenu.html");
+                })
+                
+                
+            });
+        </script>
+    </head>
+    <body>
+            <div class = "headernmenu">
+                <header>
+                        <input type = "checkbox" id = "check" >
+                        <label for ="check">
+                            <i class="fas fa-bars" id="hamburger"></i>
+                            <i class="fas fa-times" id="cancel"></i>
+                        </label>
+                        <div class="sidebar">
+                            <div class="sidebar_header">
+                                <p>Menu</p>
+                                <div class="login-Info">
+                                    <a href = "#" class = "login-btn">로그인<i class="fas fa-sign-in-alt"></i></a>
+			
+								
+									<div class = "loginInfo-box" style="display:none">
+										
+										<li class = "infoId"><i class="fas fa-user" id="user-icon"></i></li>
+										<li class = "infoEmail"></li>
+										<a href="logout" class ="logout-btn">로그아웃<i class="fas fa-sign-out-alt" id ="logout-icon"></i></a>
+									</div>
+                            	</div>
+                            
+                   	 		</div>  
+                            <ul id = "menu">
+                                <li><a href = "#" class="exam-btn">기출문제
+                                    <i class="fas fa-angle-down"></i>
+                                    </a>
+                                    <ul class = "examlist">
+                                        <li><a href ="#" class = "EIP">정보처리기사</a></li>
+                                        <li><a href ="#">SQLD (준비중)</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href ="#" class ="board">게시판</a></li>
+                                <li><a href ="#" class = "mypage" style="display:none">마이페이지</a></li>
+                                <li><a href ="#" class = "qawrite" style = "display:none">문의사항</a></li>
+                                <li><a href ="#" class = "admqa" style = "display:none">문의사항</a></li>
+                                <li><a href ="#" class ="admreport" style="display:none">신고</a></li>
+                            </ul>
+                        </div>              
+                    <div class = "header-icon">
+                        <a href = "#" class ="mainlogo"><img src ="images/logo.png" class = "logo-image"></a>
+                 
+                        <button type="button" class = "alarm-btn" onclick="alarmPopup()">
+                            <i class="fas fa-bell" id = "alarm-logo"></i>
+                        </button> 
+
+                        <!-- 알람버튼 모달창-->
+                        <div class="alarm_modal" id = "alarm">
+                            <div class="overlay"></div>
+                            <div class="content">
+                                <div class="close-btn" onclick="alarmPopup()">&times;</div>
+                                <div class = "alarmInfo">
+                                <table id = "alarmTable"></table>
+                                </div>
+                                <div class="feedbackInfo"></div>                                
+                            </div>                      
+                        </div>
+                        
+                    </div>
+
+                    
+                </header>
+            </div>
+            <script>
+                function alarmPopup(){
+                    document.getElementById("alarm").classList.toggle("active");
+                }
+                $('.alarm-btn').click(function(){
+                    $("#alarm-modal").attr("style", "display:block");
+                });              
+
+                $('.exam-btn').click(function(){
+                    $('#menu li .examlist').toggleClass("show");
+                });
+            </script>         
+    </body>
+</html>

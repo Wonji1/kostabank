@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+
+    <style>
+        .testresult {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .testresult #test {
+            width: 900px;
+            margin: 0 auto;
+        }
+
+        .testresult .containerFirst {
+            border-style: solid;
+            padding: 30px;
+        }
+
+        .testresult .container1 {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .testresult .container1 input {
+            width: 80px;
+            font-size: 20px;
+            padding: 5px;
+        }
+
+        .testresult .incorrect input {
+            width: 250px;
+        }
+
+        .testresult .container2 {
+            width: 800px;
+            font-size: 16px;
+            margin: 0 auto;
+        }
+
+        .testresult .container2 a{
+            color: rgb(58, 58, 58);
+        }
+
+        .testresult .div1 {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: space-around;
+        }
+        .testresult .div2 {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: space-around;
+        }
+
+
+        .testresult .container3 {
+            margin-left: 40%;
+            margin-top: 20px;
+        }
+
+        .testresult .container3 input {
+            font-size: 20px;
+            padding: 5px;
+        }
+
+        .testresult .questioninfo {
+            border-style: solid;
+            width: 99.6%;
+            min-height: 250px;
+            height: auto;
+            margin-top: 15px;
+        }
+        .questioninfo img{
+            display: block;
+        }
+    </style>
+    <script>
+        $(function () {
+            //헤더 로드
+            $(".header").load("headernmenu.html");
+
+            let test_mn_list = JSON.parse(sessionStorage.getItem("test_mn_list"));
+            if(test_mn_list === null){
+                test_mn_list = [];
+            }
+
+            //문제번호 띄우기
+            $('.container1>.box>input[type="button"]').click(function(event){
+                $.ajax({
+                    url: './solveresult',
+                    method: 'post',
+                    data: {"question_round": $(event.target).attr("class")},
+                    success(data){
+                        $('.div1').empty();
+                        $('.div2').empty();
+                        //번호 띄우기
+                        for(let i = 0 ; i < data.length; i++){
+                            if( i < 10){
+                                $('.div1').append('<a href="#" id="'+data[i].question_id+'">'+(i+1)+'</a><input type="checkbox" class="'+data[i].question_id+'">');
+                                if(data[i].question_ox == 1){
+                                    $('#'+data[i].question_id).css("color","green");
+                                } else {
+                                    $('#'+data[i].question_id).css("color","red");
+                                }
+                                if(test_mn_list.indexOf(data[i].question_id)>=0){
+                                    $('.'+data[i].question_id).prop("checked",true);
+                                }
+                            } else {
+                                $('.div2').append('<a href="#" id="'+data[i].question_id+'">'+(i+1)+'</a><input type="checkbox" class="'+data[i].question_id+'">');
+                                if(data[i].question_ox == 1){
+                                    $('#'+data[i].question_id).css("color","green");
+                                } else {
+                                    $('#'+data[i].question_id).css("color","red");
+                                }
+                                if(test_mn_list.indexOf(data[i].question_id)>=0){
+                                    $('.'+data[i].question_id).prop("checked",true);
+                                }
+                            }
+                        }
+
+                        $('.container2>div>a').click(function (event) {
+                            $.ajax({
+                                url: './questioninfo',
+                                method: 'post',
+                                data: {"question_id": $(event.target).attr('id')},
+                                success(data){
+                                    $('.questionnum').html(data.question_id.substr(0,4)+"년 "+
+                                        data.question_id.substr(5, 1) + "회 " +
+                                        data.question_id.substr(7, 1) + "과목 " +
+                                        data.question_id.substr(8, 2) + "번 " +
+                                        '<span class="answer_percent">(정답률: ' + data.correct_percent + '%)</span>');
+                                    $('.questionimg').attr("src","./images/question/"+data.content+".PNG");
+                                    $('.explanationimg').attr("src","./images/question/"+data.explanation+".PNG");
+
+                                }
+                            });
+                        });
+
+                        $('.incorrect>input').click(function () {
+                            let aArr1 = $('.div1>a');
+                            let iArr1 = $('.div1>input');
+                            for(let i =0;i<aArr1.length;i++){
+                                if($(aArr1[i]).css("color") === 'rgb(255, 0, 0)'){
+                                    $(iArr1[i]).prop('checked', true);
+                                    if(test_mn_list.indexOf($(iArr1[i]).attr('class'))<0){
+                                        test_mn_list.push($(iArr1[i]).attr('class'));
+                                    }
+                                }
+                            }
+                            let aArr2 = $('.div2>a');
+                            let iArr2 = $('.div2>input');
+                            for(let i =0;i<aArr2.length;i++){
+                                if($(aArr2[i]).css("color") === 'rgb(255, 0, 0)'){
+                                    $(iArr2[i]).prop('checked', true);
+                                    if(test_mn_list.indexOf($(iArr2[i]).attr('class'))<0){
+                                        test_mn_list.push($(iArr2[i]).attr('class'));
+                                    }
+                                }
+                            }
+                            sessionStorage.setItem("test_mn_list",JSON.stringify(test_mn_list));
+
+                        });
+
+                        $('.container2>div>input').click(function (event) {
+                            let event_input = $(event.target);
+                            if(!event_input.prop("checked")){
+                                event_input.prop("checked",false);
+                                test_mn_list.splice(test_mn_list.indexOf(event_input.attr('class')), 1);
+                            }else{
+                                event_input.prop("checked",true);
+                                test_mn_list.push(event_input.attr('class'));
+                            }
+                            sessionStorage.setItem("test_mn_list",JSON.stringify(test_mn_list));
+                        });
+
+                        $('.container3>input').click(function () {
+                            $.ajax({
+                                url: './addmn',
+                                method: 'post',
+                                data: {"question_id_list": JSON.parse(sessionStorage.getItem("test_mn_list"))},
+                                traditional: true,// 이거 꼭 추가하기
+                                dataType: "text",
+                                success(data){
+                                    sessionStorage.clear();
+                                    alert('마이노트에서 확인해보세요!');
+                                    location.href = 'randomorquestions.html';
+                                }
+                            });
+                        });
+
+
+                        $('.div1>a:nth-child(1)').trigger("click");
+                    }
+                });
+            });
+            $('.'+'01').trigger("click");
+
+        });
+    </script>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="testresult">
+    <div id="test">
+        <div class="containerFirst">
+            <div class="container1">
+                <div class="box"><input type="button" value="1과목" class = "01"></div>
+                <div class="box"><input type="button" value="2과목" class = "02"></div>
+                <div class="box"><input type="button" value="3과목" class = "03"></div>
+                <div class="box"><input type="button" value="4과목" class = "04"></div>
+                <div class="box"><input type="button" value="5과목" class = "05"></div>
+                <div class="incorrect"><input type="button" value="틀린문제 전체 체크하기"></div>
+            </div>
+
+            <div class="container2">
+                <div class="div1">
+                </div>
+                <div class="div2">
+                </div>
+            </div>
+
+            <div class="container3">
+                <input type="button" value="마이노트로 보내기">
+            </div>
+        </div>
+
+
+        <div class="questioninfo">
+            <div class="questionnum"></div>
+            <img class="questionimg">
+            <img class="explanationimg">
+        </div>
+
+        <div style="margin-top: 50px; border: 0"></div>
+
+    </div>
+</div>
+<section></section>
+</body>
+
+</html>

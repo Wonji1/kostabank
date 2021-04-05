@@ -1,0 +1,212 @@
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <style>
+        .questions {
+            margin: 0 auto 0 auto;
+            width: 650px;
+            align-items: center;
+        }
+
+      .questions .numtotal {
+            position: relative;
+            top: -15px;
+            left: 250px;
+        }
+        .questions .showquestion{
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+      .questions legend {
+         font-size:20px;
+         padding: 20px;
+      }
+      
+        .questions .questionimg{
+            margin: 20px 0px;
+        }
+
+        .questions label {
+            font-size: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: auto 20px;
+        }
+        .questions form.questionsolve {     
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom :30px;
+        }
+        .questions button {
+          border: none;
+          padding: 10px;
+          background: gray;
+          color: white;
+          border-radius: 20px;
+          outline :none;
+          cursor: pointer;
+      }
+
+        .questions .scoring {
+          display: flex;
+          flex-direction: column-reverse;          
+      }
+
+        .questions input.scoringbtn {
+          border: none;
+          background: gray;
+          color: white;
+          margin: 10px;
+          padding: 15px;
+          font-size: 20px;
+          border-radius: 20px;
+          cursor: pointer;
+      } 
+
+        .questions .report {
+            width: fit-content;
+            display: flex;
+            margin: 0px 0px 0px auto;
+            font-size: 40px;
+            color: #882020;
+        }
+    </style>
+    <script>
+        $(function () {
+            //헤더 로드
+            $(".header").load("headernmenu.html");
+
+            //세션스토리지문제번호 검색하기
+            let question_num = sessionStorage.getItem("question_num");
+            if(question_num === null){
+                question_num = 1;
+            }
+            if (question_num <= 1) {
+                $('.prev').hide();
+            }
+
+            let question_answer_list = [];
+            let session_question_answer_list = JSON.parse(sessionStorage.getItem("question_answer_list"));
+            if(session_question_answer_list !== null){
+                question_answer_list=session_question_answer_list;
+            }
+            let nth_num = 0;
+            if(question_answer_list.length >= question_num){
+                nth_num = parseInt(question_answer_list[question_num-1]);
+            }
+            $('.questionsolve>label:nth-child('+(nth_num+1)+')>input').prop("checked",true);
+            //문제 이미지 띄우기
+            $.ajax({
+                url: './qtmp',
+                method: 'post',
+                data: {"row_num": question_num},
+                success(data){
+                    console.log(data);
+                    if(question_num == data.total){
+                        $('.next').hide();
+                    }
+                    sessionStorage.setItem("question_num", question_num);
+                    $('.numtotal').html(question_num+" / " + data.total);
+                    
+                    $('.questionnum').html(data.question_id.substr(0,4)+"년 "+
+                        data.question_id.substr(5, 1) + "회 " +
+                        data.question_id.substr(7, 1) + "과목 " +
+                        data.question_id.substr(8, 2) + "번 " +
+                        '<span class="answer_percent">(정답률: ' + data.correct_percent + '%)</span>');
+                    $('.questionimg').attr("src","./images/question/"+data.content+ ".PNG" );
+
+
+                    //이전문제
+                    $('.prev').click(function(){
+                        let solvenum = $("input[name='solvenum']:checked").val();
+                        if(solvenum != null){
+                            question_answer_list[question_num-1] = solvenum;
+                        } else {
+                            question_answer_list[question_num-1] = 0;
+                        }
+                        sessionStorage.setItem("question_answer_list",JSON.stringify(question_answer_list));
+                        sessionStorage.setItem("question_num", parseInt(question_num)-1);
+                        // location.reload();
+
+                    });
+                    //다음문제
+                    $('.next').click(function(){
+                        //푼 문제 번호 리스트에 넣기
+                        let solvenum = $("input[name='solvenum']:checked").val();
+                        if(solvenum != null){
+                            question_answer_list[question_num-1] = solvenum;
+                        } else {
+                            question_answer_list[question_num-1] = 0;
+                        }
+                        sessionStorage.setItem("question_answer_list",JSON.stringify(question_answer_list));
+
+                        sessionStorage.setItem("question_num", parseInt(question_num)+1);                        
+                    });
+                    
+                    //문제 신고
+                    $('.report').click(function(){
+                            alert("신고버튼");
+                    });
+                }
+            });
+            
+            //채점하기
+            $('.scoringbtn').click(function(){
+               $.ajax({
+                    url: './scoringq',
+                    method: 'post',
+                    data: {"answer_list": JSON.parse(sessionStorage.getItem("question_answer_list"))},
+                    traditional: true,// 이거 꼭 추가하기
+                    success(data){
+                        sessionStorage.clear();
+                        location.href= "testresult.html";
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="header">
+</div>
+<div class="questions">
+    <div class="report" style="cursor: pointer;">
+        <i class="fas fa-bullhorn"></i>
+    </div>
+    <fieldset class="showquestion">
+        <legend>정보처리기사 기출문제</legend>
+        <div class = "numtotal"></div>
+        <div class="questioninfo">
+            <div class="questionnum"></div>
+            <img class="questionimg" src= "images/question/2018010101q.PNG">
+        </div>
+        <form class="questionsolve">        
+           <button class="prev">PREV</button>
+            <label>①<input type="radio" name = "solvenum" value= "1"></label>
+            <label>②<input type="radio" name = "solvenum" value= "2"></label>
+            <label>③<input type="radio" name = "solvenum" value= "3"></label>
+            <label>④<input type="radio" name = "solvenum" value= "4"></label>
+            <div class="prevnext">
+                
+                <button class="next">NEXT</button>
+            </div>
+        </form>
+    </fieldset>
+    <div class="scoring">
+        <input type="submit" value = "채점하기" class="scoringbtn">
+    </div>
+</div>
+<div class="footer" style="height: 100px;"></div>
+</body>
+</html>

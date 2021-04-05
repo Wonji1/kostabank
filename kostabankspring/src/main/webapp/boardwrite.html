@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+
+    <title>KostaBank</title>
+    <style>
+        .boardwrite div.user_board {
+            width: 900px;
+            height: auto;
+            margin: 40px auto;
+        }
+
+        .boardwrite div.board_header {
+            width: 900px;
+            height: 30px;
+            margin: 10px auto;
+        }
+
+        .boardwrite div.board_header>h1 {
+            font-size: 25px;
+            display: inline-block;
+            margin-top: 3px;
+            margin-left: 20px;
+        }
+
+        .boardwrite div.div_inline,
+        .boardwrite div.board_header>div>button.cancel,
+        .boardwrite div.upload>h4 {
+            display: inline;
+        }
+
+        .boardwrite button,
+        .boardwrite .upload>div.div_inline>label {
+            font-size: 15px;
+        }
+
+        .boardwrite div.board_header>div>button.cancel,
+        .boardwrite div.board_header>div>button.post {
+            float: right;
+            padding: 5px;
+            margin-left: 8px;
+            width: 70px;
+            height: 30px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .boardwrite div.board_header>div>button.post {
+            margin-right: 20px;
+        }
+
+        .boardwrite div.board_border {
+            box-sizing: border-box;
+            width: 900px;
+            height: auto;
+            min-height: 500px;
+            padding: 30px;
+            margin: 0 auto;
+            border: 3px solid;
+        }
+
+        .boardwrite .subtitle_title {
+            margin-bottom: 10px;
+        }
+
+        .boardwrite #subtitle,
+        .boardwrite #title {
+            border: none;
+            height: 30px;
+        }
+
+        .boardwrite #subtitle,
+        .boardwrite #title {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .boardwrite #subtitle {
+            width: 180px;
+        }
+
+        .boardwrite #title {
+            width: 630px;
+        }
+
+        .boardwrite div.upload {
+            margin: 10px 0;
+        }
+
+        .boardwrite div.upload>h4 {
+            margin: 0 15px 0 0;
+            vertical-align: middle;
+        }
+
+        .boardwrite div.upload>span#file_info,
+        .boardwrite div.upload>div.div_inline,
+        .boardwrite #file_btn,
+        .boardwrite button#file_submit {
+            box-sizing: border-box;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .boardwrite div.upload>span#file_info {
+            border: 1px solid black;
+            width: 150px;
+            height: 21px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .boardwrite #file_cancel {
+            margin-right: 10px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .boardwrite #file_input,
+        .boardwrite button#file_submit {
+            display: none;
+        }
+
+        .boardwrite div.upload>div.div_inline {
+            height: 21px;
+        }
+
+        .boardwrite #file_btn {
+            width: 84px;
+            height: 21px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            vertical-align: middle;
+        }
+
+        .boardwrite div.board_content {
+            margin-top: 20px;
+        }
+
+        .boardwrite div.board_content>#board_write {
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            min-height: 350px;
+            padding: 10px;
+            border: none;
+            resize: none;
+        }
+
+        .boardwrite hr.boardwrite_hr {
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+
+        .boardwrite #writemodal {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: none;
+        }
+
+        .boardwrite #writemodal p {
+            /* padding-left: 15px; */
+            padding: 15px;
+        }
+
+        .boardwrite #writemodal .wrtieheaderline {
+            position: relative;
+            padding-top: 0;
+            width: 100%;
+            height: 30px;
+            background: rgb(87, 87, 87);
+        }
+
+        .boardwrite #writemodal .writemodal_content {
+            position: relative;
+            width: 300px;
+            margin: 100px auto;
+            background: #fff;
+            border: 2px solid #666;
+            text-align: center;
+        }
+
+        .boardwrite #writemodal .writemodal_body {
+            padding: 10px 10px;
+        }
+
+        .boardwrite #writemodal .writemodal_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .boardwrite #writemodal button {
+            display: inline-block;
+            width: 100px;
+            padding: 5px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function chk_file_type(obj) {
+            var file_kind = obj.value.lastIndexOf('.');
+            var file_name = obj.value.substring(file_kind + 1, obj.length);
+            var file_type = file_name.toLowerCase();
+            var check_file_type = new Array();
+            check_file_type = ['jpg', 'gif', 'png', 'jpeg', 'bmp'];
+            if (check_file_type.indexOf(file_type) == -1) {
+                alert('이미지 파일만 선택할 수 있습니다.');
+                var parent_Obj = obj.parentNode
+                var node = parent_Obj.replaceChild(obj.cloneNode(true), obj);
+                return false;
+            }
+        };
+        $(function () {
+            //파일
+            var $fileInputObj = $("#file_input");//<input type="file">
+            var $fileInfoOjb = $("span[id=file_info]");
+            var $fileCancelBtn = $("#file_cancel");
+
+            $("#file_btn").click(function () {
+                $fileInputObj.change(function () {
+                    //선택한 파일이 바뀔때
+                    var $fileVal = $fileInputObj[0].files[0].name;
+                    $fileInfoOjb.html($fileVal);
+                });
+            });
+            //선택파일 취소 
+            $fileCancelBtn.click(function () {
+                $fileInfoOjb.html("");
+                $fileInputObj.val('');
+            });
+
+            //등록버튼  클릭이벤트
+
+            var $writecloseBtn = $("div.writemodal_body>button#writemodal_close_btn");
+            var $writecheckBtn = $("div.writemodal_body>button#writemodal_check_btn");
+            var postBtn = $("div.board_header>div>button[type=submit]");
+
+            $(postBtn).click(function () {
+                var $subtitleObj = $("#subtitle").val();
+                var $titleObj = $("#title").val();
+                var $contentObj = $("#board_write").val();
+
+                if ($subtitleObj == "") {
+                    $writecheckBtn.attr("style", "display:none");
+                    $("div.writemodal_body>p").html("소제목을 입력하세요.");
+                    $writecloseBtn.html("확인");
+
+                    $("#writemodal").attr("style", "display:block");
+                    $writecloseBtn.click(function () {
+                        $("#writemodal").attr("style", "display:none");
+                        $("#subtitle").focus();
+                        $writecheckBtn.attr("display", "inline-block");
+                        return false;
+                    });
+
+                } else if ($titleObj == "") {
+                    $writecheckBtn.attr("style", "display:none");
+                    $("div.writemodal_body>p").html("제목을 입력하세요.");
+                    $writecloseBtn.html("확인");
+
+                    $("#writemodal").attr("style", "display:block");
+                    $writecloseBtn.click(function () {
+                        $("#writemodal").attr("style", "display:none");
+                        $("#title").focus();
+                        $writecheckBtn.attr("display", "inline-block");
+                        return false;
+                    });
+
+                } else if ($contentObj == "") {
+                    $writecheckBtn.attr("style", "display:none");
+                    $("div.writemodal_body>p").html("내용을 입력하세요.");
+                    $writecloseBtn.html("확인");
+
+                    $("#writemodal").attr("style", "display:block");
+                    $writecloseBtn.click(function () {
+                        $("#writemodal").attr("style", "display:none");
+                        $("#board_write").focus();
+                        $writecheckBtn.attr("display", "inline-block");
+                        return false;
+                    });
+                }
+                if ($subtitleObj && $titleObj && $contentObj != "") {
+                    $writecheckBtn.attr("style", "display:inline-block");
+                    $writecheckBtn.html("확인");
+                    $writecloseBtn.html("취소");
+
+                    $("#writemodal").attr("style", "display:block");
+                    $("div.writemodal_body>p").html("작성한 글을 등록하시겠습니까?");
+                    $writecheckBtn.click(function () {
+                        $("#writemodal").attr("style", "display:none");
+                        var boardForm = $("div.user_board>form.board_form")[0];
+                        var formData = new FormData(boardForm);
+                        $.ajax({
+                            url: "./addboard",
+                            method: "post",
+                            success: function (responseObj) {
+                                location.reload();
+                                return false;
+                            },
+                            error: function (jqXHR) {
+                                console.log(jqXHR.status);
+                            },
+                            enctype: 'multipart/form-data',
+                            contentType: false,
+                            processData: false,
+                            data: formData
+                        });
+                        return false;
+                    });
+                    $writecloseBtn.click(function () {
+                        $("#writemodal").attr("style", "display:none");
+                        return false;
+                    });
+                }
+                return false;
+            });
+
+            //취소버튼 클릭이벤트 -> 
+            $("div.board_header>div.div_inline>button[type=button]").click(function () {
+                $("#writemodal").attr("style", "display:block");
+                $checkBtn.css("width", "140px");
+                $checkBtn.html("목록으로 가기");
+                $("div.writemodal_body>p").html("취소하시겠습니까?");
+
+                $checkBtn.click(function () {
+                    $("#writemodal").attr("style", "display:none");
+                    location.reload();
+                    return false;
+                });
+                $writecloseBtn.click(function () {
+                    $("#writemodal").attr("style", "display:none");
+                    return false;
+                });
+                return false;
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="boardwrite">
+        <section>
+            <div id="writemodal">
+                <div class="writemodal_content">
+                    <div class="writeheaderline"></div>
+                    <div class="writemodal_body">
+                        <p></p>
+                        <button type="button" id="writemodal_check_btn">확인</button>
+                        <button type="button" id="writemodal_close_btn">취소</button>
+                    </div>
+                </div>
+                <div class="writemodal_layer"></div>
+            </div>
+            <div class="user_board">
+                <form method="post" class="board_form" enctype="multipart/form-data">
+                    <div class="board_header">
+                        <h1>자유게시판</h1>
+                        <div class="div_inline">
+                            <button type="submit" class="post">등록</button>
+                            <button type="button" class="cancel">취소</button>
+                        </div>
+
+                    </div>
+                    <div class="board_border">
+                        <div class="subtitle_title">
+                            <div class="div_inline">
+                                <input type="text" name="subtitle" placeholder="[소제목]" id="subtitle">
+                            </div>
+                            <span>|</span>
+                            <div class="div_inline">
+                                <input type="text" name="title" placeholder="제목을 입력하세요." id="title">
+                            </div>
+                        </div>
+                        <hr class="boardwrite_hr">
+
+                        <div class="upload">
+                            <h4>파일첨부</h4>
+                            <span id="file_info"></span>
+                            <i class="fas fa-times" id="file_cancel"></i>
+                            <div class="div_inline">
+                                <label for="file_input" id="file_btn">파일선택</label>
+                                <input type="file" name="board_file" id="file_input" onchange='chk_file_type(this)'>
+                                <button type="submit" id="file_submit">파일업로드</button>
+                            </div>
+                        </div>
+                        <hr class="boardwrite_hr">
+                        <div class="board_content">
+                            <textarea placeholder="내용을 입력하세요." name="board_content" id="board_write"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

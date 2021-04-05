@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset ="utf-8"/>
+        <title>KostaBank</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+        <link rel="shortcut icon" href="./images/logo.png">
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            h1, p {
+                margin: 0;
+            }
+
+            a{
+                color: inherit;
+                text-decoration: none;
+            }
+           #main {
+                background: url("./images/welcomeback.jpg") no-repeat;
+                background-size: cover;
+                background-position :center center;
+                width: 100vw;
+                height : 100vh;
+                font-family: 'Do Hyeon', sans-serif;
+            }
+
+            #contents{
+                position:absolute;
+                top: 50%;
+                width: 70%;
+                transform: translateY(-50%);
+                color :rgb(27, 27, 27);
+                text-align :center;
+            }
+            #contents h1 {
+                font-size: 50px;
+                margin-bottom: 16px;
+            }
+
+            #contents p {
+                font-family: 'Nanum Gothic', sans-serif;
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            #gomain{
+                display: inline-block;
+                border: 2px solid rgb(77, 77, 77);
+                border-radius:20px;
+                padding: 10px 20px;
+                font-size : 17px;
+                font-weight: bold;
+                margin-bottom: 7px;
+            }
+            
+            @media(max-width: 769px){
+                #contents h1 {
+                    font-size: 46px;
+                }
+
+                #contents p {
+                    font-size: 17px;
+                } 
+
+                #contents a {
+                    font-size:  14px;
+                }               
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "main">
+            <div id = "contents">
+                <a href = "#" id = "logo"><img src = "images/logo.png"></a>
+                <h1>KOSTA BANK</h1>
+                <p>자격증 공부</p>
+                <a href = "login.html" id = "gomain">Go for an examination</a>
+                <br>
+                <a href = "signup.html">회원가입</a>
+                /
+                <a href = "login.html">로그인</a>
+            </div>
+        </div>
+    </body>
+</html>

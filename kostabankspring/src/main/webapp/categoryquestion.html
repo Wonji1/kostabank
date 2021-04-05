@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1:1문의</title>
+</head>
+<style>
+    .container {
+        width: 100%;
+    }
+
+    .qa_title {
+        margin-top: 40px;
+        border-bottom: 1px solid black;
+        width: 100%;
+        min-height: 30px;
+        height: auto;
+    }
+
+    .qa_content_title {
+        border-bottom: 1px solid black;
+        width: 100%;
+        min-height: 200px;
+        height: auto;
+    }
+
+    .qa_sol_title {
+        border-bottom: 1px solid black;
+        width: 100%;
+        min-height: 100px;
+        height: auto;
+    }
+
+    .qa_title>strong {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .qa_content_title>strong {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .qa_sol_title>strong {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .qa_info {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .qa_sol_info {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .qa_content_title .file {
+        width: 40%;
+        height: 40%;
+    }
+
+    .container>.paging {
+        box-sizing: border-box;
+        height: 50px;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .container>.paging>span {
+        cursor: pointer;
+    }
+
+    .container>.paging>div {
+        display: none;
+        cursor: pointer;
+    }
+</style>
+<script>
+    $(function () {
+        sessionStorage.clear();
+        let $fileImg = $('.file');
+        let $pagingNumber = $('.paging_number');
+        let num = sessionStorage.getItem("pagingNum");
+        if (num === null) {
+            num = 1;
+        }
+        num = parseInt(num);
+        let promisePaging = $.ajax({
+            url: './myqa',
+            method: 'post',
+            data: { "rownum": num },
+            success(data) {
+                $('.paging>div').css("display", "none");
+                $('.qa_tit').html("<span>:&nbsp;&nbsp;</span>" + data.qa_title);
+                $('.qa_wdate').html(data.qa_wdate.substr(0, 10));
+                if (data.qa_status == 2) {
+                    //alert("답변완료");
+                    $('.qa_status').html("답변왼료");
+                    $('.qa_status').css('color','green');
+                } else if (data.qa_status == 1) {
+                    //alert("처리중");
+                    $('.qa_status').html("답변중");
+                    $('.qa_status').css('color','darkorange');
+                } else if (data.qa_status == 0) {
+                    //alert("미해결");
+                    $('.qa_status').html("확인중");
+                    $('.qa_status').css('color','red');
+                }
+                let qa_file = data.qa_file;
+                if (data.qa_file === null) {
+                    $('.qa_image').hide();
+                }else {
+                   $('.qa_image').show();
+                   $fileImg.attr("src", "./qaupload/" + data.qa_id + '_'+data.qa_file);
+                }
+                let qa_sol_wdate = data.qa_sol_wdate;
+                if (data.qa_sol_wdate === null) {
+                    qa_sol_wdate = '';
+                }
+
+
+                // $('.qa_content_title').html('<strong>문의내용</strong>' + "<p>" + data.qa_content + "</p>"); 
+                $('.qa').html(data.qa_content)
+                $('.qa_sol_content').html(data.qa_sol_content);
+                $('.qa_sol_info').html('<strong>답변일시:</strong>' + qa_sol_wdate.substr(0,10));
+                
+
+                let str = "";
+                let total = data.qa_total;
+                let pagePerTen = Math.ceil(total / 10);
+                let pageLast = total % 10;
+                let countTen;
+                if (num !== 1) {
+                    $('.paging>.prev').css("display", "inline-block");
+                }
+                if (num !== total) {
+                    $('.paging>.next').css("display", "inline-block");
+                }
+                if (num >= 11) {
+                    $('.paging>.prevDouble').css("display", "inline-block");
+                }
+                if ((pagePerTen * 10 - num) >= 10) {
+                    $('.paging>.nextDouble').css("display", "inline-block");
+                }
+                countTen = Math.ceil(num / 10);
+                if (countTen !== pagePerTen) {
+                    for (let i = 1; i <= 10; i++) {
+                        str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                    }
+                } else {
+                    for (let i = 1; i <= pageLast; i++) {
+                        str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                    }
+                }
+                $pagingNumber.html(str);
+                let p = 10;
+                if (num % 10 !== 0) {
+                    p = num % 10;
+                }
+                $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                sessionStorage.setItem("pagingNum", num);
+            },
+            error: function (jqXHR) {
+                alert("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+            }
+        });
+        promisePaging.done(pagingFunc);
+        function pagingFunc() {
+            $('.paging_number>span').click(function (event) {
+               let $fileImg = $('.file');
+                let num = parseInt($(event.target).text());
+                promisePaging = $.ajax({
+                    url: './myqa',
+                    method: 'post',
+                    data: { "rownum": num },
+                    success(data) {
+                        $('.paging>div').css("display", "none");
+                        $('.qa_tit').html("<span>:&nbsp;&nbsp;</span>" + data.qa_title);
+                        $('.qa_wdate').html(data.qa_wdate.substr(0, 10));
+                        if (data.qa_status == 2) {
+                            //alert("답변완료");
+                            $('.qa_status').html("답변왼료");
+                            $('.qa_status').css('color','green');
+                        } else if (data.qa_status == 1) {
+                            //alert("처리중");
+                            $('.qa_status').html("답변중");
+                            $('.qa_status').css('color','darkorange');
+                        } else if (data.qa_status == 0) {
+                            //alert("미해결");
+                            $('.qa_status').html("확인중");
+                            $('.qa_status').css('color','red');
+                        }
+                        let qa_file = data.qa_file;
+                        if (data.qa_file === null) {
+                            $('.qa_image').hide();
+                        } else {
+                           $('.qa_image').show();
+                           $fileImg.attr("src", "./qaupload/"  + data.qa_id + '_'+data.qa_file);
+                        }
+                        let qa_sol_wdate = data.qa_sol_wdate;
+                        if (data.qa_sol_wdate === null) {
+                            qa_sol_wdate = '';
+                        }
+
+                        $('.qa').html(data.qa_content)
+                        $('.qa_sol_content').html(data.qa_sol_content);
+                        $('.qa_sol_info').html('<strong>답변일시:</strong>' + qa_sol_wdate.substr(0,10));
+                        //$fileImg.attr("src", "./qaupload/" + data.qa_file);
+
+                        let str = "";
+                        let total = data.qa_total;
+                        let pagePerTen = Math.ceil(total / 10);
+                        let pageLast = total % 10;
+                        let countTen;
+                        if (num !== 1) {
+                            $('.paging>.prev').css("display", "inline-block");
+                        }
+                        if (num !== total) {
+                            $('.paging>.next').css("display", "inline-block");
+                        }
+                        if (num >= 11) {
+                            $('.paging>.prevDouble').css("display", "inline-block");
+                        }
+                        if ((pagePerTen * 10 - num) >= 10) {
+                            $('.paging>.nextDouble').css("display", "inline-block");
+                        }
+                        countTen = Math.ceil(num / 10);
+                        if (countTen !== pagePerTen) {
+                            for (let i = 1; i <= 10; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        } else {
+                            for (let i = 1; i <= pageLast; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        }
+                        $pagingNumber.html(str);
+                        let p = 10;
+                        if (num % 10 !== 0) {
+                            p = num % 10;
+                        }
+                        $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                        sessionStorage.setItem("pagingNum", num);
+                    }
+                });
+                promisePaging.done(pagingFunc);
+            });
+        }
+        $('.paging>div').click(function (event) {
+           let $fileImg = $('.file');
+            let $clickBtn = $(event.target).attr('class');
+            let n;
+            switch ($clickBtn) {
+                case 'prevDouble':
+                    n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10) - 2) * 10 + 1;
+                    break;
+                case 'prev':
+                    n = parseInt(sessionStorage.getItem("pagingNum")) - 1;
+                    break;
+                case 'next':
+                    n = parseInt(sessionStorage.getItem("pagingNum")) + 1;
+                    break;
+                case 'nextDouble':
+                    n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10)) * 10 + 1;
+                    break;
+            }
+            $.ajax({
+                url: './myqa',
+                method: 'post',
+                data: { "rownum": n },
+                success(data) {
+                    $('.paging>div').css("display", "none");
+                    $('.qa_tit').html("<span>:&nbsp;&nbsp;</span>" + data.qa_title);
+                    $('.qa_wdate').html(data.qa_wdate.substr(0, 10));
+                    if (data.qa_status == 2) {
+                        //alert("답변완료");
+                        $('.qa_status').html("답변왼료");
+                        $('.qa_status').css('color','green');
+                    } else if (data.qa_status == 1) {
+                        //alert("처리중");
+                        $('.qa_status').html("답변중");
+                        $('.qa_status').css('color','darkorange');
+                    } else if (data.qa_status == 0) {
+                        //alert("미해결");
+                        $('.qa_status').html("확인중");
+                        $('.qa_status').css('color','red');
+                    }
+                    let qa_file = data.qa_file;
+                    if (data.qa_file === null) {
+                        $('.qa_image').hide();
+                    } else{
+                       $('.qa_image').show();
+                       $fileImg.attr("src", "./qaupload/"  + data.qa_id + '_'+data.qa_file);
+                    }
+                    let qa_sol_wdate = data.qa_sol_wdate;
+                    if (data.qa_sol_wdate === null) {
+                        qa_sol_wdate = '';
+                    } 
+
+                    $('.qa').html(data.qa_content)
+                    $('.qa_sol_content').html(data.qa_sol_content);
+                    $('.qa_sol_info').html('<strong>답변일시:</strong>' + qa_sol_wdate.substr(0,10));
+
+                    let str = "";
+                    let total = data.qa_total;
+                    let pagePerTen = Math.ceil(total / 10);
+                    let pageLast = total % 10;
+                    let countTen;
+                    if (n !== 1) {
+                        $('.paging>.prev').css("display", "inline-block");
+                    }
+                    if (n !== total) {
+                        $('.paging>.next').css("display", "inline-block");
+                    }
+                    if (n >= 11) {
+                        $('.paging>.prevDouble').css("display", "inline-block");
+                    }
+                    if ((pagePerTen * 10 - n) >= 10) {
+                        $('.paging>.nextDouble').css("display", "inline-block");
+                    }
+                    countTen = Math.ceil(n / 10);
+                    if (countTen !== pagePerTen) {
+                        for (let i = 1; i <= 10; i++) {
+                            str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                        }
+                    } else {
+                        for (let i = 1; i <= pageLast; i++) {
+                            str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                        }
+                    }
+                    $pagingNumber.html(str);
+                    let p = 10;
+                    if (n % 10 !== 0) {
+                        p = n % 10;
+                    }
+                    $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                    sessionStorage.setItem("pagingNum", n);
+                    promisePaging.done(pagingFunc);
+                }
+            });
+        });
+    });
+</script>
+
+<body>
+    <div class="container">
+        <div class="qa_title">
+            <strong>제목</strong><span class="qa_tit"></span>
+            <p class="qa_info">
+                문의일시:<span class="qa_wdate"></span>
+                <span>&nbsp;|&nbsp;</span>
+                답변여부:<span class="qa_status"></span>
+            </p>
+        </div>
+        <div class="qa_content_title">
+            <strong>문의내용</strong>
+            <div class="qa_image">
+                <img class="file" alt="file">
+            </div>
+            <p class="qa"></p>
+
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+        </div>
+        <div class="qa_sol_title">
+            <strong>답변내용</strong>
+            <p class="qa_sol_content">
+
+            </p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p class="qa_sol_info">
+                답변일시:
+            </p>
+        </div>
+        <div class="paging">
+            <div class="prevDouble">◀◀&nbsp;</div>
+            <div class="prev">◀&nbsp;</div><span class="paging_number"></span>
+            <div class="next">▶&nbsp;</div>
+            <div class="nextDouble">▶▶</div>
+        </div>
+    </div>
+</body>
+
+</html>

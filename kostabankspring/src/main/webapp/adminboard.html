@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+    <style>
+        #modal {
+            /* position: relative; */
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            /*------------*/
+
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            top: 0px;
+        }
+
+        #modal button {
+            display: inline-block;
+            width: 100px;
+            /* margin-left: 25px; */
+        }
+
+        #modal .headerline {
+            padding-top: 0;
+            width: 100%;
+            height: 30px;
+            background: rgb(87, 87, 87);
+        }
+
+        #modal .board {
+            width: 900px;
+            height: 700px;
+            margin: 100px auto;
+            background: #fff;
+            border: 2px solid #666;
+        }
+
+        #modal .board_header {
+            padding: 30px 30px;
+            /* top: 20px;
+               left:20px;
+               position: fixed; */
+        }
+
+        #modal .modal_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            /*------------*/
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+
+        }
+
+        #modal_close_btn>button {
+            margin-left: 8px;
+            padding: 5px;
+            width: 130px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+        }
+
+        #modal_open_btn {
+            position: fixed;
+            top: 0;
+            right: 0;
+            color: red;
+        }
+
+        .board::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .board::-webkit-scrollbar-thumb {
+            background-color: #2f3542;
+            border-radius: 10px;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+
+        .board::-webkit-scrollbar-track {
+            background-color: grey;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 5px white;
+        }
+
+        .mainbox {
+            width: 900px;
+            height: 500px;
+            margin: 50px auto;
+            box-sizing: border-box;
+        }
+
+        .board_list th {
+            padding: 6px 0 10px;
+            border-bottom: 1px solid black;
+            text-align: center;
+            background-color: gray;
+            color: white;
+        }
+
+        .board_list td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        table th {
+            letter-spacing: -1px;
+            border-collapse: collapse;
+        }
+
+        th {
+            display: table-cell;
+            vertical-align: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+        }
+
+        .board_image {
+            height: auto;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid black;
+        }
+
+        .boardimg {
+            width: 50%;
+        }
+
+        .board_list>.paging {
+            box-sizing: border-box;
+            height: 50px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .board_list>.paging>span {
+            cursor: pointer;
+        }
+
+        .board_list>.paging>div {
+            display: none;
+            cursor: pointer;
+        }
+
+        .board_list table {
+            padding: 10px;
+        }
+
+        .board_list a {
+            text-decoration: none;
+            color: black;
+        }
+
+        div.board_header>h3 {
+            display: inline-block;
+            margin-top: 3px;
+            margin-left: 30px;
+        }
+
+        div.boardsol_content {
+            margin-top: 20px;
+        }
+
+        div.boardsol_content>form>#write {
+            width: 100%;
+            height: auto;
+            min-height: 350px;
+            border: 1px solid;
+            resize: none;
+        }
+
+        div.detail_info {
+            width: 100%;
+            height: 20%;
+            margin: 10px auto;
+        }
+
+        div.flex_container {
+            display: flex;
+            margin: 0 0 5px 0;
+        }
+
+        div.flex_container>span {
+            display: flex;
+        }
+
+        div.flex_container>span.writer>h3,
+        div.flex_container>span.title>h3,
+        div.flex_container>span.wdate>h3 {
+            margin: 0 10px 0px 30px;
+        }
+
+        div.flex_container>span.writer>h3 {
+            flex: 0 0 50px;
+        }
+
+        div.flex_container>span.title>h3 {
+            flex: 0 0 50px;
+        }
+
+        div.flex_container>span.wdate>h3 {
+            flex: 0 0 50px;
+        }
+
+        div.board_content {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        div.boardsol_content {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        input.check {
+            float: right;
+        }
+
+        #articles .tit {
+            cursor: pointer;
+        }
+
+        .postbtn {
+            visibility: hidden;
+
+        }
+    </style>
+    <script>
+        $(".header").load("headernmenu.html");
+        //게시물 상세보기 이동 
+        $(document).on("click", "td.tit", function (event) {
+            let $idBox = $(event.target);
+            let board_id = $idBox.attr('id');
+            sessionStorage.setItem("board_id", board_id);
+            location.href = "boarddetail.html";
+        });
+
+        //체크박스 : 글삭제 
+        $(document).on("click", "#articles>tr>td>input", function (event) {
+            let board_id_list = [];
+            let $idBox = $(event.target);
+            let board_id = $idBox.attr('class');
+            if ($idBox.prop("checked")) {
+                if (sessionStorage.getItem("board_id_list") !== null) {
+                    board_id_list = JSON.parse(sessionStorage.getItem("board_id_list"));
+                }
+                board_id_list.push(board_id);
+                sessionStorage.setItem("board_id_list", JSON.stringify(board_id_list));
+            }
+            else {
+                board_id_list = JSON.parse(sessionStorage.getItem("board_id_list"));
+                board_id_list.splice(board_id_list.indexOf(board_id), 1);
+                sessionStorage.setItem("board_id_list", board_id_list);
+            }
+        });
+        $(function () {
+            $('.header').load("headernmenu.html");
+            $('.delbtn').click(function () {
+                if (confirm("삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: "./removeboardbylist",
+                        method: "post",
+                        data: { "board_id_list": JSON.parse(sessionStorage.getItem("board_id_list")) },
+                        traditional: true,
+                        dataType: "text",
+                        success: function () {
+                            sessionStorage.clear();
+                            location.reload();
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            });
+
+            //페이징  
+            sessionStorage.clear();
+            let $pagingNumber = $('.paging_number');
+            let num = sessionStorage.getItem("pagingNum");
+            if (num === null) {
+                num = 1;
+            }
+            let promisePaging = $.ajax({
+                url: './boardlist',
+                data: { "page": num, "num": 10 },
+                method: 'post',
+                success(data) {//성공응답
+                    console.log(data);
+                    $('.paging>div').css("display", "none");
+                    let tableObj = $('#articles');
+
+                    for (let i = 0; i < data.length; i++) {
+                        tableObj += `<tr><td class="chk"><input type="checkbox" name="checkRow" class="${data[i].board_id}"></td>`;
+                        tableObj += `<td>${data[i].board_id}</td>`;
+                        tableObj += `<td>${data[i].board_subtitle}</td>`;
+                        tableObj += `<td class="tit" id="${data[i].board_id}" title="${data[i].board_title}">${data[i].board_title}</td>`;
+                        tableObj += `<td>${data[i].user_nickname}</td>`;
+                        tableObj += `<td>${data[i].board_wdate.substring(0, 10)}</td>`;
+                        tableObj += `<td>${data[i].board_view}</td>`;
+                        $('#articles').html(tableObj);
+
+                    }
+
+                    let str = "";
+                    let total = data[0].board_total;
+                    let pagePerTen = Math.ceil(total / 10);//소수점 이하 올림
+                    let pageLast = pagePerTen % 10;
+                    if (pageLast === 0) {
+                        pageLast = 10;
+                    }
+                    let countTen;
+                    num = parseInt(num);
+                    if (num !== 1) {
+                        $('.paging>.prev').css("display", "inline-block");
+                    }
+                    if (num !== pagePerTen) {
+                        $('.paging>.next').css("display", "inline-block");
+                    }
+                    if (num >= 11) {
+                        $('.paging>.prevDouble').css("display", "inline-block");
+                    }
+                    if ((Math.ceil(pagePerTen / 10) - Math.ceil(num / 10)) >= 1) {
+                        $('.paging>.nextDouble').css("display", "inline-block");
+                    }
+                    countTen = Math.ceil(num / 10);
+                    if (countTen !== Math.ceil(pagePerTen / 10)) {
+                        for (let i = 1; i <= 10; i++) {
+                            str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                        }
+                    }
+                    else {
+                        for (let i = 1; i <= pageLast; i++) {
+                            str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                        }
+                    }
+                    $pagingNumber.html(str);
+                    let p = 10;
+                    if (num % 10 !== 0) {
+                        p = num % 10;
+                    }
+                    $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                    sessionStorage.setItem("pagingNum", num);
+                },
+                error: function (jqXHR) {//실패응답
+                    console.log("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                }
+            });
+            promisePaging.done(pagingFunc);
+            function pagingFunc() {
+                $('.paging_number>span').click(function (event) {
+                    let num = parseInt($(event.target).text());
+                    promisePaging = $.ajax({
+                        url: './boardlist',
+                        data: { "page": num, "num": 10 },
+                        method: 'post',
+                        success(data) {//성공응답
+                            $('.paging>div').css("display", "none");
+                            let tableObj = $('#articles');
+                            for (let i = 0; i < data.length; i++) {
+                                tableObj += `<tr><td class="chk"><input type="checkbox" name="checkRow" class="${data[i].board_id}"></td>`;
+                                tableObj += `<td>${data[i].board_id}</td>`;
+                                tableObj += `<td>${data[i].board_subtitle}</td>`;
+                                tableObj += `<td class="tit"  id="${data[i].board_id}" title="${data[i].board_title}">${data[i].board_title}</td>`;
+                                tableObj += `<td>${data[i].user_nickname}</td>`;
+                                tableObj += `<td>${data[i].board_wdate.substring(0, 10)}</td>`;
+                                tableObj += `<td>${data[i].board_view}</td>`;
+                                $('#articles').html(tableObj);
+                            }
+
+                            let str = "";
+                            let total = data[0].board_total;
+                            let pagePerTen = Math.ceil(total / 10);//소수점 이하 올림
+                            let pageLast = pagePerTen % 10;
+                            if (pageLast === 0) {
+                                pageLast = 10;
+                            }
+                            let countTen;
+                            num = parseInt(num);
+                            if (num !== 1) {
+                                $('.paging>.prev').css("display", "inline-block");
+                            }
+                            if (num !== pagePerTen) {
+                                $('.paging>.next').css("display", "inline-block");
+                            }
+                            if (num >= 11) {
+                                $('.paging>.prevDouble').css("display", "inline-block");
+                            }
+                            if ((Math.ceil(pagePerTen / 10) - Math.ceil(num / 10)) >= 1) {
+                                $('.paging>.nextDouble').css("display", "inline-block");
+                            }
+                            countTen = Math.ceil(num / 10);
+
+                            if (countTen !== Math.ceil(pagePerTen / 10)) {
+                                for (let i = 1; i <= 10; i++) {
+                                    str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                }
+                            } else {
+                                for (let i = 1; i <= pageLast; i++) {
+                                    str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                }
+                            }
+                            $pagingNumber.html(str);
+                            let p = 10;
+                            if (num % 10 !== 0) {
+                                p = num % 10;
+                            }
+                            $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                            sessionStorage.setItem("pagingNum", num);
+                        }
+                    });
+                    promisePaging.done(pagingFunc);
+                });
+            }
+            $('.paging>div').click(function (event) {
+                let $clickBtn = $(event.target).attr('class');
+                let n;
+                switch ($clickBtn) {
+                    case 'prevDouble':
+                        n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10) - 2) * 10 + 1;
+                        break;
+                    case 'prev':
+                        n = parseInt(sessionStorage.getItem("pagingNum")) - 1;
+                        break;
+                    case 'next':
+                        n = parseInt(sessionStorage.getItem("pagingNum")) + 1;
+                        break;
+                    case 'nextDouble':
+                        n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10)) * 10 + 1;
+                        break;
+                }
+                $.ajax({
+                    url: './boardlist',
+                    data: { "page": n, "num": 10 },
+                    method: 'post',
+                    success(data) {//성공응답
+                        $('.paging>div').css("display", "none");
+                        let tableObj = $('#articles');
+                        for (let i = 0; i < data.length; i++) {
+                            tableObj += `<tr><td class="chk"><input type="checkbox" name="checkRow" class="${data[i].board_id}"></td>`;
+                            tableObj += `<td>${data[i].board_id}</td>`;
+                            tableObj += `<td>${data[i].board_subtitle}</td>`;
+                            tableObj += `<td class="tit"  id="${data[i].board_id}" title="${data[i].board_title}">${data[i].board_title}</td>`;
+                            tableObj += `<td>${data[i].user_nickname}</td>`;
+                            tableObj += `<td>${data[i].board_wdate.substring(0, 10)}</td>`;
+                            tableObj += `<td>${data[i].board_view}</td>`;
+                            $('#articles').html(tableObj);
+                        }
+
+                        let str = "";
+                        let total = data[0].board_total;
+                        let pagePerTen = Math.ceil(total / 10);
+                        let pageLast = pagePerTen % 10;
+                        if (pageLast === 0) {
+                            pageLast = 10;
+                        }
+                        let countTen;
+                        n = parseInt(n);
+                        if (n !== 1) {
+                            $('.paging>.prev').css("display", "inline-block");
+                        }
+                        if (n !== pagePerTen) {
+                            $('.paging>.next').css("display", "inline-block");
+                        }
+                        if (n >= 11) {
+                            $('.paging>.prevDouble').css("display", "inline-block");
+                        }
+                        if ((Math.ceil(pagePerTen / 10) - Math.ceil(n / 10)) >= 1) {
+                            $('.paging>.nextDouble').css("display", "inline-block");
+                        }
+                        countTen = Math.ceil(n / 10);
+                        if (countTen !== Math.ceil(pagePerTen / 10)) {
+                            for (let i = 1; i <= 10; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        } else {
+                            for (let i = 1; i <= pageLast; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        }
+                        $pagingNumber.html(str);
+                        let p = 10;
+                        if (n % 10 !== 0) {
+                            p = n % 10;
+                        }
+                        $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                        sessionStorage.setItem("pagingNum", n);
+                        promisePaging.done(pagingFunc);
+                    }
+                });
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+<div class="header"></div>
+    <div class="adminboard">
+        <script>
+            //체크박스 전체 선택&해제
+            function checkAll() {
+                if ($("#ck_all").is(':checked')) {
+                    $("input[name=checkRow]").prop("checked", true);
+                } else {
+                    $("input[name=checkRow]").prop("checked", false);
+                }
+            }
+
+
+            $('.exam-btn').click(function () {
+                $('#menu li .examlist').toggleClass("show");
+            });
+        </script>
+
+        <!--신고 게시판 리스트-->
+        <div class="mainbox">
+            <div class="board_list">
+
+                <table summary="삭제,번호,소제목,제목,작성자,작성일,조회수,좋아요" style="table-layout: fixed;">
+                    <colgroup>
+                        <col width="4%">
+                        <col width="8%">
+                        <col width="16%">
+                        <col width="*%">
+                        <col width="8%">
+                        <col width="12%">
+                        <col width="8%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="background-color: #ffffff; opacity: 0.2;"></th>
+                            <th colspan="1" style="background-color: rgba(255, 255, 255, 0.1);  border:none;">
+                                <button class="postbtn" type="button" style="margin-left: 8px;
+                            padding : 5px;
+                            width: 130px;
+                            border: none;
+                            outline:0;
+                            border-radius: 15px;
+                            background-color:gray;
+                            color:white;" disabled>게시하기
+                                </button>
+                            </th>
+                            <th colspan="2" style="background-color: rgba(255, 255, 255, 0.1);; border:none;">
+                                <button class="delbtn" type="button" style="margin-left: 8px;
+                            padding : 5px;
+                            width: 130px;
+                            border: none;
+                            outline:0;
+                            border-radius: 15px;
+                            background-color:gray;
+                            color:white;
+                            cursor:pointer;">삭제하기
+                                </button>
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <th scope="col">삭제</th>
+                            <th scope="col">번호</th>
+                            <th scope="col">소제목</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">작성일</th>
+                            <th scope="col">조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody id="articles">
+                        <tr class="tit1">
+                            <td class="chkbox"><input type="checkbox" name="checkRow"></td>
+                            <td id="boardId">10</td>
+                            <td class="tit" title="정보처리기사 1회 23문제 수정 부탁"></td>
+                            <td>최예만</td>
+                            <td class="wdt">2021.01.25</td>
+                            <td>미해결</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="paging">
+                    <div class="prevDouble">◀◀&nbsp;</div>
+                    <div class="prev">◀&nbsp;</div><span class="paging_number"></span>
+                    <div class="next">▶&nbsp;</div>
+                    <div class="nextDouble">▶▶</div>
+                </div>
+            </div>
+        </div>
+        <div id="modal">
+            <div class="board" style="overflow-y:scroll; overflow-x:hidden">
+                <div class="headerline"></div>
+                <div class="board_header">
+                    <div class="detail_info">
+                        <div class="flex_container">
+                            <span class="writer" style="flex-grow: 2;">
+                                <h3>작성자</h3>
+                                <div class="user_id"></div>
+                            </span>
+                        </div>
+                        <div class="flex_container">
+                            <span class="title" style="flex-grow: 2;">
+                                <h3>제목</h3>
+                                <div class="title">SQL 13번 답이 잘못되었습니다</div>
+                            </span>
+                        </div>
+                        <div class="flex_container">
+                            <span class="wdate" style="flex-grow: 2;">
+                                <h3>날짜</h3>
+                                <div class="date">2021/02/21</div>
+                            </span>
+                        </div>
+                    </div>
+                    <h3>문의내용</h3>
+                    <div class="board_image">
+                        <img class="boardimg" alt="boardimg" src="">
+                        <img class="explanation" alt="explanation" src="">
+                    </div>
+                    <div class="board_content">
+                        1
+                    </div>
+                    <div class="boardsol_content">
+                        <h3>답변내용</h3>
+                        <form a method="post">
+                            <!--action-->
+                            <textarea placeholder="내용을 입력하세요." name="boardsol_content" id="write"></textarea>
+                            <input type="button" class="check" value="등록" id="btn_save">
+                        </form>
+                    </div>
+                </div>
+                <button type="button" id="modal_close_btn">닫기</button>
+            </div>
+            <div class="modal_layer"></div>
+        </div>
+    </div>
+</body>
+
+</html>

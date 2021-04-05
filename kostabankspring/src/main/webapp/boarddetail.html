@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+   <link rel="shortcut icon" href="./images/logo.png">
+   <link rel="preconnect" href="https://fonts.gstatic.com">
+   <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+         rel="stylesheet">
+   <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+   <title>KostaBank</title>
+   <style>
+      .boarddetail div.board {
+         width: 900px;
+         height: auto;
+         margin: 40px auto;
+      }
+
+      .boarddetail div.board_header {
+         width: 900px;
+         height: 30px;
+         margin: 10px auto;
+      }
+
+      .boarddetail div.board_header>h1 {
+         display: inline-block;
+         margin-top: 3px;
+         margin-left: 20px;
+         font-size: 25px;
+      }
+
+      .boarddetail div.board_header>button.board_list,
+      .boarddetail .boardmodi,
+      .boarddetail .board_delete {
+         float: right;
+         padding: 5px;
+         margin-left: 8px;
+         width: 70px;
+         height: 30px;
+         border: none;
+         outline: 0;
+         border-radius: 15px;
+         background-color: gray;
+         color: white;
+         cursor: pointer;
+         font-size: 15px;
+      }
+
+      .boarddetail div.board_header>.board_delete {
+         margin-right: 20px;
+      }
+
+      .boarddetail div.board_border {
+         box-sizing: border-box;
+         width: 900px;
+         height: auto;
+         min-height: 500px;
+         border: 3px solid black;
+         margin: 0 auto;
+         padding: 30px;
+      }
+
+      .boarddetail div.detail_info {
+         width: 95%;
+         height: 20%;
+         margin: 10px auto;
+      }
+
+      .boarddetail div.board_flex_container,
+      .boarddetail div.board_flex_container>div {
+         display: flex;
+      }
+
+      .boarddetail div.board_flex_container>div.title,
+      .boarddetail div.writer,
+      .boarddetail div.wdate {
+         flex: 0 0 400px;
+      }
+
+      .boarddetail div.board_flex_container>div.view {
+         flex: 0 0 220px;
+      }
+
+      .boarddetail div.board_flex_container>div.like {
+         flex: 0 0 180px;
+      }
+      .boarddetail div.board_flex_container>div>h3 {
+         margin: 0 20px 0 0;
+         flex-grow: 0;
+         flex-shrink: 0;
+      }
+
+      .boarddetail div.board_flex_container>div>div {
+         margin: 0 10px 0 0;
+         word-break: break-all;
+      }
+
+      .boarddetail div.content_border {
+         box-sizing: border-box;
+         border: 1px solid;
+         width: 90%;
+         height: auto;
+         min-height: 100px;
+         margin: 0 auto;
+      }
+
+      .boarddetail fieldset.fs_content {
+         width: 95%;
+         margin: 20px auto;
+         position: relative;
+      }
+
+      .boarddetail legend.lg_content {
+         font-size: 1.17em;
+         font-weight: bold;
+         margin-left: 20px;
+      }
+
+      .boarddetail div.board_content {
+         width: 100%;
+         height: auto;
+         min-height: 100px;
+         margin: 0;
+         padding: 15px;
+      }
+      .boarddetail img.board_file_img {
+         margin: 20px;
+         display: none;
+      }
+      .boarddetail input#like_btn {
+         display: none;
+      }
+      .boarddetail #like_label{
+         background-image: url(./images/like.png);
+         cursor: pointer;
+         border: 0;
+         outline: 0;
+         width: 26px;
+         height: 25px;
+         position: absolute;
+         right: 20px;
+         bottom: 10px;
+      }
+      .boarddetail img#like_ori, .boarddetail img#like_up {
+         border: 0;
+         outline: 0;
+         width: 26px;
+         height: 25px;
+         position: absolute;
+      }
+      .boarddetail img#like_up{
+         display: none;
+      }
+      .boarddetail div.comment_box>h4 {
+         margin: 40px 10px 10px 30px;
+      }
+
+      .boarddetail div.cmt_flex_container,
+      .boarddetail div.cmt_flex_container1 {
+         margin: 0 auto;
+         width: 90%;
+         margin-bottom: 10px;
+         display: flex;
+      }
+
+      .boarddetail div.cmt_flex_container>div.cmt_writer,
+      .boarddetail div.cmt_flex_container1>div.user_id {
+         flex: 0 0 100px;
+         margin: 0 10px;
+      }
+
+      .boarddetail div.comment_box>div.cmt_flex_container>div.cmt_content,
+      .boarddetail div.cmt_flex_container1>input.cmt_write {
+         flex: 0 0 480px;
+         word-break: break-all;
+         margin: 0 10px;
+      }
+
+      .boarddetail div.cmt_wdate {
+         flex: 0 0 130px;
+         margin: 0 10px;
+      }
+
+      .boarddetail input.cmt_write {
+         background-color: rgba(255, 255, 255, 0.5);
+         border: 1px solid;
+         margin-right: 10px;
+      }
+
+      .boarddetail div.cmt_wdate {
+         text-align: right;
+         margin-left: 10px;
+      }
+
+      .boarddetail button#cmt_post {
+         padding: 5px;
+         margin-left: 15px;
+         width: 70px;
+         height: 30px;
+         border: none;
+         outline: 0;
+         border-radius: 15px;
+         background-color: gray;
+         color: white;
+         cursor: pointer;
+         font-size: 15px;
+      }
+
+      .boarddetail #boardmodal {
+         position: fixed;
+         width: 100%;
+         height: 100%;
+         z-index: 1;
+         display: none;
+      }
+
+      .boarddetail #boardmodal p {
+         /* padding-left: 15px; */
+         padding: 15px;
+      }
+
+      .boarddetail #boardmodal .boardheaderline {
+         position: relative;
+         padding-top: 0;
+         width: 100%;
+         height: 30px;
+         background: rgb(87, 87, 87);
+      }
+
+      .boarddetail #boardmodal .boardmodal_content {
+         position: relative;
+         width: 300px;
+         margin: 100px auto;
+         background: #fff;
+         border: 2px solid #666;
+         text-align: center;
+      }
+
+      .boarddetail #boardmodal .boardmodal_body {
+         padding: 10px 10px;
+      }
+
+      .boarddetail #boardmodal .boardmodal_layer {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background: rgba(0, 0, 0, 0.5);
+         z-index: -1;
+      }
+
+      .boarddetail #boardmodal button {
+         display: inline-block;
+         width: 100px;
+         padding: 5px;
+         border: none;
+         outline: 0;
+         border-radius: 15px;
+         background-color: gray;
+         color: white;
+         cursor: pointer;
+      }
+   </style>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script>
+      $(function () {
+         $(".header").load("headernmenu.html");
+         var board_id = sessionStorage.getItem("board_id");
+
+
+         $.ajax({
+            url: "./findboardup",
+            method: "post",
+            data: { "board_id": board_id },
+            success: function (data) {
+               if(data.status === -1){
+                  $("#like_ori").css("display", "block");
+                  $("#like_up").css("display", "none");
+               }else{
+                  $("#like_ori").css("display", "none");
+                  $("#like_up").css("display", "block");
+               }
+            }
+         });
+
+         //소제목 , 제목, 내용, 좋아요, 조회수, 댓글 작성 아이디 
+         $.ajax({
+            url: "./boarddetail",
+            method: "post",
+            data: { "board_id": board_id },
+            success: function (data) {
+               var boardFileName = "./boardupload/" + board_id + "_" + data.board_file;
+               $("div.title>div#title").html("[" + data.board_subtitle + "]" + " " + data.board_title);
+               $("div.detail_info>div>div.writer>div.user_id").html(data.user_nickname);
+               $("div.view>div.view_cnt").html(data.board_view);
+               $("div.like>div.like_cnt").html(data.board_up);
+               var bWdateFull = data.board_wdate;
+               bWdate = bWdateFull.substring(0, 16);
+               $("div.wdate>div.date").html(bWdate);
+               $(".fs_content>div.board_content").html(data.board_content);
+               if (data.board_file != null) {
+                  var $boardFileImg = $("img.board_file_img");
+                  $boardFileImg.attr("style", "display:block");
+                  $boardFileImg.attr("src", boardFileName);
+               }
+            },
+            error: function (jqXHR) {
+               console.log(jqXHR.status);
+            }
+         });
+
+         $.ajax({
+            url: "./boardcomment",
+            method: "post",
+            data: { "board_id": board_id },
+            success: function (data) {
+               var $origin = $("div.cmt_flex_container");
+               data.forEach(function (d, i) {
+                  var $copy = $origin.clone();
+                  $cWdate = (d.comment_wdate).substring(0, 16);
+                  $copy.find("div.cmt_writer").html(d.user_nickname.user_nickname);
+                  $copy.find("div.cmt_content").html(d.comment_content);
+                  $copy.find("div.cmt_wdate").html($cWdate);
+                  $origin.before($copy);
+               });
+            },
+            error: function (jqXHR) {
+               console.log(jqXHR.status);
+            }
+         });
+
+         //조회수 증가
+         $.ajax({
+            url: "./modboardview",
+            method: "post",
+            data: { "board_id": board_id }
+         });
+
+         //목록 이동 
+         $("button.board_list").click(function () {
+            location.href = 'userboard.html';
+            return false;
+         });
+         //수정버튼  
+         var $boardcloseBtn = $("button#boardmodal_close_btn");
+         var $boardcheckBtn = $("button#boardmodal_check_btn");
+         var $boardModiBtn = $(".boardmodi");
+
+         $boardModiBtn.on("click", function(){
+            $(".boarddetail div.boardmodal_body>p").html("수정하시겠습니까?");
+            $("#boardmodal").attr("style", "display:block");
+            $("#boardmodal_check_btn").click(function () {
+               $("#boardmodal").attr("style", "display:none");
+               location.href = "./modifyboard.html";
+            });
+            $("#boardmodal_close_btn").click(function () {
+               $("#boardmodal").attr("style", "display:none");
+               return false;
+            });
+            return false;
+         });
+
+         // 삭제버튼
+         var $boardDelBtn = $(".board_delete");
+         $boardDelBtn.click(function () {
+            $("div.boardmodal_body>p").html("삭제하시겠습니까?");
+            $("#boardmodal").attr("style", "display:block");
+            $("#boardmodal_check_btn").click(function () {
+               $("#boardmodal").attr("style", "display:none");
+               $.ajax({
+                  url: "./removeboard",
+                  method: "post",
+                  data: { "board_id": board_id },
+                  success: function (responseObj) {
+                     location.href = 'userboard.html';
+                  },
+                  error: function (jqXHR) {
+                     console.log(jqXHR.status);
+                  }
+               });
+               return false;
+            });
+            $("#boardmodal_close_btn").click(function () {
+               $("#boardmodal").attr("style", "display:none");
+               return false;
+            });
+            return false;
+         });
+
+         //좋아요
+         $("#like_label").on("click", function(){
+               $.ajax({
+                  url: "./boardup",
+                  method: "post",
+                  data: { "board_id": board_id},
+                  success: function (data) {
+                     console.log(data);
+                     if (data.status === 1) {
+                        $("#like_ori").css("display", "none");
+                        $("#like_up").css("display", "block");
+                     }
+                     else if (data.status === -1){
+                        $.ajax({
+                        url: "./removeboardup",
+                        method: "post",
+                        data: { "board_id": board_id},
+                        success: function (data) {
+                        },
+                        error: function (jqXHR) {
+                           console.log(1);
+                           $("#like_up").css("display", "none");
+                           $("#like_ori").css("display", "block");
+                        }
+                     });
+                     }
+                  },
+                  error: function (jqXHR) {
+                     console.log(jqXHR.status);
+                  }
+               });
+         });
+
+         //댓글 등록버튼
+         var $cmtPostBtn = $("div.cmt_flex_container1>button#cmt_post");
+         var $cmtWriteObj = $("div.cmt_flex_container1>input.cmt_write");
+         $cmtPostBtn.click(function () {
+            if ($cmtWriteObj.val() == "") {
+               $boardcheckBtn.attr("style", "display:none");
+               $("div.boardmodal_body>p").html("내용을 입력하세요.");
+               $boardcloseBtn.html("확인");
+
+               $("#boardmodal").attr("style", "display:block");
+               $("#boardmodal_close_btn").click(function () {
+                  $("#boardmodal").attr("style", "display:none");
+                  $cmtWriteObj.focus();
+                  return false;
+               });
+            } else {
+               $.ajax({
+                  url: "./addcomment",
+                  method: "post",
+                  data: { "board_id": board_id, "comment_w_content": $cmtWriteObj.val() },
+                  success: function (responseObj) {
+                     location.reload();
+                  },
+                  error: function (jqXHR) {
+                     console.log(jqXHR.status);
+                  }
+               });
+               return false;
+            }
+            return false;
+         });
+      });
+   </script>
+</head>
+
+<body>
+<div class="header"></div>
+<div class="boarddetail">
+   <div id="boardmodal">
+      <div class="boardmodal_content">
+         <div class="boardheaderline"></div>
+         <div class="boardmodal_body">
+            <p></p>
+            <button type="button" id="boardmodal_check_btn">확인</button>
+            <button type="button" id="boardmodal_close_btn">취소</button>
+         </div>
+      </div>
+      <div class="boardmodal_layer"></div>
+   </div>
+   <div class="board">
+      <div class="board_header">
+         <h1>자유게시판</h1>
+         <button type="button" class="board_delete" >삭제</button>
+         <button type="button" class="boardmodi" >수정</button>
+         <button type="button" class="board_list">목록</button>
+      </div>
+      <div class="board_border">
+         <div class="detail_info">
+            <div class="board_flex_container">
+               <div class="title">
+                  <h3>제&nbsp;&nbsp;목</h3>
+                  <div id="title"></div>
+               </div>
+               <div class="view">
+                  <h3>조회수</h3>
+                  <div class="view_cnt"></div>
+               </div>
+               <div class="like">
+                  <h3>좋아요</h3>
+                  <div class="like_cnt"></div>
+               </div>
+            </div>
+            <div class="board_flex_container">
+               <div class="writer">
+                  <h3>작성자</h3>
+                  <div class="user_id">c</div>
+               </div>
+               <div class="wdate">
+                  <h3>작성일</h3>
+                  <div class="date"></div>
+               </div>
+            </div>
+         </div>
+         <fieldset class="fs_content">
+            <legend class="lg_content">내용</legend>
+            <img class="board_file_img" alt="이미지파일">
+            <div class="board_content"></div>
+
+            <input type="checkbox" id="like_btn">
+            <label for ="like_btn" id="like_label">
+               <img src="./images/like.png" id="like_ori">
+               <img src="./images/like_up.png" id="like_up">
+            </label>
+         </fieldset>
+
+         <div class="comment_box">
+            <h4>댓글</h4>
+            <div class="cmt_flex_container">
+               <div class="cmt_writer"></div>
+               <div class="cmt_content"></div>
+               <div class="cmt_wdate"></div>
+            </div>
+            <form method="post" class="cmt_form">
+               <div class="cmt_flex_container1">
+                  <div class="user_id"></div>
+                  <input type="text" class="cmt_write" name="comment_w_content" placeholder="댓글쓰기">
+                  <button type="submit" name="comment" id="cmt_post">등록</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+</body>
+
+</html>

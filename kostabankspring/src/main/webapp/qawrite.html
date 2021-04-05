@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+    <title>KostaBank</title>
+    <style>
+        .qawrite div.user_qa {
+            width: 900px;
+            height: auto;
+            margin: 40px auto;
+        }
+
+        .qawrite div.qa_header {
+            width: 900px;
+            height: 30px;
+            margin: 10px auto;
+        }
+
+        .qawrite div.qa_header>h1 {
+            font-size: 25px;
+            display: inline-block;
+            margin-top: 3px;
+            margin-left: 20px;
+        }
+
+        .qawrite div.qa_div_inline,
+        .qawrite div.qa_header>button.qa_cancel,
+        .qawrite div.upload>h4 {
+            display: inline;
+        }
+
+        .qawrite button,
+        .qawrite .upload>div>label {
+            font-size: 15px;
+        }
+
+        .qawrite div.qa_header>div>button.qa_cancel,
+        .qawrite div.qa_header>div>button.qa_post {
+            float: right;
+            padding: 5px;
+            margin-left: 8px;
+            width: 70px;
+            height: 30px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .qawrite div.qa_header>div>button.qa_post {
+            margin-right: 20px;
+        }
+
+        .qawrite div.qa_border {
+            box-sizing: border-box;
+            width: 900px;
+            height: auto;
+            min-height: 500px;
+            padding: 30px;
+            margin: 0 auto;
+            border: 3px solid;
+        }
+
+        .qawrite div.qa_title {
+            margin-bottom: 10px;
+        }
+
+        .qawrite #qa_title {
+            border: none;
+            width: 100%;
+            height: 30px;
+        }
+
+        .qawrite #qa_title,
+        .qawrite #qa_write {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .qawrite div.upload {
+            margin: 10px 0;
+        }
+
+        .qawrite div.upload>h4 {
+            margin: 0 15px 0 0;
+            vertical-align: middle;
+        }
+
+        .qawrite div.upload>span#qa_file_info,
+        .qawrite div.upload>div.qa_div_inline,
+        .qawrite #qa_file_btn,
+        .qawrite button#qa_file_submit {
+            box-sizing: border-box;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .qawrite div.upload>span#qa_file_info {
+            border: 1px solid black;
+            min-width: 150px;
+            width: auto;
+            height: 21px;
+            font-size: 14px;
+            word-break: keep-all;
+            vertical-align: middle;
+        }
+
+        .qawrite #qa_file_cancel {
+            margin-right: 10px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .qawrite #qa_file_input,
+        .qawrite button#qa_file_submit {
+            display: none;
+        }
+
+        .qawrite div.upload>div.qa_div_inline {
+            height: 21px;
+        }
+
+        .qawrite #qa_file_btn {
+            width: 84px;
+            height: 21px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            vertical-align: middle;
+        }
+
+        .qawrite div.qa_content {
+            margin-top: 20px;
+        }
+
+        .qawrite div.qa_content>#qa_write {
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            min-height: 350px;
+            padding: 10px;
+            border: none;
+            resize: none;
+        }
+
+        .qawrite hr.qawrite_hr {
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .qawrite #modal {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: none;
+        }
+
+        .qawrite #modal p {
+            /* padding-left: 15px; */
+            padding: 15px;
+        }
+
+        .qawrite #modal .headerline {
+            position: relative;
+            padding-top: 0;
+            width: 100%;
+            height: 30px;
+            background: rgb(87, 87, 87);
+        }
+
+        .qawrite #modal .modal_content {
+            position: relative;
+            width: 300px;
+            margin: 100px auto;
+            background: #fff;
+            border: 2px solid #666;
+            text-align: center;
+        }
+
+        .qawrite #modal .modal_body {
+            padding: 10px 10px;
+        }
+
+        .qawrite #modal .modal_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .qawrite #modal button {
+            display: inline-block;
+            width: 100px;
+            padding: 5px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function chk_file_type(obj) {
+            var file_kind = obj.value.lastIndexOf('.');
+            var file_name = obj.value.substring(file_kind + 1, obj.length);
+            var file_type = file_name.toLowerCase();
+            var check_file_type = ['jpg', 'gif', 'png', 'jpeg', 'bmp'];
+            if (check_file_type.indexOf(file_type) == -1) {
+                alert('이미지 파일만 선택할 수 있습니다.');
+                var $qaFileInputObj = $("#qa_file_input");
+                var $qaFileInfoOjb = $("span[id=qa_file_info]");
+                $qaFileInfoOjb.html(" ");
+                $qaFileInputObj.val('');
+            }
+        }
+        $(function () {
+        	
+        	$(".header").load("headernmenu.html");
+        	
+            //파일
+            var $qaFileInputObj = $("#qa_file_input");
+            var $qaFileInfoOjb = $("span[id=qa_file_info]");
+            var $qaFileCancelBtn = $("#qa_file_cancel");
+            //파일선택 버튼클릭
+            $("#qa_file_btn").click(function () {
+                $qaFileInputObj.change(function () {
+                    //선택한 파일이 바뀔때
+                    var $fileVal = $qaFileInputObj[0].files[0].name;
+                    $qaFileInfoOjb.html($fileVal);
+                });
+            });
+            //선택파일 취소 
+            $qaFileCancelBtn.click(function () {
+                $qaFileInfoOjb.html(" ");
+                $qaFileInputObj.val('');
+            });
+
+            var $closeBtn = $("div.modal_body>button#modal_close_btn");
+            var $checkBtn = $("div.modal_body>button#modal_check_btn");
+            $("div.qa_header>div>button.qa_post").click(function () {
+                var $qaTitleObj = $("#qa_title").val();
+                var $qaContentObj = $("#qa_write").val();
+                if ($qaTitleObj == "") {
+                    $checkBtn.attr("style", "display:none");
+                    $("div.modal_body>p").html("제목을 입력하세요.");
+                    $closeBtn.html("확인");
+                    $("#modal").attr("style", "display:block");
+                    $closeBtn.click(function () {
+                        $("#modal").attr("style", "display:none");
+                        $("#qa_title").focus();
+                        $checkBtn.attr("display", "inline-block");
+                        return false;
+                    });
+                } else if ($qaContentObj == "") {
+                    $checkBtn.attr("style", "display:none");
+                    $("div.modal_body>p").html("내용을 입력하세요.");
+                    $closeBtn.html("확인");
+
+                    $("#modal").attr("style", "display:block");
+                    $closeBtn.click(function () {
+                        $("#modal").attr("style", "display:none");
+                        $("#qa_write").focus();
+                        $checkBtn.attr("display", "inline-block");
+                        return false;
+                    });
+                }
+                if ($qaTitleObj && $qaContentObj != "") {
+                    //모달보여주기
+                    $checkBtn.attr("style", "display:inline-block");
+                    $checkBtn.html("확인");
+                    $closeBtn.html("취소");
+
+                    $("#modal").attr("style", "display:block");
+                    $("div.modal_body>p").html("1:1문의를 등록하시겠습니까?");
+                    //확인클릭 
+                    $checkBtn.click(function () {
+                        $("#modal").attr("style", "display:none");
+                        var qaForm = $("div.user_qa>form.qa_form")[0];
+                        var formData = new FormData(qaForm);
+                        $.ajax({
+                            url: "./addqa",
+                            method: "post",
+                            success: function (responseObj) {
+                                location.href="myinfo.html";
+                            },
+                            error: function (jqXHR) {
+                                console.log(jqXHR.status);
+                            },
+                            enctype: 'multipart/form-data',
+                            contentType: false,
+                            processData: false,
+                            data: formData
+                        });
+                        return false;
+                    });
+                    //취소 클릭 
+                    $closeBtn.click(function () {
+                        $("#modal").attr("style", "display:none");
+                        return false;
+                    });
+                }
+                return false;
+            });
+
+            //취소버튼 클릭이벤트 -> 
+            $(".qa_cancel").click(function () {
+                $("#modal").attr("style", "display:block");
+                $checkBtn.css("width", "140px");
+                $checkBtn.html("마이페이지로 가기 ");
+                $("div.modal_body>p").html("취소하시겠습니까?");
+
+                $checkBtn.click(function () {
+                    $("#modal").attr("style", "display:none");
+                    location.href = "myinfo.html";
+                    return false;
+                });
+                $closeBtn.click(function () {
+                    $("#modal").attr("style", "display:none");
+                    return false;
+                });
+                return false;
+            });
+        });
+    </script>
+</head>
+
+<body>
+	<div class="header"></div>
+    <div class="qawrite">
+        <div id="modal">
+            <div class="modal_content">
+                <div class="headerline"></div>
+                <div class="modal_body">
+                    <p></p>
+                    <button type="button" id="modal_check_btn">확인</button>
+                    <button type="button" id="modal_close_btn">취소</button>
+                </div>
+            </div>
+            <div class="modal_layer"></div>
+        </div>
+        <div class="user_qa">
+            <form method="post" class="qa_form" enctype="multipart/form-data">
+                <div class="qa_header">
+                    <h1>1:1문의</h1>
+                    <div class="qa_div_inline">
+                        <button type="submit" class="qa_post">문의하기</button>
+                        <button type="button" class="qa_cancel">취소 </button>
+                    </div>
+                </div>
+
+                <div class="qa_border">
+                    <div class="qa_title">
+                        <div class="qa_div_inline">
+                            <input type="text" name="qa_title" placeholder="제목을 입력하세요." id="qa_title">
+                        </div>
+                    </div>
+                    <hr class="qawrite_hr">
+
+                    <div class="upload">
+                        <h4>파일첨부</h4>
+                        <span id="qa_file_info" style="display: inline-block;"></span>
+                        <i class="fas fa-times" id="qa_file_cancel"></i>
+                        <div class="qa_div_inline">
+                            <label for="qa_file_input" id="qa_file_btn"> 파일선택 </label>
+                            <input type="file" name="qa_file" id="qa_file_input" onchange='chk_file_type(this)' accept="image/*">
+                            <button type="submit" id="qa_file_submit">파일업로드</button>
+                        </div>
+                    </div>
+                    <hr class="qawrite_hr">
+                    <div class="qa_content">
+                        <textarea placeholder="내용을 입력하세요." name="qa_content" id="qa_write"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

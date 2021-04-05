@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+    <script>
+        $(function () {	
+        	$(".header").load("headernmenu.html");
+
+            sessionStorage.clear();
+            let $pagingNumber = $('.paging_number');
+            let num = sessionStorage.getItem("pagingNum");
+            if (num === null) {
+                num = 1;
+            }
+            num = parseInt(num);
+            let promisePaging = $.ajax({
+
+                url: './boardlist',
+                data: { "page": num, "num": 10 },
+                method: 'post',
+                success(data) {//성공응답
+                    $('.paging>div').css("display", "none");
+
+                    let temp_html = $('#articles');
+                    for (let i = 0; i < data.length; i++) {
+                        temp_html += `<tr><th>${data[i].board_id}</th>`;
+                        temp_html += `<td>${data[i].board_title}</td>`;
+                        temp_html += `<td>${data[i].user_nickname}</td>`;
+                        temp_html += `<td>${data[i].board_wdate.substr(0, 10)}</td>`;
+                        temp_html += `<td>${data[i].board_view}</td>`;
+                        /* $('#articles').html(temp_html); */
+                    }
+                    $('#articles').html(temp_html);
+
+
+                    let str = "";
+                    let total = data[0].board_total;
+                    let pagePerTen = Math.ceil(total / 10);//소수점 이하 올림
+                    let pageLast = pagePerTen % 10;
+
+                    if (pageLast === 0) {
+                        pageLast = 10;
+                    }
+
+
+                    let countTen;
+                    num = parseInt(num);
+                    if (num !== 1) {
+                        $('.paging>.prev').css("display", "inline-block");
+                    }
+                    if (num !== pagePerTen) {
+                        $('.paging>.next').css("display", "inline-block");
+                    }
+                    if (num >= 11) {
+                        $('.paging>.prevDouble').css("display", "inline-block");
+                    }
+
+                    if ((Math.ceil(pagePerTen / 10) - Math.ceil(num / 10)) >= 1) {
+                        $('.paging>.nextDouble').css("display", "inline-block");
+                    }
+
+
+
+                    countTen = Math.ceil(num / 10);
+                    if (countTen !== Math.ceil(pagePerTen / 10)) {
+                        for (let i = 1; i <= 10; i++) {
+                            str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                        }
+                    } else {
+                        for (let i = 1; i <= pageLast; i++) {
+                            str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                        }
+                    }
+                    $pagingNumber.html(str);
+                    let p = 10;
+                    if (num % 10 !== 0) {
+                        p = num % 10;
+                    }
+                    $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                    sessionStorage.setItem("pagingNum", num);
+                },
+                error: function (jqXHR) {//실패응답
+                    console.log("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                }
+            });
+
+            promisePaging.done(pagingFunc);
+
+            function pagingFunc() {
+                $('.paging_number>span').click(function (event) {
+                    let num = parseInt($(event.target).text());
+                    promisePaging = $.ajax({
+                        url: './boardlist',
+                        data: { "page": num, "num": 10 },
+                        method: 'post',
+                        success(data) {//성공응답
+                            $('.paging>div').css("display", "none");
+                            let temp_html = $('#articles');
+                            for (let i = 0; i < data.length; i++) {
+                                temp_html += `<tr><th>${data[i].board_id}</th>`;
+                                temp_html += `<td>${data[i].board_title}</td>`;
+                                temp_html += `<td>${data[i].user_nickname}</td>`;
+                                temp_html += `<td>${data[i].board_wdate.substr(0, 10)}</td>`;
+                                temp_html += `<td>${data[i].board_view}</td>`;
+                                $('#articles').html(temp_html);
+                            }
+
+                            let str = "";
+                            let total = data[0].board_total;
+                            let pagePerTen = Math.ceil(total / 10);
+                            let pageLast = pagePerTen % 10;
+
+                            if (pageLast === 0) {
+                                pageLast = 10;
+                            }
+
+                            let countTen;
+
+                            num = parseInt(num);
+
+                            if (num !== 1) {
+                                $('.paging>.prev').css("display", "inline-block");
+                            }
+                            if (num !== pagePerTen) {
+                                $('.paging>.next').css("display", "inline-block");
+                            }
+                            if (num >= 11) {
+                                $('.paging>.prevDouble').css("display", "inline-block");
+                            }
+
+                            if ((Math.ceil(pagePerTen / 10) - Math.ceil(num / 10)) >= 1) {
+                                $('.paging>.nextDouble').css("display", "inline-block");
+                            }
+
+
+
+                            countTen = Math.ceil(num / 10);
+
+                            if (countTen !== Math.ceil(pagePerTen / 10)) {
+                                for (let i = 1; i <= 10; i++) {
+                                    str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                }
+                            } else {
+                                for (let i = 1; i <= pageLast; i++) {
+                                    str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                }
+                            }
+                            $pagingNumber.html(str);
+                            let p = 10;
+                            if (num % 10 !== 0) {
+                                p = num % 10;
+                            }
+                            $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                            sessionStorage.setItem("pagingNum", num);
+                        }
+                    });
+                    promisePaging.done(pagingFunc);
+                });
+            }
+            $('.paging>div').click(function (event) {
+                let $clickBtn = $(event.target).attr('class');
+                let n;
+                switch ($clickBtn) {
+                    case 'prevDouble':
+                        n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10) - 2) * 10 + 1;
+                        break;
+                    case 'prev':
+                        n = parseInt(sessionStorage.getItem("pagingNum")) - 1;
+                        break;
+                    case 'next':
+                        n = parseInt(sessionStorage.getItem("pagingNum")) + 1;
+                        break;
+                    case 'nextDouble':
+                        n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10)) * 10 + 1;
+                        break;
+                }
+                $.ajax({
+                    url: './boardlist',
+                    data: { "page": n, "num": 10 },
+                    method: 'post',
+                    success(data) {//성공응답
+                        $('.paging>div').css("display", "none");
+                        let temp_html = $('#articles');
+                        for (let i = 0; i < data.length; i++) {
+                            temp_html += `<tr><th>${data[i].board_id}</th>`;
+                            temp_html += `<td >${data[i].board_title}</td>`;
+                            temp_html += `<td>${data[i].user_nickname}</td>`;
+                            temp_html += `<td>${data[i].board_wdate.substr(0, 10)}</td>`;
+                            temp_html += `<td>${data[i].board_view}</td>`;
+                            $('#articles').html(temp_html);
+                        }
+
+                        let str = "";
+                        let total = data[0].board_total;
+                        let pagePerTen = Math.ceil(total / 10);
+                        let pageLast = pagePerTen % 10;
+
+                        if (pageLast === 0) {
+                            pageLast = 10;
+                        }
+
+                        let countTen;
+
+                        n = parseInt(n);
+
+                        if (n !== 1) {
+                            $('.paging>.prev').css("display", "inline-block");
+                        }
+                        if (n !== pagePerTen) {
+                            $('.paging>.next').css("display", "inline-block");
+                        }
+                        if (n >= 11) {
+                            $('.paging>.prevDouble').css("display", "inline-block");
+                        }
+
+                        if ((Math.ceil(pagePerTen / 10) - Math.ceil(n / 10)) >= 1) {
+                            $('.paging>.nextDouble').css("display", "inline-block");
+                        }
+
+
+
+                        countTen = Math.ceil(n / 10);
+                        if (countTen !== Math.ceil(pagePerTen / 10)) {
+                            for (let i = 1; i <= 10; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        } else {
+                            for (let i = 1; i <= pageLast; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        }
+                        $pagingNumber.html(str);
+                        let p = 10;
+                        if (n % 10 !== 0) {
+                            p = n % 10;
+                        }
+                        $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                        sessionStorage.setItem("pagingNum", n);
+                        promisePaging.done(pagingFunc);
+                    }
+                });
+            });
+
+
+            $("#articles").on("click", "tr td", function (event) {
+                var thObj = $(event.target).parent().children("th");
+                let aa = thObj.html();
+                sessionStorage.setItem("board_id", aa);
+                location.href = 'boarddetail.html';
+            });
+
+            $("#write").click(function () {
+                location.href = 'boardwrite.html';
+            });
+
+
+        });
+
+    </script>
+
+
+    <style>
+        .userBoard body {
+            font-family: 'Do Hyeon', sans-serif;
+
+        }
+
+
+        .userBoard {
+            width: 900px;
+            margin: auto;
+        }
+
+
+        .userBoard .content>.paging {
+            box-sizing: border-box;
+            height: 50px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .userBoard .content>.paging>span {
+            cursor: pointer;
+        }
+
+        .userBoard .content>.paging>div {
+            display: none;
+            cursor: pointer;
+        }
+
+        .userBoard th {
+            padding: 12px;
+        }
+        .userBoard td {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .userBoard .table {
+            width: 100%;
+        }
+
+        .userBoard .back {
+            background-color: grey;
+        }
+
+        .userBoard .back>col {
+            color: white;
+        }
+
+        .userBoard div.content1 {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .userBoard a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .userBoard .content1 {
+            padding: 12px;
+        }
+
+        .userBoard .content1 input {
+            padding: 10px;
+        }
+
+        .userBoard .content3 {
+            margin-top: 12px;
+            padding: 12px;
+
+        }
+
+        .userBoard .content3 form select {
+            height: 40px;
+            font-size: 15px;
+
+        }
+
+        .userBoard .content3 form .searchTitle {
+            height: 34px;
+            font-size: 15px;
+            width: 180px;
+        }
+
+        .userBoard .content3 form input[type=button] {
+            background-color: grey;
+            height: 40px;
+            color: whitesmoke;
+            font-size: 15px;
+            width: 120px;
+
+        }
+
+
+
+        .userBoard .order {
+            margin-top: 20px;
+            margin-left: 250px;
+        }
+
+        .userBoard .order a {
+            padding: 12px;
+        }
+
+
+
+
+
+
+
+        .userBoard #write {
+            padding: 5px;
+            margin-left: 15px;
+            width: 70px;
+            height: 30px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+	<div class = "header">	</div>
+    <div class="userBoard">
+        <div id="test">
+            <div class="content">
+
+                <div class="content1">
+                    <input id="write" type="button" value="글쓰기">
+                </div>
+
+                <table class="table">
+
+                    <thead>
+                        <tr class="back" style="color: azure; font-family: 'Nanum Myeongjo', serif;">
+                            <th scope="col">글번호</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">작성일</th>
+                            <th scope="col">조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody id="articles"></tbody>
+                </table>
+                <div class="paging">
+                    <div class="prevDouble">◀◀&nbsp;</div>
+                    <div class="prev">◀&nbsp;</div>
+                    <span class="paging_number"></span>
+                    <div class="next">▶&nbsp;</div>
+                    <div class="nextDouble">▶▶</div>
+                </div>
+                <!-- <div class="content3">
+                    <form action="">
+                        <select name="" id="">
+                            <option value="">제목+내용</option>
+                            <option value="">제목</option>
+                            <option value="">내용</option>
+                        </select>
+                        <input type="text" class="searchTitle">
+                        <input type="button" value="검색" onclick="showData()">
+                    </form>
+
+                </div> -->
+            </div>
+        </div>
+        <div style="height: 50px;"></div>
+    </div>
+    <section></section>
+</body>
+
+</html>

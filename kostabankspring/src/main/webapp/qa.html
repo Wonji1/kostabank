@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+
+    <style>
+        /* body {
+            background-image: url("images/pattern.jpg");
+            background-size: auto;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .menu_logo_alert>div.menu>img:hover {
+            cursor: pointer;
+        }
+
+        .menu_logo_alert>div.alert>img:hover {
+            cursor: pointer;
+        } */
+
+        .myinfo>div.mainbox {
+            box-sizing: border-box;
+            width: 900px;
+            height: auto;
+            min-height: 500px;
+            padding: 0;
+            margin: 0 auto 50px auto;
+            border: 5px solid;
+        }
+
+        .mainbox>div.category {
+            width: 100.2%;
+            margin: 0;
+            height: 50px;
+        }
+
+        .category>div {
+            box-sizing: border-box;
+            width: 25%;
+            height: 100%;
+            padding: 10px;
+            margin: 0;
+            border-right: 3px solid;
+            border-bottom: 3px solid;
+            text-align: center;
+            font-weight: bold;
+            font-size: large;
+            float: left;
+        }
+
+        .category>div:hover {
+            color: burlywood;
+            cursor: pointer;
+            transition: all .6s ease;
+            border-color: black;
+        }
+
+        .category>div.categoryinfo {
+            border-bottom: 0;
+        }
+
+        .mycategory_contents {
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            border: 0;
+        }
+
+        .category>div.categoryinfo {
+            border-bottom: 0;
+        }
+
+        .mycategory_contents {
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            border: 0;
+        }
+
+        /* .header-icon {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img#logo {
+            width: 200px;
+        }
+
+        #logo {
+            margin-top: 30px;
+        }
+
+        #alarm {
+            margin-top: 20px;
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-size: 50px;
+        }
+
+        @media(max-width: 928px) {
+            #logo {
+                position: absolute;
+                left: 375px;
+                width: 165pc;
+                margin: 20px auto;
+                text-align: center;
+            }
+
+            #alarm {
+                position: absolute;
+                left: 815px;
+                width: 50px;
+                margin: 20px;
+            }
+        } */
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            let $categoryObj = $(".category>div");
+            $categoryObj.click(function (event) {
+                $(".mycategory_contents").css({ "min-height": "445ox", "height": "auto" });
+
+                $categoryObj.css({ "color": "black", "border-bottom": "3px solid black" });
+                $(event.target).css({ "color": "burlywood", "border-bottom": "0", "border-color": "black" });
+                let $category = $(event.target).attr("class");
+                $(".mycategory_contents").load($category + ".html");
+            });
+            $(".mainbox>.category>.categoryinfo").trigger("click");
+            
+        });
+    </script>
+</head>
+
+<body>
+    <div class="myinfo">
+        <div class="mainbox">
+            <div class="category">
+                <div class="categoryinfo">
+                    내 정보
+                </div>
+                <div class="categorynote">
+                    내 노트
+                </div>
+                <div class="categorysolved">
+                    내가 푼 문제
+                </div>
+                <div class="categoryquestion">
+                    1:1 문의
+                </div>
+            </div>
+            <div class="mycategory_contents">
+
+            </div>
+        </div>
+    </div>
+    <div style="height: 50px;"></div>
+</body>
+
+</html>

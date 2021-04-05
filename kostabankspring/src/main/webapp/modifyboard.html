@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+    <title>KostaBank</title>
+    <style>
+        .modifyboard div.board_header {
+            width: 900px;
+            height: 30px;
+            margin: 10px auto;
+            /* border: 1px solid; */
+        }
+
+        .modifyboard div.board_header>h1 {
+            font-size: 25px;
+            display: inline-block;
+            margin-top: 3px;
+            margin-left: 20px;
+        }
+
+        .modifyboard div.div_inline,
+        .modifyboard div.board_header>div>button.cancel,
+        .modifyboard div.upload>h4 {
+            display: inline;
+        }
+
+        .modifyboard button,
+        .modifyboard .upload>div.div_inline>label#mod_file_btn {
+            font-size: 15px;
+        }
+
+        .modifyboard div.board_header>div>button.cancel,
+        .modifyboard div.board_header>div>button.modi_post {
+            float: right;
+            padding: 5px;
+            margin-left: 8px;
+            width: 70px;
+            height: 30px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .modifyboard div.board_header>div>button.modi_post {
+            margin-right: 20px;
+        }
+
+        .modifyboard div.board_border {
+            box-sizing: border-box;
+            width: 900px;
+            height: auto;
+            min-height: 500px;
+            padding: 30px;
+            margin: 0 auto;
+            border: 3px solid;
+        }
+
+        .modifyboard .subtitle_title {
+            margin-bottom: 10px;
+        }
+
+        .modifyboard #subtitle,
+        .modifyboard #title {
+            border: none;
+            height: 30px;
+        }
+
+        .modifyboard #subtitle,
+        .modifyboard #title,
+        .modifyboard #write {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modifyboard #write {
+            padding: 10px;
+        }
+
+        .modifyboard #subtitle {
+            width: 180px;
+        }
+
+        .modifyboard #title {
+            width: 630px;
+        }
+
+        .modifyboard div.upload {
+            margin: 10px 0;
+        }
+
+        .modifyboard div.upload>h4 {
+            margin: 0 15px 0 0;
+            vertical-align: middle;
+        }
+
+        .modifyboard div.upload>span#mod_file_info,
+        .modifyboard div.upload>div.div_inline,
+        .modifyboard #mod_file_btn,
+        .modifyboard button#mod_file_submit {
+            box-sizing: border-box;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .modifyboard div.upload>span#mod_file_info {
+            border: 1px solid black;
+            width: 150px;
+            height: 21px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .modifyboard #mod_file_cancel {
+            margin-right: 10px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .modifyboard #mod_file_input {
+            display: none;
+        }
+
+        .modifyboard div.upload>div.div_inline {
+            height: 21px;
+        }
+
+        .modifyboard button#mod_file_submit {
+            display: none;
+        }
+
+        .modifyboard div.upload>div.div_inline {
+            height: 21px;
+        }
+
+        .modifyboard #mod_file_btn {
+            width: 84px;
+            height: 21px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            vertical-align: middle;
+        }
+
+        .modifyboard div.board_content {
+            margin-top: 20px;
+        }
+
+        .modifyboard div.board_content>#write {
+            width: 100%;
+            height: auto;
+            min-height: 350px;
+            border: none;
+            resize: none;
+        }
+
+        .modifyboard hr.boardwrite_hr {
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .modifyboard #modimodal {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: none;
+        }
+
+        .modifyboard #modimodal p {
+            /* padding-left: 15px; */
+            padding: 15px;
+        }
+
+        .modifyboard #modimodal .modiheaderline {
+            position: relative;
+            padding-top: 0;
+            width: 100%;
+            height: 30px;
+            background: rgb(87, 87, 87);
+        }
+
+        .modifyboard #modimodal .modimodal_content {
+            position: relative;
+            width: 300px;
+            margin: 100px auto;
+            background: #fff;
+            border: 2px solid #666;
+            text-align: center;
+        }
+
+        .modifyboard #modimodal .modimodal_body {
+            padding: 10px 10px;
+        }
+
+        .modifyboard #modimodal .modimodal_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .modifyboard #modimodal button {
+            display: inline-block;
+            width: 100px;
+            padding: 5px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        //파일
+        function chk_file_type(obj) {
+            var file_kind = obj.value.lastIndexOf('.');
+            var file_name = obj.value.substring(file_kind + 1, obj.length);
+            var file_type = file_name.toLowerCase();
+            var check_file_type = ['jpg', 'gif', 'png', 'jpeg', 'bmp'];
+            if (check_file_type.indexOf(file_type) == -1) {
+                alert('이미지 파일만 선택할 수 있습니다.');
+                var $modFileInputObj = $("#mod_file_input");//<input type="file">
+                var $modFileInfoOjb = $("span[id=mod_file_info]");
+                $modFileInfoOjb.html(" ");
+                $modFileInputObj.val('');
+            }
+        };
+        $(function () {
+            $(".header").load("headernmenu.html");
+            //파일
+            var $modFileInputObj = $("#mod_file_input");//<input type="file">
+            var $modFileInfoOjb = $("span[id=mod_file_info]");
+            var $modFileCancelBtn = $("#mod_file_cancel");
+
+            //파일 업로드 라벨 클릭
+            $("#mod_file_btn").click(function () {
+                $modFileInputObj.change(function () {
+                    //선택한 파일이 바뀔때
+                    var $fileVal = $modFileInputObj[0].files[0].name;
+                    $modFileInfoOjb.html($fileVal);
+                });
+            });
+            //선택파일 취소 
+                $modFileCancelBtn.click(function () {
+                $modFileInfoOjb.html(" ");
+                $modFileInputObj.val('');
+            });
+            
+            var board_id = sessionStorage.getItem("board_id");
+
+            //수정할 게시글 번호의 내용 보여주기 
+            $.ajax({
+                url: "./boarddetail",
+                method: "post",
+                data: { "board_id": board_id },
+                success: function (data) {
+                    $("div.div_inline>input#subtitle").val(data.board_subtitle);
+                    $("div.div_inline>input#title").val(data.board_title);
+                    $("span#mod_file_info").html(data.board_file);
+                    $("div.board_content>textarea#write").val(data.board_content);
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.status);
+                }
+            });
+
+            //등록버튼  클릭이벤트
+            var $modicloseBtn = $("div.modimodal_body>button#modimodal_close_btn");
+            var $modicheckBtn = $("div.modimodal_body>button#modimodal_check_btn");
+            var $postBtn = $(".modi_post");
+
+            $postBtn.click(function () {
+                var $subtitleObj = $("#subtitle").val();
+                var $titleObj = $("#title").val();
+                var $contentObj = $("#write").val();
+
+                if ($subtitleObj == "") {
+                    $modicheckBtn.attr("style", "display:none");
+                    $("div.modimodal_body>p").html("소제목을 입력하세요.");
+                    $modicloseBtn.html("확인");
+
+                    $("#modimodal").attr("style", "display:block");
+                    $modicloseBtn.click(function () {
+                        $("#modimodal").attr("style", "display:none");
+                        $("#subtitle").focus();
+                        $modicheckBtn.attr("display", "inline-block");
+                        return false;
+                    });
+
+                } else if ($titleObj == "") {
+                    $checkBtn.attr("style", "display:none");
+                    $("div.modimodal_body>p").html("제목을 입력하세요.");
+                    $modicloseBtn.html("확인");
+
+                    $("#modimodal").attr("style", "display:block");
+                    $modicloseBtn.click(function () {
+                        $("#modimodal").attr("style", "display:none");
+                        $("#title").focus();
+                        $checkBtn.attr("display", "inline-block");
+                        return false;
+                    });
+
+                } else if ($contentObj == "") {
+                    $modicheckBtn.attr("style", "display:none");
+                    $("div.modimodal_body>p").html("내용을 입력하세요.");
+                    $modicloseBtn.html("확인");
+
+                    $("#modimodal").attr("style", "display:block");
+                    $modicloseBtn.click(function () {
+                        $("#modimodal").attr("style", "display:none");
+                        $("#write").focus();
+                        $modicheckBtn.attr("display", "inline-block");
+                        return false;
+                    });
+                }
+                if ($subtitleObj && $titleObj && $contentObj != "") {
+                    $modicheckBtn.attr("style", "display:inline-block");
+                    $modicheckBtn.html("확인");
+                    $modicloseBtn.html("취소");
+
+                    $("#modimodal").attr("style", "display:block");
+                    $("div.modimodal_body>p").html("수정하시겠습니까?");
+                    $modicheckBtn.click(function () {
+                        $("#modimodal").attr("style", "display:none");
+                        var boardForm = $("div.user_board>form.board_form")[0];
+                        var formData = new FormData(boardForm);
+                        $.ajax({
+                            url: "./modboard",
+                            method: "post",
+                            success: function (responseObj) {
+                                location.href = 'boarddetail.html'
+                            },
+                            error: function (jqXHR) {
+                                console.log(jqXHR.status);
+                            },
+                            enctype: 'multipart/form-data',
+                            contentType: false,
+                            processData: false,
+                            data:formData
+                        });
+                        return false;
+                    });
+                    $modicloseBtn.click(function () {
+                        $("#modimodal").attr("style", "display:none");
+                        return false;
+                    });
+                }
+                return false;
+            });
+
+            //취소버튼 클릭이벤트 -> 
+            $("div.board_header>div.div_inline>button[type=button]").click(function () {
+                $("#modimodal").attr("style", "display:block");
+                $modicheckBtn.css("width", "140px");
+                $modicheckBtn.html("게시글로 가기");
+                $("div.modimodal_body>p").html("취소하시겠습니까?");
+
+                $modicheckBtn.click(function () {
+                    $("#modimodal").attr("style", "display:none");
+                    location.href = 'boarddetail.html';
+                    return false;
+                });
+                $modicloseBtn.click(function () {
+                    $("#modimodal").attr("style", "display:none");
+                    return false;
+                });
+                return false;
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div class="header"></div>
+    <div class="modifyboard">
+        <div id="modimodal">
+            <div class="modimodal_content">
+                <div class="modiheaderline"></div>
+                <div class="modimodal_body">
+                    <p></p>
+                    <button type="button" id="modimodal_check_btn">확인</button>
+                    <button type="button" id="modimodal_close_btn">취소</button>
+                </div>
+            </div>
+            <div class="modimodal_layer"></div>
+        </div>
+        <div class="user_board">
+            <form method="post" class="board_form" enctype="multipart/form-data">
+                <!-- <input type="hidden" name="board_id"> -->
+                <div class="board_header">
+                    <h1>자유게시판</h1>
+                    <div class="div_inline">
+                        <button type="submit" class="modi_post">수정</button>
+                        <button type="button" class="cancel">취소</button>
+                    </div>
+                </div>
+
+                <div class="board_border">
+                    <div class="subtitle_title">
+                        <div class="div_inline">
+                            <input type="text" name="subtitle" placeholder="[소제목]" id="subtitle">
+                        </div>
+                        <span>|</span>
+                        <div class="div_inline">
+                            <input type="text" name="title" placeholder="제목을 입력하세요." id="title">
+                        </div>
+                    </div>
+                    <hr class="boardwrite_hr">
+                    <div class="upload">
+                        <h4>파일첨부</h4>
+                        <span id="mod_file_info"></span>
+                        <i class="fas fa-times" id="mod_file_cancel"></i>
+                        <div class="div_inline">
+                            <label for="mod_file_input" id="mod_file_btn">파일선택</label>
+                            <input type="file" name="board_file" id="mod_file_input" onchange='chk_file_type(this)'>
+                            <button type="submit" id="mod_file_submit">파일업로드</button>
+                        </div>
+                    </div>
+                    <hr class="boardwrite_hr">
+                    <div class="board_content">
+                        <textarea placeholder="내용을 입력하세요." name="board_content" id="write"></textarea>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+        <div style="height: 50px;"></div>
+    </div>
+
+</body>
+
+</html>

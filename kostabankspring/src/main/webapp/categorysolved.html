@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .category_solved{
+            box-sizing: border-box;
+            height: 445px;
+            width: 75%;
+            overflow-y: auto;
+            display: inline-block;
+        }
+        .category_solved::-webkit-scrollbar {
+            width: 10px;
+        }
+        .category_solved::-webkit-scrollbar-thumb {
+            background-color: #2f3542;
+            border-radius: 10px;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+        .category_solved::-webkit-scrollbar-track {
+            background-color: grey;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 5px white;
+        }
+        .category_solved>.solved_question{
+            box-sizing: border-box;
+            height: auto;
+            width: 100%;
+            padding: 15px;
+        }
+        .category_solved>.solved_question>.legend{
+            box-sizing: border-box;
+            position: relative;
+            top: 75px;
+            left: 20px;
+            width: 70px;
+            height: 20px;
+            text-align: center;
+            background-color: white;
+            font-weight: bold;
+            font-size: x-large;
+        }
+        .category_solved>.solved_question>.solved_info{
+            width:100%; height: 70px;box-sizing: border-box;
+        }
+        .solved_info>.solved_info_detail{
+            width: 70%;
+            height: 70px;
+            box-sizing: border-box;
+            padding: 20px 0 20px 10px;
+            float: left;
+            font-weight: bold;
+        }
+        .solved_info>.solved_info_detail>.answer_percent{
+            height: 70px;
+            box-sizing: border-box;
+            padding: 20px 0 20px 10px;
+            margin-left: 10px;
+            font-size: small;
+            font-weight: normal;
+        }
+        .solved_info>.answer{
+            width: 10%;
+            height: 70px;
+            box-sizing: border-box;
+            float: left;
+            border: 3px solid;
+            border-bottom: 0;
+        }
+        .solved_info>.answer>div:nth-child(1){
+            box-sizing: border-box;
+            width: 100%;
+            height: 35%;
+            text-align: center;
+            border-bottom: 3px solid;
+        }
+        .solved_info>.answer>div:nth-child(2){
+            box-sizing: border-box;
+            width: 100%;
+            height: 65%;
+            text-align: center;
+            font-size: 40px;
+        }
+        .solved_info>.solved_info_note{
+            width: 10%;
+            height: 70px;
+            box-sizing: border-box;
+            float: left;
+            border: 3px solid;
+            border-bottom: 0;
+            border-left: 0;
+        }
+        .solved_info>.solved_info_note>div:nth-child(1){
+            box-sizing: border-box;
+            width: 100%;
+            height: 35%;
+            text-align: center;
+            border-bottom: 3px solid;
+        }
+        .solved_info>.solved_info_note>div:nth-child(2){
+            box-sizing: border-box;
+            width: 100%;
+            height: 65%;
+            text-align: center;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .solved_info>.solved_info_ox{
+            width: 10%;
+            height: 70px;
+            box-sizing: border-box;
+            float: left;
+            border: 3px solid black;
+            border-bottom-width: 0;
+            border-left-width: 0;
+            text-align: center;
+            font-size: 60px;
+            color: green;
+        }
+
+        .category_solved>.solved_question>.solved_content{
+            width:100%; height: auto; box-sizing: border-box; border: 3px solid; padding: 10px;
+        }
+        .send_note {
+            box-sizing: border-box;
+            width: 25%;
+            height: 445px;
+            float: right;
+        }
+        .send_note>.send_list{
+            height: 80%;
+            box-sizing: border-box;
+            font-size: small;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .send_list::-webkit-scrollbar {
+            width: 10px;
+        }
+        .send_list::-webkit-scrollbar-thumb {
+            background-color: #2f3542;
+            border-radius: 10px;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+        .send_list::-webkit-scrollbar-track {
+            background-color: grey;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 5px white;
+        }
+        .send_note>.send_list>div{
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            font-weight: bold;
+        }
+        .send_note>.send_list>div>.list_x{
+            float: right;
+            margin-right: 50px;
+            cursor: pointer;
+        }
+        .send_note>.btn_area{
+            box-sizing: border-box;
+            width: 100%;
+            height: 20%;
+        }
+        .send_note>.btn_area>.btn_complete{
+            position: relative;
+            top: 15px;
+            left: 45px;
+            width: 100px;
+            padding: 10px;
+            text-align: center;
+            font-size: large;
+            border: 2px solid;
+            cursor: pointer;
+        }
+    </style>
+<script>
+    $(function () {
+        sessionStorage.clear();
+        let solvedPromise = $.ajax({
+            url: './solved',
+            method: 'post',
+            success(data) {
+                let str='';
+                for(let i=0;i<data.length;i++)
+                {
+                    let question_ox;
+                    if(data[i].question_ox === 1){
+                        question_ox = 'O';
+                    }else {
+                        question_ox = 'X'
+                    }
+                        str +=('<div class="solved_question">'+
+                            '<div class="legend">문 제</div>'+
+                        '<div class="solved_info">'+
+                            '<div class="solved_info_detail">' +data[i].question_id.substr(0, 4) + "년 " + data[i].question_id.substr(5, 1) + "회 정보처리기사 " + data[i].question_id.substr(7, 1) + "과목 " + data[i].question_id.substr(8, 2) + "번"+
+                            '<span class="answer_percent">(정답률: ' + data[i].correct_percent + '%)</span>'+
+                        '</div>'+
+                        '<div class="answer">'+
+                            '<div>정 답</div>'+
+                        '<div>'+data[i].correct_answer+'</div>'+
+                        '</div>'+
+                        '<div class="solved_info_note">'+
+                            '<div>내 노트</div>'+
+                        '<div class="'+data[i].question_id+'">'+data[i].mn_V+'</div>'+
+                        '</div>'+
+                        '<div class="solved_info_ox">'+question_ox+'</div>'+
+                            '</div>'+
+                            '<div class="solved_content"><img class="question" src="./images/question/'+data[i].content+'.PNG" alt="문제">'+
+                            '<img class="explanation" src="./images/question/'+data[i].explanation+'.PNG" alt="해설"></div>'+
+                            '</div>');
+                }
+                $('.category_solved').html(str);
+            }
+        });
+        solvedPromise.done(afterSolvedPromise);
+        function afterSolvedPromise() {
+            let $ox = $('.solved_info>.solved_info_ox');
+            $ox.each(function (index, element) {
+                if ($(element).text() === 'X') {
+                    $(element).css("color", "red");
+                }
+            });
+            let $mn = $('.solved_info_note>div:nth-child(2)');
+            $mn.each(function (index, element) {
+                if ($(element).text() === 'V') {
+                    $(element).css({"background-color": "silver", "cursor": "default"});
+                }
+            });
+            $mn.click(function (event) {
+                let question_list = [];
+                if (sessionStorage.getItem("question_list") !== null) {
+                    question_list = JSON.parse(sessionStorage.getItem("question_list"));
+                }
+                // let question_id = $(event.target).closest('.solved_info').find('.solved_question_id').text();
+                let question_id = $(event.target).attr('class');
+                if ($(event.target).text() === 'V' && $(event.target).css("background-color") !== 'rgb(192, 192, 192)') {
+                    question_list.splice(question_list.indexOf(question_id), 1);
+                    sessionStorage.setItem("question_list", JSON.stringify(question_list));
+                    $('.' + question_id + '').html('');
+                    $('.' + question_id + '').css('padding', '0');
+                } else if ($(event.target).text() === '' && $(event.target).css("background-color") !== 'rgb(192, 192, 192)') {
+                    $(event.target).html('V');
+                    let listElement = '<div class="' + question_id + '">' + question_id.substr(0, 4) + '년 ' + question_id.substr(5, 1) + '회 정보처리기사 <br>' + question_id.substr(7, 1) + '과목 ' + question_id.substr(8, 2) + '번 <span class="list_x">X</span></div>';
+                    $('.send_list').append(listElement);
+                    question_list.push(question_id);
+                    sessionStorage.setItem("question_list", JSON.stringify(question_list));
+                }
+            });
+
+        }
+            $(document).on('click','.send_list>div>span',function (event) {
+                let question_list = JSON.parse(sessionStorage.getItem("question_list"));
+                // $(event.target).closest('.send_list>div').find('.solved_question_id').text();
+                let question_id = $(event.target).closest('.send_list>div').attr('class');
+                question_list.splice(question_list.indexOf(question_id), 1);
+                sessionStorage.setItem("question_list", JSON.stringify(question_list));
+                $('.' + question_id + '').html('');
+                $('.' + question_id + '').css('padding', '0');
+            });
+
+        $('.btn_complete').click(function () {
+            let question_list =JSON.parse(sessionStorage.getItem("question_list"));
+            $.ajax({
+                url: './addmn',
+                method: 'post',
+                data: {'question_id_list':question_list},
+                traditional: true,
+                success(data){
+                    if(data.status === 1){
+                        $(".mycategory_contents").load("/kostabank/categorysolved.html");
+                        sessionStorage.clear();
+                    }
+                    else if (data.status !== -1){
+                        console.log(data.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
+</head>
+<body>
+<div class="category_solved">
+    <div class="solved_question">
+        <div class="legend">문 제</div>
+        <div class="solved_info">
+            <div class="solved_info_detail">2020년 1회 정보처리기사 1과목 19번
+                <span class="answer_percent">(정답률: 37%)</span>
+            </div>
+            <div class="answer">
+                <div>정 답</div>
+                <div>4</div>
+            </div>
+            <div class="solved_info_note">
+                <div>내 노트</div>
+                <div>V</div>
+            </div>
+            <div class="solved_info_ox">O</div>
+        </div>
+        <div class="solved_content"><img class="question" alt="문제">
+            <img class="explanation" alt="해설"></div>
+    </div>
+</div>
+<div class="send_note">
+    <div class="send_list">
+    </div>
+    <div class="btn_area">
+        <div class="btn_complete">완 료</div>
+    </div>
+</div>
+</body>
+</html>

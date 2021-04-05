@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>KostaBank</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./headerstyle.css">
+	<link rel="shortcut icon" href="./images/logo.png">
+<style>
+.signup {
+	width: 900px;
+	height: 100%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.signup-box {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	padding: 10px 20px;
+	border: 2px solid rgb(82, 82, 82);
+	border-radius: 5%;
+}
+
+.signup h1 {
+	font-size :30px;
+	margin: 20px auto;
+	color: rgb(82, 82, 82);
+	user-select: none;
+}
+
+.signup .signup-box div {
+	margin: 10px;
+}
+
+.signup .signup-box div input[type=text], .signup .signup-box div input[type=password]
+	{
+	background-color: rgba(180, 180, 180, 0.3);
+	border: none;
+	width: 450px;
+	height: 40px;
+	padding-left: 7px;
+	margin: 5px;
+}
+
+.signup-box span {
+	display: block;
+	font-size: 14px;
+	margin: 5px 20px 5px 5px;
+	right: 60px;
+}
+
+.signup-box input[type=text], .signup-box input[type=password] {
+	margin-left: 8px;
+	padding: 5px;
+	border: none;
+	width: 100%;
+	background: gray;
+	outline: none;
+	font-size: 15px;
+}
+
+.signup-box input[type=submit], .signup-box button {
+	margin-left: 8px;
+	padding: 5px;
+	border: none;
+	border-radius: 10px;
+	width: 90px;
+	height: 40px;
+	background: rgb(116, 116, 116);
+	color: white;
+	outline: none;
+	font-size: 15px;
+	cursor :pointer;
+}
+
+
+.btnarea {
+	display: flex;
+	width: 200px;
+}
+
+#email_modal {
+	display: none;
+	font-size: 20px;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+input#modal_check_btn {
+    margin: 5px 5px 5px 240px;
+}
+
+#email_modal .modalbody {
+	padding: 10px 35px 10px 35px;
+}
+
+#email_modal .headerline {
+	margin: 0;
+	width: 100%;
+	height: 30px;
+	background: rgb(87, 87, 87);
+}
+
+#email_modal .modal_content {
+	height: 200px;
+	width: 400px;
+	margin: -300px auto;
+	background: #fff;
+	border: 2px solid #666;
+}
+
+#email_modal .modal_layer {
+	position: fixed;
+	top: -10px;
+	left: -10px;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: -1;
+}
+
+#email_modal .headerline button#modal_close_btn {
+    width: 35px;
+    background: none;
+    padding: 0;
+    height: 30px;
+}
+</style>
+<script>
+	var idValue = false;
+	var nickValue = false;
+	var pwdValue = false;
+	var pwdchkValue = false;
+	var emailValue = false;
+	
+        $(function () {
+            //회원가입 유효성 검사
+        	var idChk = RegExp(/^[a-zA-Z0-9]{7,15}$/);        	
+        	var user_id = $('.user_id');
+        	user_id.blur(function(event){
+        		$.ajax({
+        			url:'./iddupchk',
+        			method: 'post',
+        			data : {"user_id": $('.idForm>label>.user_id').val()},
+        			success(data){
+        				console.log(data);
+        				if(data.status == -1){
+        					$('.id_error_box').show();
+        					$('.id_error_box').html("사용중인 아이디입니다");
+        					$('.id_error_box').css("color","red");
+        					idValue = false;
+        				}else{
+        					if((user_id.val()).length == 0){
+        	        			$('.id_error_box').show();
+        	        			$('.id_error_box').html("필수 정보입니다");	
+        	        			$('.id_error_box').css("color","red");
+        	        			idValue = false;
+        	        		} else if(!(idChk.test(user_id.val()))){
+        	        			$('.id_error_box').show();
+        	        			$('.id_error_box').html("7~15자의 영문 소문자와 숫자로만 입력되어야 합니다.");
+        	        			$('.id_error_box').css("color","red");
+        	        			idValue = false;
+        	        		} else {
+        	        			$('.id_error_box').show();	 
+        	        			$('.id_error_box').html("멋진 아이디 입니다!");	
+	        					$('.id_error_box').css("color","green");
+	        					idValue = true;
+        	        		}
+        				}
+        			}
+        		});
+        		return false;
+        		
+        	});
+        	
+        	var nickChk = RegExp(/^[가-힣a-zA-Z0-9]{4,15}$/);        	
+        	var user_nickname = $('.user_nickname');
+        	user_nickname.blur(function(event){
+        		$.ajax({
+                    url: './nickdupchk',
+                    method: 'post',
+                    data: {"user_nickname": $('.nicknameForm>label>.user_nickname').val()},
+                    success(data){
+        				console.log(data);
+        				if(data.status == -1){
+        					$('.nick_error_box').show();
+        					$('.nick_error_box').html("사용중인 닉네임입니다");
+        					$('.nick_error_box').css("color","red");
+        					nickValue = false;
+        				} else{
+        					if((user_nickname.val()).length == 0){
+        	        			$('.nick_error_box').show();
+        	        			$('.nick_error_box').html("필수 정보입니다");
+        	        			$('.nick_error_box').css("color","red");
+        	        			nickValue = false;
+        	        		} else if(!(nickChk.test(user_nickname.val()))){
+        	        			$('.nick_error_box').show();
+        	        			$('.nick_error_box').html("4~15자의 한글, 영어, 숫자만 입력가능합니다.");
+        	        			$('.nick_error_box').css("color","red");
+        	        			nickValue = false;
+        	        		} else {
+        	        			$('.nick_error_box').show();
+        	        			$('.nick_error_box').html("멋진 닉네임 입니다!");	
+        	        			$('.nick_error_box').css("color","green");
+        	        			nickValue = true;
+        	        		}
+        				}
+                    }
+                });
+        		
+        	});
+        	
+        	var pwdChk = RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!#^*-_?]).{8,16}$/);      	
+        	var user_pwd = $('.user_pwd');
+        	user_pwd.blur(function(event){
+        		if((user_pwd.val()).length == 0){
+        			$('.pwd_error_box').show();
+        			$('.pwd_error_box').html("필수 정보입니다");	
+        			$('.pwd_error_box').css("color","red");
+        			pwdValue = false;
+        		} else if(!(pwdChk.test(user_pwd.val()))){
+        			$('.pwd_error_box').show();
+        			$('.pwd_error_box').html("8~16자 영문 대 소문자, 숫자, 특수문자(!, #, ^, *, -, _, ?)를 하나이상씩 포함하세요.");
+        			$('.pwd_error_box').css("color","red");
+        			pwdValue = false;
+        		} else {
+        			$('.pwd_error_box').show();
+        			$('.pwd_error_box').html("멋진 패스워드 입니다!");
+        			$('.pwd_error_box').css("color","green");
+        			pwdValue = true;
+        		}
+        	});
+        	     	
+        	var chkpwd = $('.chkpwd');
+        	chkpwd.blur(function(event){
+        		if((chkpwd.val()).length == 0){
+        			$('.chkpwd_error_box').show();
+        			$('.chkpwd_error_box').html("필수 정보입니다");
+        			$('.chkpwd_error_box').css("color","red");
+        			pwdchkValue = false;
+        		} else if(chkpwd.val()!=user_pwd.val()){
+        			$('.chkpwd_error_box').show();
+        			$('.chkpwd_error_box').html("비밀번호가 일치하지 않습니다");
+        			$('.chkpwd_error_box').css("color","red");
+        			pwdchkValue = false;
+        		} else {
+        			$('.chkpwd_error_box').show();
+        			$('.chkpwd_error_box').html("정확히 일치합니다");
+        			$('.chkpwd_error_box').css("color","green");
+        			pwdchkValue = true;
+        		}
+        	});
+        	
+        	var emailChk = RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+        	var user_email = $('.user_email');
+        	user_email.blur(function(event){
+                   $.ajax({
+                       url: './emaildupchk',
+                       method: 'post',
+                       data: {"user_email": $('.emailForm>label>.user_email').val()},
+                        success(data){
+                       	if(data.status ==-1){
+                        	$('.email_error_box').show();
+        					$('.email_error_box').html("사용중인 이메일입니다");
+        					$('.email_error_box').css("color","red");
+        					emailValue = false;
+                       	}else {
+                       		if((user_email.val()).length == 0){
+           	        			$('.email_error_box').show();
+           	        			$('.email_error_box').html("필수 정보입니다");	  
+           	        			$('.email_error_box').css("color","red");
+           	        			emailValue = false;
+           	        		} else if(!(emailChk.test(user_email.val()))){
+           	        			$('.email_error_box').show();
+           	        			$('.email_error_box').html("양식(example@naver.com)에 맞게 입력하세요.");
+           	        			$('.email_error_box').css("color","red");
+           	        			emailValue = false;
+           	        		} else {
+           	        			$('.email_error_box').hide();
+           	        		}
+                       	}	      
+                       }
+                   });	        		
+        	});
+        	
+        	$('.emailForm>label>input[type=submit]').click(function () {	                
+           		if((user_email.val()).length == 0){
+        			alert("이메일을 입력해주세요.");
+        		} else if(!(emailChk.test(user_email.val()))){
+        			alert("양식에 맞게 입력해주세요.");
+        		} else {
+        			$.ajax({
+                       url: './emaildupchk',
+                       method: 'post',
+                       data: {"user_email": $('.emailForm>label>.user_email').val()},
+                       success(data){
+                    	   if(data.status == -1){
+                    		   alert("이미 가입된 이메일입니다. 다른 이메일을 입력해주세요.");
+                    		   emailValue = false;
+                    	   } else {
+	                    		$.ajax({
+	     		                   url: './addemail',
+	     		                   method: 'post',
+	     		                   data: {"email": $('.emailForm>label>.user_email').val()},
+	     		                   success(data){
+	     		                   		if(data.status == 1){
+	     	                            	$("#email_modal").attr("style", "display:block");
+											emailValue = true;
+	     		                   		} else {
+	     		                    		$("#email_modal").attr("style", "display:block");
+	     	        						alert(data.msg);
+	     		                    	}
+	     		                    }
+	                    		});
+	                    		return false;
+                    	   }
+                       }
+        			});
+        			return false;
+        		}
+        	});
+            
+        	$('.modalbody>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './chknumchk',
+                    method: 'post',
+                    data: {"email": $('.emailForm>label>.user_email').val(),
+                        "check_number": $('.modalbody>label>.emailchknum').val()},
+                    success(data){
+                       	if(data.status == -1){
+                       		alert("인증번호가 다릅니다.");
+                       	} else if(data.status == -2){
+                       		alert("5분이 지났습니다. 다시 인증해 주십시오.");
+                       	} else {
+                       		$("#email_modal").attr("style", "display:none");
+                       		$(".emailForm>label>.user_email").attr("disabled", true);
+							$('.email_error_box').show();
+							$('.email_error_box').html("인증이 완료되었습니다");
+							$('.email_error_box').css("color","green");
+							
+							$('.emailForm>label>#modal_open_btn').attr("disabled", true);
+                       	}
+                    }
+                });
+                return false;
+            });
+        	
+        	$('.btnarea>#signupbtn').click(function () {
+	        	if(idValue == true && nickValue == true && pwdValue == true && pwdchkValue ==true && emailValue ==true ){       	 
+   	        		$.ajax({
+   		                url: './adduser',
+   		                method: 'post',
+   		                data: {"user_id": $('.idForm>label>.user_id').val(),
+   		                    "user_nickname": $('.nicknameForm>label>.user_nickname').val(),
+   		                    "user_pwd": $('.pwdForm>label>.user_pwd').val(),
+   		                    "user_email": $('.emailForm>label>.user_email').val()},
+   		                success(data){
+   							if(data.status == 1){
+   								alert("가입이 완료되었습니다");
+   								location.href='testlist.html';
+   							}
+   							else{
+   								alert(data.msg);
+   							}
+   	             		}
+   		            });
+   		        	return false;
+	        	} else {
+	               	alert("입력하신 정보를 다시 확인해 주세요.");
+	            }
+           	 });
+       	}); 
+        </script>
+
+</head>
+<body>
+<div class="header" style="width:100%; height: 200px; text-align: center">
+	<img src="./images/logo.png" alt="로고" style="width: 200px; height: 152px; padding-top: 30px; margin: 0 auto;">
+</div>
+
+<div class="signup">
+	<h1>회원가입</h1>
+		<div class="signup-box">
+			<div class="idForm">
+				<label>아이디<br> <input type="text" class="user_id"
+					maxlength="15"></label><br> <span class="id_error_box"
+					id="idMsg" style="display: none;"></span>
+			</div>
+			<div class="nicknameForm">
+				<label>닉네임<br> <input type="text" class="user_nickname"></label><br>
+				<span class="nick_error_box" id="nickMsg" style="display: none"></span>
+			</div>
+			<div class="pwdForm">
+				<label>비밀번호<br> <input type="password" class="user_pwd"></label><br>
+				<span class="pwd_error_box" id="pwdMsg" style="display: none"></span>
+			</div>
+			<div class="chkPwdForm">
+				<label>비밀번호 확인<br> <input type="password"
+					class="chkpwd"></label><br> <span class="chkpwd_error_box"
+					id="chpwdMsg" style="display: none"></span>
+			</div>
+			<div class="emailForm">
+				<label>이메일<br> <input type="text" class="user_email"
+					style="width: 346px"> <input type="submit"
+					id="modal_open_btn" value="인증번호 받기"></label><br> <span
+					class="email_error_box" id="emailMsg" style="display: none"></span><br>
+			</div>
+			<div id="email_modal">
+				<div class="modal_content">
+					<div class="headerline" style="text-align: right;">
+						<button type="button" id="modal_close_btn">
+							<i class="fas fa-times" id="cancel"></i>
+						</button>
+					</div>
+					<div class="modalbody">
+						<label>이메일로 확인된 인증번호를 입력해주세요<br>
+						<input type="text" class="emailchknum" style="width: 290px"></label>
+						<input type="submit" id="modal_check_btn" value="확인">
+	
+					</div>
+				</div>
+				<div class="modal_layer"></div>
+			</div>
+			<script>
+				$('#modal_close_btn').click(function(){
+					$("#email_modal").attr("style", "display:none");
+				});
+			</script>
+			<div class="btnarea">
+				<input type="submit" id = "signupbtn" value="가입">
+				<button type="button" id ="cancel_signup">취소</button>
+			</div>
+			<script>
+				//취소버튼
+				$('#cancel_signup').click(function(){
+					location.href='login.html';
+				});
+			</script>
+		</div>
+	<div style="height: 50px;"></div>
+	</div>
+</body>
+</html>

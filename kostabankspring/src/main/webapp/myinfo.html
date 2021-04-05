@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KostaBank</title>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <script>
+
+    </script>
+    <style>
+        .menu_logo_alert>div.menu>img:hover{
+            cursor: pointer;
+        }
+        .menu_logo_alert>div.alert>img:hover{
+            cursor: pointer;
+        }
+        .myinfo>div.mainbox{
+            box-sizing: border-box;
+            width: 900px;
+            height: auto;
+            min-height: 500px;
+            padding: 0;
+            margin: 0 auto 50px auto;
+            /*background-image: url("./images/내메뉴큰.png");*/
+            /*background-size: 900px 100%;*/
+            /*background-repeat: no-repeat;*/
+            border: 5px solid;
+        }
+        .mainbox>div.category{
+            width: 100.2%;
+            margin: 0;
+            height: 50px;
+        }
+        .category>div{
+            box-sizing: border-box;
+            width: 25%;
+            height: 100%;
+            padding: 10px;
+            margin: 0;
+            border-right: 3px solid;
+            border-bottom: 3px solid;
+            text-align: center;
+            font-weight: bold;
+            font-size: large;
+            /*font-family: "Arial Narrow",monospace;*/
+            float: left;
+        }
+        .category>div:hover{
+            color: burlywood;
+            cursor: pointer;
+            transition: all .6s ease;
+            border-color: black;
+        }
+        .category>div.categoryinfo{
+            border-bottom: 0;
+        }
+        .mycategory_contents{
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            border: 0;
+        }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    	
+    	
+    
+        $(function () {
+        	$(".header").load("headernmenu.html");
+            let $categoryObj = $(".category>div");
+                $categoryObj.click(function (event) {
+                    $(".mycategory_contents").css({"min-height":"445ox", "height":"auto"});
+
+                    $categoryObj.css({"color":"black","border-bottom":"3px solid black"});
+                    $(event.target).css({"color":"burlywood","border-bottom": "0","border-color":"black"});
+                    let $category = $(event.target).attr("class");
+                    $(".mycategory_contents").load($category+".html");
+                });
+            $(".mainbox>.category>.categoryinfo").trigger("click");
+        });
+
+    </script>
+</head>
+<body>
+<div class = "header">
+</div>
+<div class="myinfo">
+    <div class="mainbox">
+        <div class="category">
+            <div class="categoryinfo">
+                내 정보
+            </div>
+            <div class="categorynote">
+                내 노트
+            </div>
+            <div class="categorysolved">
+                내가 푼 문제
+            </div>
+            <div class="categoryquestion" style="border-right:transparent">
+                1:1 문의
+            </div>
+        </div>
+        <div class="mycategory_contents">
+        </div>
+    </div>
+</div>
+</body>
+</html>

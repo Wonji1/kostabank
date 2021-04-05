@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+    <style>
+        #modal {
+            /* position: relative; */
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            /*------------*/
+
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            top: 0px;
+        }
+
+        #modal button {
+            display: inline-block;
+            width: 100px;
+            /* margin-left: 25px; */
+        }
+
+        #modal .headerline {
+            padding-top: 0;
+            width: 100%;
+            height: 30px;
+            background: rgb(87, 87, 87);
+        }
+
+        #modal .qa {
+            width: 900px;
+            height: 600px;
+            margin: 100px auto;
+            background: #fff;
+            border: 2px solid #666;
+        }
+
+        #modal .qa_header {
+            padding: 30px 30px;
+            /* top: 20px;
+               left:20px;
+               position: fixed; */
+        }
+
+        #modal .modal_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            /*------------*/
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+
+        }
+
+        #modal_close_btn>button {
+            margin-left: 8px;
+            padding: 5px;
+            width: 130px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+        }
+
+        #modal_open_btn {
+            position: fixed;
+            top: 0;
+            right: 0;
+            color: red;
+        }
+
+        .qa::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .qa::-webkit-scrollbar-thumb {
+            background-color: #2f3542;
+            border-radius: 10px;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+
+        .qa::-webkit-scrollbar-track {
+            background-color: grey;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 5px white;
+        }
+
+        .mainbox {
+            width: 900px;
+            height: 500px;
+            margin: 50px auto;
+            /* border-radius: 20px; */
+            /* border: 5px solid black; */
+            box-sizing: border-box;
+        }
+
+        .qa_list th {
+            padding: 6px 0 10px;
+            border-bottom: 1px solid black;
+            text-align: center;
+            background-color: gray;
+            color: white;
+        }
+
+        .qa_list td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        table th {
+            letter-spacing: -1px;
+            border-collapse: collapse;
+        }
+
+        th {
+            display: table-cell;
+            vertical-align: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+        }
+
+        .qa_image {
+            box-sizing: border-box;
+            height: auto;
+            width: 93%;
+            padding: 20px;
+            margin-left: 30px;
+            box-sizing: border-box;
+            border: 1px solid black;
+        }
+
+        .qaimg {
+            width: 50%;
+        }
+
+        .qa_list>.paging {
+            box-sizing: border-box;
+            height: 50px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .qa_list>.paging>span {
+            cursor: pointer;
+        }
+
+        .qa_list>.paging>div {
+            display: none;
+            cursor: pointer;
+        }
+
+        .qa_list table {
+            padding: 10px;
+        }
+
+        .qa_list a {
+            text-decoration: none;
+            color: black;
+        }
+
+        div.qa_header>h3 {
+            display: inline-block;
+            margin-top: 3px;
+            margin-left: 30px;
+        }
+
+        div.qasol_content {
+            margin-top: 20px;
+        }
+
+        div.qasol_content>form>#write {
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            min-height: 350px;
+            padding: 20px;
+            border: 1px solid;
+            resize: none;
+        }
+
+        div.detail_info {
+            width: 100%;
+            height: 20%;
+            margin: 10px auto;
+        }
+
+        div.flex_container {
+            display: flex;
+            margin: 0 0 5px 0;
+        }
+
+        div.flex_container>span {
+            display: flex;
+        }
+
+        div.flex_container>span.writer>h3,
+        div.flex_container>span.title>h3,
+        div.flex_container>span.wdate>h3 {
+            margin: 0 10px 0px 30px;
+        }
+
+        div.flex_container>span.writer>h3 {
+            flex: 0 0 50px;
+        }
+
+        div.flex_container>span.title>h3 {
+            flex: 0 0 50px;
+        }
+
+        div.flex_container>span.wdate>h3 {
+            flex: 0 0 50px;
+        }
+
+        div.qa_content {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        div.qasol_content {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        input.check {
+            float: right;
+        }
+
+        #articles .tit {
+            cursor: pointer;
+        }
+
+        #btn_save {
+            padding: 5px;
+            width: 70px;
+            height: 30px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            /* margin-right: 30px; */
+        }
+
+        #modal_close_btn {
+            padding: 5px;
+            width: 70px;
+            height: 30px;
+            border: none;
+            outline: 0;
+            border-radius: 15px;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            /* margin-left: 30px; */
+        }
+    </style>
+    <script>
+        //해당 제목 클릭시 신고처리
+        $(function () {
+            $(".header").load("headernmenu.html");
+
+            $('.delbtn').click(function () {
+                if (confirm("삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: "./removeqabylist",
+                        method: "post",
+                        data: { "qa_id_list": JSON.parse(sessionStorage.getItem("qa_id_list")) },
+                        traditional: true,
+                        dataType: "text",
+                        success: function () {
+                            sessionStorage.clear();
+                            location.reload();
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            });
+            $(document).on("click", "#articles .tit", function (event) {
+
+                //var qaId = 52;
+                var $tdObj = $(event.target).prev();
+                var qaId = $tdObj.html().trim();//<td>   52   </td> 공백제거
+                $.ajax({
+                    url: './qa',
+                    method: 'post',
+                    data: { "qa_id": qaId, "n": 0, "s": 1 },
+                    success(data) {//성공응답
+                        $(data).each(function (index, element) {
+                            $("#modal").show();
+                            $("div.user_id").html(element.user_nickname);
+                            $("div.title").html(element.qa_title);
+                            $("div.date").html(element.qa_wdate.substr(0, 10));
+                            if(element.qa_file !== null) {
+                                $('.qa_image').html('<img class="qaimg" alt="qaimg" src="' + "./qaupload/" + element.qa_id + '_' + element.qa_file + '">');
+                            }
+                            $('.qa_image').append('<div class="qa_content">'+element.qa_content+'<div>');
+                        });
+                        //등록버튼 이벤트
+                        //var $qaBtn = $("input#btn_save");
+                        $("input#btn_save").click(function () {
+                            var $contentObj = $("#write").val();
+
+                            if ($contentObj == "") {
+                                alert("답변을 입력해주세요.");
+                                $("#write").focus();
+                                return;
+                            } else {
+                                var qasolContent = $("#write").val();
+                                $.ajax({
+                                    url: './addqasol',
+                                    method: 'post',
+                                    data: { "qa_id": qaId, "content": qasolContent },
+                                    success(data) {
+                                        alert("등록되었습니다");
+                                        location.reload();
+                                    },
+                                    error: function (jqXHR) {//실패응답
+                                        console.log("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                                    }
+                                });
+                            }
+                            $.ajax({
+                                url: './qalist',
+                                method: 'post',
+                                data: { "page": 1, "num": 10 },
+                                success(data) {//성공응답
+                                },
+                                error: function (jqXHR) {//실패응답
+                                    console.log("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                                }
+                            });
+                        });
+                    },
+                    error: function (jqXHR) {//실패응답
+                        console.log("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                    }
+                });
+                //신고처리 버튼 닫을때
+                $("#modal_close_btn").click(function () {
+                    // $("#modal").attr("style", "display:none");
+                    $("#modal").hide();
+                });
+            });
+            //체크박스 선택 -> 글 삭제 
+
+            $(document).on("click", "#articles>tr>td>input", function (event) {
+                let qa_id_list = [];
+                let $idBox = $(event.target);
+                let qa_id = $idBox.attr('class');
+                if ($idBox.prop("checked")) {
+                    if (sessionStorage.getItem("qa_id_list") !== null) {
+                        qa_id_list = JSON.parse(sessionStorage.getItem("qa_id_list"));
+                    }
+                    qa_id_list.push(qa_id);
+                    sessionStorage.setItem("qa_id_list", JSON.stringify(qa_id_list));
+                }
+                else {
+                    qa_id_list = JSON.parse(sessionStorage.getItem("qa_id_list"));
+                    qa_id_list.splice(qa_id_list.indexOf(qa_id), 1);
+                    sessionStorage.setItem("qa_id_list", JSON.stringify(qa_id_list));
+                }
+            });
+            //페이징
+            $(function () {
+                sessionStorage.clear();
+                let $pagingNumber = $('.paging_number');
+                let num = sessionStorage.getItem("pagingNum");
+                if (num === null) {
+                    num = 1;
+                }
+                let promisePaging = $.ajax({
+                    url: './qalist',
+                    data: { "page": num, "num": 10 },
+                    method: 'post',
+                    success(data) {//성공응답
+                        $('.paging>div').css("display", "none");
+                        let tableObj = $('#articles');
+                        for (let i = 0; i < data.length; i++) {
+                            tableObj += `<tr><td class="chkbox"><input type="checkbox" name="checkRow" id="id_chkbox" class="${data[i].qa_id}"></td>`;
+                            tableObj += `<td class="qid">${data[i].qa_id}</td>`;
+                            tableObj += `<td class="tit" title="${data[i].qa_title}">${data[i].qa_title}</td>`;
+                            tableObj += `<td>${data[i].user_nickname}</td>`;
+                            tableObj += `<td>${data[i].qa_wdate.substring(0, 10)}</td>`;
+                            tableObj += `<td>${data[i].qa_status == 2 ? "해결" : "미해결"}</td>`;
+                            $('#articles').html(tableObj);
+                        }
+                        let str
+                            = "";
+                        let total = data[0].qa_total;
+                        let pagePerTen = Math.ceil(total / 10);//소수점 이하 올림
+                        let pageLast = pagePerTen % 10;
+                        if (pageLast === 0) {
+                            pageLast = 10;
+                        }
+                        let countTen;
+                        num = parseInt(num);
+                        if (num !== 1) {
+                            $('.paging>.prev').css("display", "inline-block");
+                        }
+                        if (num !== pagePerTen) {
+                            $('.paging>.next').css("display", "inline-block");
+                        }
+                        if (num >= 11) {
+                            $('.paging>.prevDouble').css("display", "inline-block");
+                        }
+                        if ((Math.ceil(pagePerTen / 10) - Math.ceil(num / 10)) >= 1) {
+                            $('.paging>.nextDouble').css("display", "inline-block");
+                        }
+                        countTen = Math.ceil(num / 10);
+                        if (countTen !== Math.ceil(pagePerTen / 10)) {
+                            for (let i = 1; i <= 10; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        }
+                        else {
+                            for (let i = 1; i <= pageLast; i++) {
+                                str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                            }
+                        }
+                        $pagingNumber.html(str);
+                        let p = 10;
+                        if (num % 10 !== 0) {
+                            p = num % 10;
+                        }
+                        $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                        sessionStorage.setItem("pagingNum", num);
+                    },
+                    error: function (jqXHR) {//실패응답
+                        console.log("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                    }
+                });
+                promisePaging.done(pagingFunc);
+                function pagingFunc() {
+                    $('.paging_number>span').click(function (event) {
+                        let num = parseInt($(event.target).text());
+                        promisePaging = $.ajax({
+                            url: './qalist',
+                            data: { "page": num, "num": 10 },
+                            method: 'post',
+                            success(data) {//성공응답
+                                $('.paging>div').css("display", "none");
+                                let tableObj = $('#articles');
+                                for (let i = 0; i < data.length; i++) {
+                                    tableObj += `<tr><td class="chkbox"><input type="checkbox" name="checkRow" class="${data[i].qa_id}"></td>`;
+                                    tableObj += `<td class="qid">${data[i].qa_id}</td>`;
+                                    tableObj += `<td class="tit" title="${data[i].qa_title}">${data[i].qa_title}</td>`;
+                                    tableObj += `<td>${data[i].user_nickname}</td>`;
+                                    tableObj += `<td>${data[i].qa_wdate.substring(0, 10)}</td>`;
+                                    tableObj += `<td>${data[i].qa_status == 2 ? "해결" : "미해결"}</td>`;
+                                    $('#articles').html(tableObj);
+                                }
+
+                                let str = "";
+                                let total = data[0].qa_total;
+                                let pagePerTen = Math.ceil(total / 10);//소수점 이하 올림
+                                let pageLast = pagePerTen % 10;
+                                if (pageLast === 0) {
+                                    pageLast = 10;
+                                }
+                                let countTen;
+                                num = parseInt(num);
+                                if (num !== 1) {
+                                    $('.paging>.prev').css("display", "inline-block");
+                                }
+                                if (num !== pagePerTen) {
+                                    $('.paging>.next').css("display", "inline-block");
+                                }
+                                if (num >= 11) {
+                                    $('.paging>.prevDouble').css("display", "inline-block");
+                                }
+                                if ((Math.ceil(pagePerTen / 10) - Math.ceil(num / 10)) >= 1) {
+                                    $('.paging>.nextDouble').css("display", "inline-block");
+                                }
+                                countTen = Math.ceil(num / 10);
+
+                                if (countTen !== Math.ceil(pagePerTen / 10)) {
+                                    for (let i = 1; i <= 10; i++) {
+                                        str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                    }
+                                } else {
+                                    for (let i = 1; i <= pageLast; i++) {
+                                        str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                    }
+                                }
+                                $pagingNumber.html(str);
+                                let p = 10;
+                                if (num % 10 !== 0) {
+                                    p = num % 10;
+                                }
+                                $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                                sessionStorage.setItem("pagingNum", num);
+                            }
+                        });
+                        promisePaging.done(pagingFunc);
+                    });
+                }
+                $('.paging>div').click(function (event) {
+                    let $clickBtn = $(event.target).attr('class');
+                    let n;
+                    switch ($clickBtn) {
+                        case 'prevDouble':
+                            n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10) - 2) * 10 + 1;
+                            break;
+                        case 'prev':
+                            n = parseInt(sessionStorage.getItem("pagingNum")) - 1;
+                            break;
+                        case 'next':
+                            n = parseInt(sessionStorage.getItem("pagingNum")) + 1;
+                            break;
+                        case 'nextDouble':
+                            n = (Math.ceil(sessionStorage.getItem("pagingNum") / 10)) * 10 + 1;
+                            break;
+                    }
+                    $.ajax({
+                        url: './qalist',
+                        data: { "page": n, "num": 10 },
+                        method: 'post',
+                        success(data) {//성공응답
+                            $('.paging>div').css("display", "none");
+                            let tableObj = $('#articles');
+                            for (let i = 0; i < data.length; i++) {
+                                tableObj += `<tr><td class="chkbox"><input type="checkbox" name="checkRow" class="${data[i].qa_id}"></td>`;
+                                tableObj += `<td class="qid">${data[i].qa_id}</td>`;
+                                tableObj += `<td class="tit" title="${data[i].qa_title}">${data[i].qa_title}</td>`;
+                                tableObj += `<td>${data[i].user_nickname}</td>`;
+                                tableObj += `<td>${data[i].qa_wdate.substring(0, 10)}</td>`;
+                                tableObj += `<td>${data[i].qa_status == 2 ? "해결" : "미해결"}</td>`;
+                                $('#articles').html(tableObj);
+                            }
+
+                            let str = "";
+                            let total = data[0].qa_total;
+                            let pagePerTen = Math.ceil(total / 10);
+                            let pageLast = pagePerTen % 10;
+                            if (pageLast === 0) {
+                                pageLast = 10;
+                            }
+                            let countTen;
+                            n = parseInt(n);
+                            if (n !== 1) {
+                                $('.paging>.prev').css("display", "inline-block");
+                            }
+                            if (n !== pagePerTen) {
+                                $('.paging>.next').css("display", "inline-block");
+                            }
+                            if (n >= 11) {
+                                $('.paging>.prevDouble').css("display", "inline-block");
+                            }
+                            if ((Math.ceil(pagePerTen / 10) - Math.ceil(n / 10)) >= 1) {
+                                $('.paging>.nextDouble').css("display", "inline-block");
+                            }
+                            countTen = Math.ceil(n / 10);
+                            if (countTen !== Math.ceil(pagePerTen / 10)) {
+                                for (let i = 1; i <= 10; i++) {
+                                    str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                }
+                            } else {
+                                for (let i = 1; i <= pageLast; i++) {
+                                    str += "<span>" + ((countTen - 1) * 10 + i) + "</span>&nbsp";
+                                }
+                            }
+                            $pagingNumber.html(str);
+                            let p = 10;
+                            if (n % 10 !== 0) {
+                                p = n % 10;
+                            }
+                            $('.paging_number>span:nth-child(' + p + ')').css("color", "silver");
+                            sessionStorage.setItem("pagingNum", n);
+                            promisePaging.done(pagingFunc);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="header"></div>
+    <div class="adminqa">
+        <!--신고 게시판 리스트-->
+        <div class="mainbox">
+            <div class="qa_list">
+                <table summary="삭제,번호,제목,작성자,작성일,처리상태" style="table-layout: fixed;">
+                    <colgroup>
+                        <col width="4%">
+                        <col width="8%">
+                        <col width="*">
+                        <col width="12%">
+                        <col width="16%">
+                        <col width="16%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="5" style="background-color: #ffffff; opacity: 0.2;"></th>
+                            <th style="background-color:white; border:none;">
+                                <button class="delbtn" type="button" style="margin-left: 8px;
+                            padding : 5px;
+                            width: 130px;
+                            border: none;
+                            outline:0;
+                            border-radius: 15px;
+                            background-color:gray;
+                            color:white;
+                            cursor:pointer;">삭제하기
+                                </button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="col">삭제</th>
+                            <th scope="col">번호</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">작성일</th>
+                            <th scope="col">처리상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="articles">
+                        <tr class="tit1">
+                            <td class="chkbox"><input type="checkbox" name="checkRow"></td>
+                            <td id="qaId">10</td>
+                            <td class="tit" title="정보처리기사 1회 23문제 수정 부탁"></td>
+                            <td>최예만</td>
+                            <td>2021.01.25</td>
+                            <td>미해결</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="paging">
+                    <div class="prevDouble">◀◀&nbsp;</div>
+                    <div class="prev">◀&nbsp;</div><span class="paging_number"></span>
+                    <div class="next">▶&nbsp;</div>
+                    <div class="nextDouble">▶▶</div>
+                </div>
+            </div>
+        </div>
+        <div id="modal">
+            <div class="qa" style="overflow-y:scroll; overflow-x:hidden">
+                <div class="headerline"></div>
+                <div class="qa_header">
+                    <div class="detail_info">
+                        <div class="flex_container">
+                            <span class="writer" style="flex-grow: 2;">
+                                <h3>작성자</h3>
+                                <div class="user_id"></div>
+                            </span>
+                        </div>
+                        <div class="flex_container">
+                            <span class="title" style="flex-grow: 2;">
+                                <h3>제목</h3>
+                                <div class="title">SQL 13번 답이 잘못되었습니다</div>
+                            </span>
+                        </div>
+                        <div class="flex_container">
+                            <span class="wdate" style="flex-grow: 2;">
+                                <h3>날짜</h3>
+                                <div class="date">2021/02/21</div>
+                            </span>
+                        </div>
+                    </div>
+                    <h3>문의내용</h3>
+                    <div class="qa_image">
+                        <div class="qa_content">
+                    </div>
+                    </div>
+                    <div class="qasol_content">
+                        <h3>답변내용</h3>
+                        <form a method="post">
+                            <!--action-->
+                            <textarea placeholder="내용을 입력하세요." name="qasol_content" id="write"></textarea>
+                            <input type="button" class="check" value="등록" id="btn_save">
+                        </form>
+                        <button type="button" id="modal_close_btn">닫기</button>
+                    </div>
+                </div>
+
+                <!-- <button type="button" id="modal_close_btn">닫기</button> -->
+            </div>
+            <div class="modal_layer"></div>
+        </div>
+        <div style="height: 50px;"></div>
+    </div>
+</body>
+</html>

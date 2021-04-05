@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./headerstyle.css">
+
+    <style>
+        .manager_main {
+            width: 1200px;
+            min-height: 550px;
+            height: auto;
+            margin: 50px auto;
+            border: 5px solid black;
+            box-sizing: border-box;
+        }
+
+        .report_list ul li {
+            list-style-type: none;
+            float: left;
+            margin-left: 30px;
+        }
+
+        .report_list ul li a {
+            text-decoration: none;
+        }
+
+        .manager_main .report_list {
+            margin-top: 50px;
+        }
+
+        .manager_main .report_content {
+            width: 300px;
+            height: auto;
+            border: 2px solid black;
+            margin-left: 30px;
+            min-height: 280px;
+        }
+
+        .manager_main .report_new {
+            color: red;
+            margin-left: 1px;
+            font-weight: 500;
+        }
+
+        .report_info strong {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 30px;
+        }
+
+        .report_info span {
+            margin-left: 100px;
+        }
+
+        .report_content a {
+            margin-left: 10px;
+        }
+
+        .report_info a {
+            margin-left: 100px;
+            text-decoration: none;
+        }
+
+
+        .manager_card li {
+            list-style: none;
+            float: left;
+            display: list-item;
+        }
+
+        .manager_main .qa_list {
+            margin-top: 50px;
+            margin-left: 50px;
+        }
+
+        .manager_main .qa_content {
+            width: 330px;
+            min-height: 285px;
+            height: auto;
+            border: 2px solid black;
+            margin-left: 50px;
+        }
+
+        .manager_main .qa_new {
+            color: red;
+            margin-left: 1px;
+            font-weight: 500;
+        }
+
+        .qa_content a {
+            margin-left: 10px;
+        }
+
+        .qa_info strong {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .qa_info span {
+            margin-left: 110px;
+        }
+
+        .qa_info a {
+            margin-left: 100px;
+            text-decoration: none;
+        }
+
+        .manager_main .signup_list {
+            margin-left: 60px;
+            margin-top: 20px;
+        }
+
+        .manager_main .signup_content {
+            margin-left: 60px;
+            width: 350px;
+            min-height: 220px;
+            height: auto;
+            border: 2px solid black;
+        }
+
+        .signup_content strong {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .signup_content .cell {
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+        }
+
+        .signup_info span {
+            margin-left: 70px;
+        }
+
+        .signup_info strong.user_id {
+            margin-left: 60px;
+        }
+
+        .signup_info strong.signup_date {
+            margin-left: 60px;
+        }
+
+        .signup_info .signup_tit {
+            font-size: 20px;
+            margin-left: 130px;
+        }
+
+        @media(max-width: 928px) {
+            #logo {
+                position: absolute;
+                left: 375px;
+                width: 165pc;
+                margin: 20px auto;
+                text-align: center;
+            }
+
+            #alarm {
+                position: absolute;
+                left: 815px;
+                width: 50px;
+                margin: 20px;
+            }
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".header").load("headernmenu.html");
+            //신고리스트
+            $.ajax({
+                url: './reportlist',
+                method: 'post',
+                data: { "page": 1, "num": 10 },
+                success(data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var str2 = "";
+                        if (data[i].report_status == 0) {
+                            str2 = "<span style=\"color:red;\">(new)</span>";
+                        }
+                        let r = `<p><a>${data[i].report_title}</a><a>${str2}</a></p><br>`;
+                        $('.report_content').append(r);
+                        //$('.report_content').append("<a>"+ data[i].report_title +"</a>"+ str2 +"<p><br>");
+                    }
+
+                },
+                error: function (jqXHR) {
+                    alert("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                }
+            });
+            //문의리스트
+            $.ajax({
+                url: './qalist',
+                method: 'post',
+                data: { "page": 1, "num": 10 },
+                success(data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var str2 = "";
+                        if (data[i].qa_status == 0) {
+                            str2 = "<span style=\"color:red;\">(new)</span>";
+                        }
+                        let q = `<p><a>${data[i].qa_title}</a><a>${str2}</a></p><br>`;
+                        $('.qa_content').append(q);
+                        //$('.qa_content').append("<a>"+ data[i].qa_title +"</a>"+ str2 +" <p><br>");
+                    }
+
+                },
+                error: function (jqXHR) {
+                    alert("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                }
+            });
+            //가입자리스트
+            $.ajax({
+                url: './recentreguser',
+                method: 'post',
+                data: { "page": 1, "num": 15 },
+                success(data) {
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        let s = `<p><a><span class="cell">${data[i].user_id}</span><span class="cell">${data[i].user_date.substring(0, 10)}</span></a></p><br>`
+                        $('.signup_content').append(s);
+                    }
+
+                },
+                error: function (jqXHR) {
+                    alert("AJAX요청응답 실패: 에러코드=" + jqXHR.status);
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div class="header"></div>
+    <div class="manager_main">
+        <ul class="manager_card">
+            <li>
+                <div class="report_list">
+                    <p class="report_info">
+                        <strong>신고</strong>
+                        <span>|</span>
+                        <a href="./adminreport.html">더보기</a>
+                    </p>
+                </div>
+                <div class="report_content">
+
+                </div>
+            </li>
+            <li>
+                <div class="qa_list">
+                    <p class="qa_info">
+                        <strong>문의사항</strong>
+                        <span>|</span>
+                        <a href="./adminqa.html">더보기</a>
+                    </p>
+                </div>
+                <div class="qa_content">
+
+                </div>
+            </li>
+            <li>
+                <div class="signup_list">
+                    <p class="signup_info">
+                        <strong class="signup_tit">최근 가입자</strong><br>
+                        <strong class="user_id">아이디</strong>
+                        <span>|</span>
+                        <strong class="signup_date">가입일시</strong>
+                    </p>
+                </div>
+                <div class="signup_content">
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <section></section>
+</body>
+
+</html>

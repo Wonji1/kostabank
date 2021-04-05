@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties>
+        <property name="username" value="kosta"/>
+    </properties>
+    <typeAliases>
+        <typeAlias alias="Board" type="com.my.vo.Board"/>
+        <typeAlias alias="BoardComment" type="com.my.vo.BoardComment"/>
+        <typeAlias alias="Feedback" type="com.my.vo.Feedback"/>
+        <typeAlias alias="Qa" type="com.my.vo.Qa"/>
+        <typeAlias alias="Question" type="com.my.vo.Question"/>
+        <typeAlias alias="Notice" type="com.my.vo.Notice"/>
+        <typeAlias alias="QuestionDetail" type="com.my.vo.QuestionDetail"/>
+        <typeAlias alias="Report" type="com.my.vo.Report"/>
+        <typeAlias alias="User" type="com.my.vo.User"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="boardMapper.xml"/>
+ <!--       <mapper resource="userMapper.xml"/>
+        <mapper resource="feedbackMapper.xml"/>
+        <mapper resource="questionMapper.xml"/>	-->
+    </mappers>
+</configuration>

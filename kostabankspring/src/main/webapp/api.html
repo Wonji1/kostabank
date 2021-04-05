@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $('.iddupchk>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './iddupchk',
+                    method: 'post',
+                    data: {"user_id": $('.iddupchk>label>.user_id').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.iddupchkdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.nickdupchk>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './nickdupchk',
+                    method: 'post',
+                    data: {"user_nickname": $('.nickdupchk>label>.user_nickname').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.nickdupchkdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.emaildupchk>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './emaildupchk',
+                    method: 'post',
+                    data: {"user_email": $('.emaildupchk>label>.user_email').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.emaildupchkdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.chknumchk>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './chknumchk',
+                    method: 'post',
+                    data: {"email": $('.chknumchk>label>.email').val(),
+                        "check_number": $('.chknumchk>label>.check_number').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.chknumchkdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.recentreguser>button').click(function () {
+                $.ajax({
+                    url: './recentreguser',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        console.log(data);
+                        $('.recentreguserdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.adduser>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './adduser',
+                    method: 'post',
+                    data: {"user_id": $('.adduser>label>.user_id').val(),
+                        "user_nickname": $('.adduser>label>.user_nickname').val(),
+                        "user_pwd": $('.adduser>label>.user_pwd').val(),
+                        "user_email": $('.adduser>label>.user_email').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.adduserdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.addemail>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './addemail',
+                    method: 'post',
+                    data: {"email": $('.addemail>label>.email').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.addemaildiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.login>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './login',
+                    method: 'post',
+                    data: {"user_id": $('.login>label>.user_id').val(),
+                        "user_pwd": $('.login>label>.user_pwd').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.logindiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.logout>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './logout',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                    },error(jQueryXHR){
+                        alert("로그아웃 불가능");
+                    }
+                });
+                return false;
+            });
+
+            $('.moduser>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './moduser',
+                    method: 'post',
+                    data: {"user_nickname": $('.moduser>label>.user_nickname').val(),
+                        "user_pwd": $('.moduser>label>.user_pwd').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.moduserdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.userinfo>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './userinfo',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.userinfodiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.modpwdbyemail>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './modpwdbyemail',
+                    method: 'post',
+                    data: {"user_email": $('.modpwdbyemail>label>.user_email').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.modpwdbyemaildiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.removeuser>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './removeuser',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.removeuserdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.questioninfo>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './questioninfo',
+                    method: 'post',
+                    data: {"question_id": $('.questioninfo>label>.question_id').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.questioninfodiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.mynote>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './mynote',
+                    method: 'post',
+                    data: {"rownum": $('.mynote>label>.rownum').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.mynotediv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.solved>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './solved',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.solveddiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.myqa>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './myqa',
+                    method: 'post',
+                    data: {"rownum": $('.myqa>label>.rownum').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.myqadiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.qalist>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './qalist',
+                    method: 'post',
+                    data: {"page": $('.qalist>label>.page').val(),
+                        "num": $('.qalist>label>.num').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.qalistdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.qa>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './qa',
+                    method: 'post',
+                    data: {"qa_id": $('.qa>label>.qa_id').val(),
+                        "n": $('.qa>label>.n').val(),
+                        "s": $('.qa>label>.s').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.qadiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.report>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './report',
+                    method: 'post',
+                    data: {"report_id": $('.report>label>.report_id').val(),
+                        "n": $('.report>label>.n').val(),
+                        "s": $('.report>label>.s').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.reportdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.addreportsol>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './addreportsol',
+                    method: 'post',
+                    data: {"report_id": $('.addreportsol>label>.report_id').val(),
+                        "content": $('.addreportsol>label>.content').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.addreportsoldiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.addqasol>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './addqasol',
+                    method: 'post',
+                    data: {"qa_id": $('.addqasol>label>.qa_id').val(),
+                        "content": $('.addqasol>label>.content').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.addqasoldiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.reportlist>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './reportlist',
+                    method: 'post',
+                    data: {"page": $('.reportlist>label>.page').val(),
+                        "num": $('.reportlist>label>.num').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.reportlistdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.boarddetail>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './board/boarddetail',
+                    method: 'post',
+                    data: {"board_id": $('.boarddetail>label>.board_id').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.boarddetaildiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.boardlist>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './boardlist',
+                    method: 'post',
+                    data: {"page": $('.boardlist>label>.page').val(),
+                        "num": $('.boardlist>label>.num').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.boardlistdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.header>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './header',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.headerdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.removemn>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './removemn',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.removemndiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.addqtmp>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './addqtmp',
+                    method: 'post',
+                    data: {"question_year": $('.addqtmp>label>.question_year').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.addqtmpdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.addrandomqtmp>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './addrandomqtmp',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.addrandomqtmpdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+            $('.qtmp>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './qtmp',
+                    method: 'post',
+                    data: {"row_num": $('.qtmp>label>.row_num').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.qtmpdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+
+            let question_id_list =[];
+            $('.addmn>button.add_list').click(function () {
+                let session_question_id_list = JSON.parse(sessionStorage.getItem("question_id_list"));
+                if(session_question_id_list !== null){
+                    question_id_list=session_question_id_list;
+                }
+                question_id_list.push($('.addmn>label>.question_id_list').val());
+                // 수정할 때는 question_id_list[i] = ? (문제 풀이과정에서만)
+                sessionStorage.setItem("question_id_list", JSON.stringify(question_id_list));
+                return false;
+            });
+            $('.addmn>button.ajax').click(function () {
+
+                $.ajax({
+                    url: './addmn',
+                    method: 'post',
+                    data: {"question_id_list": JSON.parse(sessionStorage.getItem("question_id_list"))},
+                    traditional: true,// 이거 꼭 추가하기
+                    dataType: "text",
+                    success(data){
+                        sessionStorage.clear();
+                        $('.addmndiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+
+            let question_answer_list =[];
+            $('.scoringq>button.add_list').click(function () {
+                let session_question_answer_list = JSON.parse(sessionStorage.getItem("question_answer_list"));
+                if(session_question_answer_list !== null){
+                    question_answer_list=session_question_answer_list;
+                }
+                question_answer_list.push($('.scoringq>label>.answer_list').val());
+                // 수정할 때는 question_id_list[i] = ? (문제 풀이과정에서만)
+                sessionStorage.setItem("question_answer_list", JSON.stringify(question_answer_list));
+                return false;
+            });
+            $('.scoringq>button.ajax').click(function () {
+
+                $.ajax({
+                    url: './scoringq',
+                    method: 'post',
+                    data: {"answer_list": JSON.parse(sessionStorage.getItem("question_answer_list"))},
+                    traditional: true,// 이거 꼭 추가하기
+                    dataType: "text",
+                    success(data){
+                        sessionStorage.clear();
+                        $('.scoringqdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+
+
+            $('.solveresult>input[type=submit]').click(function () {
+                $.ajax({
+                    url: './solveresult',
+                    method: 'post',
+                    data: {"question_round": $('.solveresult>label>.question_round').val()},
+                    dataType: "text",
+                    success(data){
+                        $('.solveresultdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+
+
+
+            let board_id_list =[];
+            $('.removeboardbylist>button.add_list').click(function () {
+                let session_board_id_list = JSON.parse(sessionStorage.getItem("board_id_list"));
+                if(session_board_id_list !== null){
+                    board_id_list=session_board_id_list;
+                }
+                board_id_list.push($('.removeboardbylist>label>.board_id_list').val());
+                // 수정할 때는 question_id_list[i] = ? (문제 풀이과정에서만)
+                sessionStorage.setItem("board_id_list", JSON.stringify(board_id_list));
+                return false;
+            });
+            $('.removeboardbylist>button.ajax').click(function () {
+
+                $.ajax({
+                    url: './removeboardbylist',
+                    method: 'post',
+                    data: {"board_id_list": JSON.parse(sessionStorage.getItem("board_id_list"))},
+                    traditional: true,// 이거 꼭 추가하기
+                    dataType: "text",
+                    success(data){
+                        sessionStorage.clear();
+                        $('.removeboardbylistdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+
+
+
+            let qa_id_list =[];
+            $('.removeqabylist>button.add_list').click(function () {
+                let session_qa_id_list = JSON.parse(sessionStorage.getItem("qa_id_list"));
+                if(session_qa_id_list !== null){
+                    qa_id_list=session_qa_id_list;
+                }
+                qa_id_list.push($('.removeqabylist>label>.qa_id_list').val());
+                // 수정할 때는 question_id_list[i] = ? (문제 풀이과정에서만)
+                sessionStorage.setItem("qa_id_list", JSON.stringify(qa_id_list));
+                return false;
+            });
+            $('.removeqabylist>button.ajax').click(function () {
+
+                $.ajax({
+                    url: './removeqabylist',
+                    method: 'post',
+                    data: {"qa_id_list": JSON.parse(sessionStorage.getItem("qa_id_list"))},
+                    traditional: true,// 이거 꼭 추가하기
+                    dataType: "text",
+                    success(data){
+                        sessionStorage.clear();
+                        $('.removeqabylistdiv').html(data);
+                    }
+                });
+                return false;
+            });
+
+
+
+            let timer = setInterval(function () {
+                $.ajax({
+                    url: './header',
+                    method: 'post',
+                    dataType: "text",
+                    success(data){
+                        $('.headerdiv').html(data);
+                    }
+                });
+            },31*60*1000);
+
+        });
+
+    </script>
+</head>
+<body>
+
+<hr><h1>iddupchk</h1>
+<form class="iddupchk">
+    <label > user_id
+        <input type="text" class="user_id">
+    </label>
+    <input type="submit">
+</form>
+<div> 중복하는 경우 status -1 <br> 중복하지 않는경우 status undefined</div>
+<div class="iddupchkdiv"></div>
+
+<hr><h1>nickdupchk</h1>
+<form class="nickdupchk">
+    <label> user_nickname
+        <input type="text" class="user_nickname">
+    </label>
+    <input type="submit">
+</form>
+<div> 중복하는 경우 status -1 <br> 중복하지 않는경우 status 1</div>
+<div class="nickdupchkdiv"></div>
+
+<hr><h1>emaildupchk</h1>
+<form class="emaildupchk">
+    <label> user_email
+        <input type="text" class="user_email">
+    </label>
+    <input type="submit">
+</form>
+<div> 중복하는 경우 status -1 <br> 중복하지 않는경우 status 1</div>
+<div class="emaildupchkdiv"></div>
+
+<hr><h1>chknumchk</h1>
+<form class="chknumchk">
+    <label> email
+        <input type="text" class="email"><br>
+    </label>
+    <label> check_number
+        <input type="text" class="check_number">
+    </label>
+    <input type="submit">
+</form>
+<div> 인증번호가 다른경우 -1 <br> 인증번호가 같은경우 1 <br> email이 잘못됐거나 5분이 지나면 -2</div>
+<div class="chknumchkdiv"></div>
+
+<hr><h1>recentreguser</h1>
+<form class="recentreguser">
+    <button>유저확인</button>
+</form>
+<div> 유저가 존재하지 않을경우 -1 </div>
+<div class="recentreguserdiv"></div>
+
+<hr><h1>adduser</h1>
+<form class="adduser">
+    <label> user_id
+        <input type="text" class="user_id"><br>
+    </label>
+    <label> user_nickname
+        <input type="text" class="user_nickname"><br>
+    </label>
+    <label> user_pwd
+        <input type="text" class="user_pwd"><br>
+    </label>
+    <label> user_email
+        <input type="text" class="user_email">
+    </label>
+    <input type="submit">
+</form>
+<div> 성공적으로 추가됐을때 1 <br> 이미 존재하는 정보일 경우 -1</div>
+<div class="adduserdiv"></div>
+
+<hr><h1>addemail</h1>
+<form class="addemail">
+    <label> email
+        <input type="text" class="email"><br>
+    </label>
+    <input type="submit">
+</form>
+<div> 성공적으로 추가됐을때 1 <br> 이미 존재하는 정보일 경우 -1</div>
+<div class="addemaildiv"></div>
+
+<hr><h1>login</h1>
+<form class="login">
+    <label> user_id
+        <input type="text" class="user_id"><br>
+    </label>
+    <label> user_pwd
+        <input type="text" class="user_pwd"><br>
+    </label>
+    <input type="submit">
+</form>
+<div> 로그인 성공 1 <br> 로그인 실패 -1</div>
+<div class="logindiv"></div>
+
+<hr><h1>logout</h1>
+<form class="logout">
+    <input type="submit">
+</form>
+<div> 로그아웃 >> 누르면 로그아웃</div>
+
+<hr><h1>moduser  // 로그인 먼저 진행하기</h1>
+<form class="moduser">
+    <label> user_nickname
+        <input type="text" class="user_nickname"><br>
+    </label>
+    <label> user_pwd
+        <input type="text" class="user_pwd"><br>
+    </label>
+    <input type="submit">
+</form>
+<div> 성공적으로 수정됐을때 1 <br> 수정 실패했을때 -1 <br> 수정하지 않는 정보는 입력 x </div>
+<div class="moduserdiv"></div>
+
+<hr><h1>userinfo  // 로그인 먼저 진행하기</h1>
+<form class="userinfo">
+    <input type="submit">
+</form>
+<div>  조회 실패했을때 -1</div>
+<div class="userinfodiv"></div>
+
+<hr><h1>modpwdbyemail</h1>
+<form class="modpwdbyemail">
+    <label> user_email
+        <input type="text" class="user_email"><br>
+    </label>
+    <input type="submit">
+</form>
+<div> 성공적으로 수정됐을때 1 <br> 수정 실패했을때 -1</div>
+<div class="modpwdbyemaildiv"></div>
+
+<hr><h1>removeuser  // 로그인 먼저 진행하기</h1>
+<form class="removeuser">
+    <input type="submit">
+</form>
+<div>  삭제 성공 1 <br>삭제 실패 -1</div>
+<div class="removeuserdiv"></div>
+
+<hr><h1>questioninfo</h1>
+<form class="questioninfo">
+    <label> question_id
+        <input type="text" class="question_id"><br>
+    </label>
+    <input type="submit">
+</form>
+<div> 성공 1 <br> 수정 -1</div>
+<div class="questioninfodiv"></div>
+
+<hr><h1>mynote // 로그인 하고 진행</h1>
+<form class="mynote">
+    <label> rownum
+        <input type="text" class="rownum"><br>
+    </label>
+    <input type="submit">
+</form>
+<div> 실패했을때 -1</div>
+<div class="mynotediv"></div>
+
+<hr><h1>solved // 로그인 하고 진행</h1>
+<form class="solved">
+    <input type="submit">
+</form>
+<div>  실패했을때 -1</div>
+<div class="solveddiv"></div>
+
+<hr><h1>myqa // 로그인 하고 진행</h1>
+<form class="myqa">
+    <label> rownum
+        <input type="text" class="rownum"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1</div>
+<div class="myqadiv"></div>
+
+
+<hr><h1>qalist</h1>
+<form class="qalist">
+    <label> page
+        <input type="text" class="page"><br>
+    </label>
+    <label> num
+        <input type="text" class="num"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1</div>
+<div class="qalistdiv"></div>
+
+<hr><h1>qa</h1>
+<form class="qa">
+    <label> qa_id
+        <input type="text" class="qa_id"><br>
+    </label>
+    <label> n
+        <input type="text" class="n"><br>
+    </label>
+    <label> s
+        <input type="text" class="s"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1  <br> 오른쪽 위 알림 클릭할때 n,s = 0,2 <br> 관리자 리스트에서 가져올때 n,s = 0, 1<</div>
+<div class="qadiv"></div>
+
+<hr><h1>report</h1>
+<form class="report">
+    <label> report_id
+        <input type="text" class="report_id"><br>
+    </label>
+    <label> n
+        <input type="text" class="n"><br>
+    </label>
+    <label> s
+        <input type="text" class="s"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1 <br> 오른쪽 위 알림 클릭할때 n,s = 0,2 <br> 관리자 리스트에서 가져올때 n,s = 0, 1</div>
+<div class="reportdiv"></div>
+
+<hr><h1>reportlist</h1>
+<form class="reportlist">
+    <label> page
+        <input type="text" class="page"><br>
+    </label>
+    <label> num
+        <input type="text" class="num"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1</div>
+<div class="reportlistdiv"></div>
+
+<hr><h1>addreportsol</h1>
+<form class="addreportsol">
+    <label> report_id
+        <input type="text" class="report_id"><br>
+    </label>
+    <label> content
+        <input type="text" class="content"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1 <br> 성공했을때 1</div>
+<div class="addreportsoldiv"></div>
+
+<hr><h1>addqasol</h1>
+<form class="addqasol">
+    <label> qa_id
+        <input type="text" class="qa_id"><br>
+    </label>
+    <label> content
+        <input type="text" class="content"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1 <br> 성공했을때 1</div>
+<div class="addqasoldiv"></div>
+
+<hr><h1>boarddetail</h1>
+<form class="boarddetail">
+    <label> board_id
+        <input type="text" class="board_id"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1</div>
+<div class="boarddetaildiv"></div>
+
+<hr><h1>boardlist</h1>
+<form class="boardlist">
+    <label> page
+        <input type="text" class="page"><br>
+    </label>
+    <label> num
+        <input type="text" class="num"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  실패했을때 -1</div>
+<div class="boardlistdiv"></div>
+
+<hr><h1>header // 로그인 후 진행</h1>
+<form class="header">
+    <input type="submit">
+</form>
+<div>  로그인 아닐때 -1 // 피드백 알림이 하나도 없을 때 -2</div>
+<div class="headerdiv"></div>
+
+<hr><h1>removemn // 로그인 후 진행</h1>
+<form class="removemn">
+    <input type="submit">
+</form>
+<div>  삭제 실패 -1 // 삭제 성공 1</div>
+<div class="removemndiv"></div>
+
+<hr><h1>addqtmp // 로그인 후 진행</h1>
+<form class="addqtmp">
+    <label> question_year
+        <input type="text" class="question_year"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  저장 실패 -1 // 저장 성공 1</div>
+<div class="addqtmpdiv"></div>
+
+<hr><h1>addrandomqtmp // 로그인 후 진행</h1>
+<form class="addrandomqtmp">
+    <input type="submit">
+</form>
+<div>  저장 실패 -1 // 저장 성공 1</div>
+<div class="addrandomqtmpdiv"></div>
+
+<hr><h1>qtmp // 로그인 후 진행</h1>
+<form class="qtmp">
+    <label> row_num
+        <input type="text" class="row_num"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  조회 실패 -1 // </div>
+<div class="qtmpdiv"></div>
+
+<hr><h1>addmn // 로그인 후 진행 //문제 중복 x</h1>
+<div class="addmn">
+    <label> question_id_list
+        <input type="text" class="question_id_list"><br>
+    </label>
+    <button class="add_list">리스트 추가</button>
+    <button class="ajax">ajax 버튼</button>
+</div>
+<div>  추가 실패 -1 // </div>
+<div class="addmndiv"></div>
+
+<hr><h1>scoringq // 로그인 후 진행 //문제 중복 x</h1>
+<div class="scoringq">
+    <label> answer_list
+        <input type="text" class="answer_list"><br>
+    </label>
+    <button class="add_list">리스트 추가</button>
+    <button class="ajax">ajax 버튼</button>
+</div>
+<div>  채점 실패 -1 // </div>
+<div class="scoringqdiv"></div>
+
+<hr><h1>solveresult // 로그인 후 진행</h1>
+<form class="solveresult">
+    <label> question_round
+        <input type="text" class="question_round"><br>
+    </label>
+    <input type="submit">
+</form>
+<div>  조회 실패 -1 // </div>
+<div class="solveresultdiv"></div>
+
+<hr><h1>removeboardbylist //게시판 id 중복 x</h1>
+<div class="removeboardbylist">
+    <label> board_id_list
+        <input type="text" class="board_id_list"><br>
+    </label>
+    <button class="add_list">리스트 추가</button>
+    <button class="ajax">ajax 버튼</button>
+</div>
+<div>  삭제 실패 -1 // </div>
+<div class="removeboardbylistdiv"></div>
+
+<hr><h1>removeqabylist //문의사항 id 중복 x</h1>
+<div class="removeqabylist">
+    <label> qa_id_list
+        <input type="text" class="qa_id_list"><br>
+    </label>
+    <button class="add_list">리스트 추가</button>
+    <button class="ajax">ajax 버튼</button>
+</div>
+<div>  삭제 실패 -1 // </div>
+<div class="removeqabylistdiv"></div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "=//mybatis.org//DTD Mapper 3.0..EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.boardMapper">
+    <resultMap id="boardMap" type="Board" autoMapping="true">
+        <id property="board_id" column="board_id"/>
+        <association property="user" javaType="User" autoMapping="true">
+            <id property="user_id" column="user_id"/>
+        </association>
+    </resultMap>
+    <select id="BoardById" resultMap="boardMap">
+      SELECT b.*, u.*, (SELECT COUNT(*) FROM board_up WHERE board_id = #{board_id}) AS board_up
+      FROM board b join users u on (b.user_id = u.user_id) WHERE b.board_id = #{board_id}
+   </select>
+       <select id="BoardAll" resultMap="boardMap">
+      SELECT b.*, u.*, (SELECT COUNT(*) FROM board_up WHERE board_id = #{board_id}) AS board_up
+      FROM board b join users u on (b.user_id = u.user_id) WHERE b.board_id = #{board_id}
+   </select>
+</mapper>

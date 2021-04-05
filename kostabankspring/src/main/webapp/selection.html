@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>KostaBank</title>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@700&display=swap"
+        rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>      
+
+        .selection .container {			
+            display: grid;
+            grid-template-columns: 100px 100px 100px 100px 100px 100px;
+            grid-template-rows: 60px 60px 60px 60px 60px 60px;
+            grid-gap: 20px;
+            justify-content: space-around;
+
+        }
+
+        .selection .container>div{
+            text-align: center;
+            padding-top: 35px;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .selection div#test {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .selection legend {
+            font-size: 25px;
+            padding: 20px;
+        }
+
+        .selection fieldset {
+            width: 900px;
+            height: 500px;
+            margin: 0 auto;
+            border-style: double;
+        }
+
+        .selection a {
+            text-decoration: none;
+        }
+    </style>
+    <script>
+    	$(function(){
+    		$(".header").load("headernmenu.html");
+
+            $('.selection .container>div').click(function(event){
+                $.ajax({
+                    url: './addqtmp',
+                    method: 'post',
+                    data: {"question_year": $(event.target).attr("class")},
+                    success(data){
+                        location.href = "questions.html";
+                    }
+                });
+            });
+    	});
+    </script>
+</head>
+
+<body>
+<div class= "header">
+</div>
+    <div class="selection">
+        <div id="test">
+            <fieldset>
+                <!-- fieldset이 전체선이구나-->
+                <legend>정보처리기사 기출문제</legend>
+                <div class="container">
+                    <div style="user-select:none; cursor: unset;">2015년</div>
+                    <div style="user-select:none; cursor: unset;">2016년</div>
+                    <div style="user-select:none; cursor: unset;">2017년</div>
+                    <div style="user-select:none; cursor: unset;">2018년</div>
+                    <div style="user-select:none; cursor: unset;">2019년</div>
+                    <div style="user-select:none; cursor: unset;">2020년</div>
+
+                    <div class="201501">1회</div>
+                    <div class="201601">1회</div>
+                    <div class="201701">1회</div>
+                    <div class="201801">1회</div>
+                    <div class="201901">1회</div>
+                    <div class="202001">1회</div>
+                    
+                    <div class="201502">2회</div>
+                    <div class="201602">2회</div>
+                    <div class="201702">2회</div>
+                    <div class="201802">2회</div>
+                    <div class="201902">2회</div>
+                    <div class="202002">2회</div>
+                    
+                    <div class="201503">3회</div>
+                    <div class="201603">3회</div>
+                    <div class="201703">3회</div>
+                    <div class="201803">3회</div>
+                    <div class="201903">3회</div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</body>
+
+</html>
