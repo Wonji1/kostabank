@@ -297,4 +297,30 @@ public class BoardController {
 
     }
     
+    @RequestMapping("/removeboardbylist")
+    public Map<String, Object> removeboardbylist(@RequestParam(value = "board_id_list") String[] board_id_list) throws RemoveException {
+		
+		Map<String, Object> jacksonMap = new HashMap<>();
+
+		service.removeBoardByList(board_id_list);
+		jacksonMap.put("status", 1);
+		return jacksonMap;
+
+    }
+    
+    @RequestMapping("/findboardup")
+    public Map<String, Object> findboardup(@RequestParam(value = "board_id") String board_id
+    		, HttpServletRequest request) throws FindException {
+		
+		Map<String, Object> jacksonMap = new HashMap<>();
+		HttpSession session = request.getSession();
+        
+		String user_id = (String)session.getAttribute("loginInfo");
+
+		service.findBoardUp(user_id, board_id);
+		jacksonMap.put("status", 1);
+		return jacksonMap;
+
+    }
+    
 }

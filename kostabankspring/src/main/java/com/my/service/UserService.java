@@ -8,8 +8,14 @@ import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.vo.User;
 
+import lombok.extern.log4j.Log4j;
+
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
+@Log4j
 public class UserService {
     private UserDAO dao =new UserDAOOracle();
     public User findById(String user_id) throws FindException{

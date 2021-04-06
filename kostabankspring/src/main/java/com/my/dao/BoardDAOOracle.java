@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -280,59 +281,38 @@ public class BoardDAOOracle implements BoardDAO{
     }
 
     @Override
+    @Transactional(rollbackFor = RemoveException.class)
     public void DeleteBoardByList(String[] board_id_list) throws RemoveException {
-        Connection con = null;
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            
+            for(String board_id: board_id_list) {
+            	session.delete("mybatis.boardMapper.DeleteBoardByList",board_id);
+            }
+            session.commit();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RemoveException("게시판 삭제 실패: 이유= " + e.getMessage());
-        }
-        PreparedStatement pstmt = null;
-        String deleteSQL = "DELETE FROM board WHERE board_id = ?";
-        try {
-            for (int i = 0; i < board_id_list.length; i++) {
-                pstmt = con.prepareStatement(deleteSQL);
-                pstmt.setString(1, board_id_list[i]);
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1) {
-                throw new RemoveException("이미 존재하는 정보 입니다.");
-            } else {
-                e.printStackTrace();
-            }
-        } finally {
-            MyConnection.close(con, pstmt);
+            throw  new RemoveException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
+    
 
     @Override
     public void selectBoardUp(String user_id, String board_id) throws FindException {
-        Connection con =null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("user_id",user_id);
+            map.put("board_id",board_id);
+            Board board =session.selectOne("mybatis.boardMapper.SelectBoardUp",map);
+            
         } catch (Exception e) {
-            throw new FindException(e.getMessage());
-        }
-
-        String selectByIdSQL = "select * from board_up where user_id = ? and board_id = ?";
-        try {
-            pstmt = con.prepareStatement(selectByIdSQL);
-            pstmt.setString(1, user_id);
-            pstmt.setString(2, board_id);
-            rs = pstmt.executeQuery();
-            if(!rs.next()){
-                throw new FindException("아이디에 해당하는 값이 없습니다.");
-            }
-
-        } catch (SQLException e) {
             throw  new FindException(e.getMessage());
         }finally {
-            MyConnection.close(con,pstmt,rs);
+            if(session != null) session.close();
         }
     }
 }

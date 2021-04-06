@@ -10,7 +10,7 @@
         </association>
     </resultMap>
     
-        <resultMap id="boardcommentMap" type="BoardComment" autoMapping="true">
+    <resultMap id="boardcommentMap" type="BoardComment" autoMapping="true">
         <id property="board_id" column="board_id"/>
         <id property="comment_wdate" column="comment_wdate"/>
         
@@ -64,15 +64,23 @@
 		delete board where board_id = #{board_id}
 	</delete>
 	
-	<select id="NextId" resultMap="int">
+	<select id="NextId" resultType="int">
 		SELECT AUTO_INCRE_BOARD.NEXTVAL FROM dual
 	</select>
 	
-	<select id="BoardViewChk" resultMap="Board">
+	<select id="BoardViewChk" resultType="Board">
 		SELECT board_view FROM board WHERE board_id = #{board_id}
 	</select>
 	
 	<update id="BoardViewUpdate">
 		UPDATE board SET board_view = board_view+1 WHERE board_id = #{board_id}
 	</update>
+	
+	<delete id="DeleteBoardByList">
+		DELETE FROM board WHERE board_id = #{board_id}
+	</delete>
+	
+	<select id="SelectBoardUp" parameterType = "map" resultType="Board">
+		select * from board_up where user_id = #{user_id} and board_id = #{board_id}
+	</select>
 </mapper>
