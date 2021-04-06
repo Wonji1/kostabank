@@ -274,7 +274,7 @@
 
 
          $.ajax({
-            url: "./findboardup",
+            url: "./board/findboardup",
             method: "post",
             data: { "board_id": board_id },
             success: function (data) {
@@ -315,7 +315,7 @@
          });
 
          $.ajax({
-            url: "./boardcomment",
+            url: "./board/boardcomment",
             method: "post",
             data: { "board_id": board_id },
             success: function (data) {
@@ -336,7 +336,7 @@
 
          //조회수 증가
          $.ajax({
-            url: "./modboardview",
+            url: "./board/modboardview",
             method: "post",
             data: { "board_id": board_id }
          });
@@ -373,7 +373,7 @@
             $("#boardmodal_check_btn").click(function () {
                $("#boardmodal").attr("style", "display:none");
                $.ajax({
-                  url: "./removeboard",
+                  url: "./board/removeboard",
                   method: "post",
                   data: { "board_id": board_id },
                   success: function (responseObj) {
@@ -395,7 +395,7 @@
          //좋아요
          $("#like_label").on("click", function(){
                $.ajax({
-                  url: "./boardup",
+                  url: "./board/boardup",
                   method: "post",
                   data: { "board_id": board_id},
                   success: function (data) {
@@ -406,7 +406,7 @@
                      }
                      else if (data.status === -1){
                         $.ajax({
-                        url: "./removeboardup",
+                        url: "./board/removeboardup",
                         method: "post",
                         data: { "board_id": board_id},
                         success: function (data) {
@@ -442,7 +442,7 @@
                });
             } else {
                $.ajax({
-                  url: "./addcomment",
+                  url: "./board/addcomment",
                   method: "post",
                   data: { "board_id": board_id, "comment_w_content": $cmtWriteObj.val() },
                   success: function (responseObj) {

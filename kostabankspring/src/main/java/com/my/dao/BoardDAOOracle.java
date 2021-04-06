@@ -49,8 +49,6 @@ public class BoardDAOOracle implements BoardDAO{
         try {
             session = sqlSessionFactory.openSession();
             Map<String, Object> map = new HashMap<String, Object>();
-            System.out.println(page);
-            System.out.println(num);
             map.put("page", page*num);
             map.put("num", (page-1)*num +1);
             List<Board> list =session.selectList("mybatis.boardMapper.BoardAll",map);
@@ -68,78 +66,38 @@ public class BoardDAOOracle implements BoardDAO{
 
     @Override
     public List<BoardComment> CommentAll(String board_id) throws FindException {
-        Connection con =null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FindException(e.getMessage());
-        }
-
-
-        // board_id, comment_content, TO_CHAR(comment_wdate, 'YYYY/MM/DD HH:MI')AS comment_wdate,
-//		TO_CHAR(comment_wdate, 'YYYY/MM/DD HH:MI')AS comment_wdate,
-        String selectSQL = "SELECT bc.board_id, bc.user_id, comment_content, comment_wdate, (SELECT u.user_nickname \r\n" +
-                "                                                                FROM users u\r\n" +
-                "                                                                WHERE u.user_id=bc.user_id)AS user_nickname\r\n" +
-                "FROM board_comment bc  \r\n" +
-                "WHERE board_id=?\r\n" +
-                "ORDER BY comment_wdate asc";
-
-        List<BoardComment> list = new ArrayList();
-        try {
-            pstmt = con.prepareStatement(selectSQL);
-            pstmt.setString(1, board_id);
-            rs = pstmt.executeQuery();
-            while(rs.next()) {
-                BoardComment board_comment = new BoardComment();
-                String comment_content = rs.getString("comment_content");
-                String comment_wdate = rs.getString("comment_wdate");
-                String user_nickname = rs.getString("user_nickname");
-
-                User user = new User();
-                user.setUser_nickname(user_nickname);
-                board_comment.setComment_content(comment_content);
-                board_comment.setComment_wdate(comment_wdate);
-
-                board_comment.setUser(user);
-
-                list.add(board_comment);
-
-            }
-
+            session = sqlSessionFactory.openSession();
+            
+            List<BoardComment> list =session.selectList("mybatis.boardMapper.CommentAll",board_id);
+            if (list.size() == 0) {
+                throw new FindException("댓글이 존재하지 않습니다.");
+             }
             return list;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new FindException(e.getMessage());
-        } finally {
-            MyConnection.close(con, pstmt, rs);
+        } catch (Exception e) {
+            throw  new FindException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
     @Override
     public void CommentInsert(BoardComment comment) throws AddException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
-            String insertSQL = "INSERT INTO board_comment(board_id, comment_content, comment_wdate, user_id)\r\n" +
-                    "VALUES (?, ?, SYSDATE, ?)";
-
-            pstmt = con.prepareStatement(insertSQL);
-
-            pstmt.setString(1, comment.getBoard_id());
-            pstmt.setString(2, comment.getComment_content());
-            pstmt.setString(3, comment.getUser().getUser_id());
-            pstmt.executeUpdate();
+            session = sqlSessionFactory.openSession();
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("board_id",comment.getBoard_id());
+            map.put("comment_content",comment.getComment_content());
+            map.put("user_id",comment.getUser().getUser_id());
+            
+            session.insert("mybatis.boardMapper.CommentInsert",map);
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AddException();
-        } finally {
-            MyConnection.close(con, pstmt);
+            throw  new AddException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
@@ -150,131 +108,95 @@ public class BoardDAOOracle implements BoardDAO{
 
     @Override
     public void BoardUpInsert(String board_id, String user_id) throws AddException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("board_id",board_id);
+            map.put("user_id",user_id);
+            
+            session.insert("mybatis.boardMapper.BoardUpInsert",map);
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AddException(e.getMessage());
-        }
-        String insertSQL = "INSERT INTO board_up (board_id, user_id) VALUES(?,?)";
-        try {
-            pstmt = con.prepareStatement(insertSQL);
-            pstmt.setString(1, board_id);
-            pstmt.setString(2, user_id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new AddException(e.getMessage());
-        } finally {
-            MyConnection.close(con, pstmt);
+            throw  new AddException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
     @Override
     public void BoradUpDelete(String board_id, String user_id) throws RemoveException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
-            String deleteSQL = "DELETE board_up WHERE board_id =? AND user_id = ?";
-            pstmt = con.prepareStatement(deleteSQL);
-            pstmt.setString(1, board_id);
-            pstmt.setString(2, user_id);
-            pstmt.executeUpdate();
+            session = sqlSessionFactory.openSession();
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("board_id",board_id);
+            map.put("user_id",user_id);
+            
+            int rowcnt = session.delete("mybatis.boardMapper.BoardUpDelete",map);
+            
+            if(rowcnt == 0) {
+            	throw new RemoveException("삭제할 좋아요가 없습니다.");
+            }
+            session.commit();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RemoveException(e.getMessage());
+            throw  new RemoveException(e.getMessage());
         }finally {
-            MyConnection.close(con, pstmt);
+            if(session != null) session.close();
         }
     }
 
     @Override
     public void BoardInsert(Board board) throws AddException {
-        Connection con = null;
-        PreparedStatement pstmt=null;
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            
+            session.insert("mybatis.boardMapper.BoardInsert",board);
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AddException(e.getMessage());
+            throw  new AddException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
-        try {
-            String insertSQL = "INSERT INTO board(board_id,     board_subtitle, board_title, board_content, user_id, board_wdate, board_file)\r\n" +
-                    "			VALUES (? ,?,             ?,           ?,             ?,       sysdate,     ?)";
-            pstmt = con.prepareStatement(insertSQL);
 
-            pstmt.setString(1, board.getBoard_id());
-            pstmt.setString(2, board.getBoard_subtitle());
-            pstmt.setString(3, board.getBoard_title());
-            pstmt.setString(4, board.getBoard_content());
-            pstmt.setString(5, board.getUser().getUser_id());
-            pstmt.setString(6, board.getBoard_file());
-            pstmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new AddException();
-        } finally {
-            MyConnection.close(con, pstmt);
-        }
     }
 
     @Override
     public void BoardUpdate(Board board) throws ModifyException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            
+            int rowcnt = session.update("mybatis.boardMapper.BoardUpdate",board);
+            
+            if(rowcnt == 0) {
+            	throw new ModifyException("해당 게시글이 존재하지 않습니다.");
+            }
+            session.commit();
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String updateSQL = "UPDATE board SET board_subtitle = ?, board_title=?, "
-                + "board_content = ?, board_file = ?, user_id = ?, board_wdate =?"
-                + "WHERE board_id = ?";
-
-        try {
-            pstmt = con.prepareStatement(updateSQL);
-            pstmt.setString(1, board.getBoard_subtitle());
-            pstmt.setString(2, board.getBoard_title());
-            pstmt.setString(3, board.getBoard_content());
-            pstmt.setString(4, board.getBoard_file());
-            pstmt.setString(5, board.getUser().getUser_id());
-            pstmt.setString(6, board.getBoard_wdate());
-            pstmt.setString(7, board.getBoard_id());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new ModifyException();
-        } finally {
-            MyConnection.close(con,pstmt);
+            throw  new ModifyException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
     @Override
     public void BoardDelete(String board_id) throws RemoveException {
-        Connection con = null;
-        PreparedStatement pstmt =null;
-
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
-
-            String deleteSQL = "delete board where board_id = ?";
-
-            pstmt = con.prepareStatement(deleteSQL);
-            pstmt.setString(1, board_id);
-            int rowcnt = pstmt.executeUpdate();
-            if(rowcnt == 0 ) {
-                throw new RemoveException("삭제실패");
+            session = sqlSessionFactory.openSession();
+            
+            int rowcnt = session.delete("mybatis.boardMapper.BoardDelete",board_id);
+            
+            if(rowcnt == 0) {
+            	throw new RemoveException("해당 게시글이 존재하지 않습니다.");
             }
+            session.commit();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RemoveException(e.getMessage());
-        } finally {
-            MyConnection.close(con, pstmt);
+            throw  new RemoveException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
@@ -305,81 +227,50 @@ public class BoardDAOOracle implements BoardDAO{
 
     @Override
     public int NextId() throws FindException {
-        Connection con = null;
-        PreparedStatement pstmt=null;
-        ResultSet rs = null;
+        SqlSession session = null;
         try {
-            con = MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            int next_val = session.selectOne("mybatis.boardMapper.NextId");
 
-            String selectNextIdSQL = "SELECT AUTO_INCRE_BOARD.NEXTVAL FROM dual";
-
-            pstmt = con.prepareStatement(selectNextIdSQL);
-            rs = pstmt.executeQuery();
-            rs.next();
-            return rs.getInt(1);
+            return next_val;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new FindException(e.getMessage());
-        } finally {
-            MyConnection.close(con, pstmt, rs);
+            throw  new FindException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
     @Override
     public Board BoardViewChk(String board_id) throws FindException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
+        SqlSession session = null;
         try {
-            con=MyConnection.getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FindException(e.getMessage());
-        }
-        String selectSQL = "SELECT board_view FROM board WHERE board_id =?";
+            session = sqlSessionFactory.openSession();
+            Board board = session.selectOne("mybatis.boardMapper.BoardViewChk",board_id);
 
-        try {
-            pstmt = con.prepareStatement(selectSQL);
-            pstmt.setString(1, board_id);
-            rs = pstmt.executeQuery();
-            Board board = new Board();
-            if(!rs.next()) {
-                board.setBoard_view(rs.getInt("board_view"));
-            }
             return board;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new FindException(e.getMessage());
-        } finally {
-            MyConnection.close(con, pstmt, rs);
-
+        } catch (Exception e) {
+            throw  new FindException(e.getMessage());
+        }finally {
+            if(session != null) session.close();
         }
     }
 
     @Override
     public void BoardViewUpdate(String board_id) throws ModifyException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-
+        SqlSession session = null;
         try {
-            con=MyConnection.getConnection();
+            session = sqlSessionFactory.openSession();
+            
+            int rowcnt = session.update("mybatis.boardMapper.BoardViewUpdate",board_id);
+            
+            if(rowcnt == 0) {
+            	throw new ModifyException("해당 게시글이 존재하지 않습니다.");
+            }
+            session.commit();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ModifyException(e.getMessage());
-        }
-
-        String updateSQL = "UPDATE board SET board_view = board_view+1 WHERE board_id = ?";
-
-        try {
-            pstmt = con.prepareStatement(updateSQL);
-            pstmt.setString(1, board_id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new ModifyException(e.getMessage());
+            throw  new ModifyException(e.getMessage());
         }finally {
-            MyConnection.close(con, pstmt);
+            if(session != null) session.close();
         }
     }
 

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice(assignableTypes = com.my.controller.UserController.class)
-public class CustomerControllerAdviser {
+public class UserControllerAdviser {
 	@ExceptionHandler
 	@ResponseBody
 	public Object except(Exception e) {

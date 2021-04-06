@@ -9,14 +9,70 @@
             <id property="user_id" column="user_id"/>
         </association>
     </resultMap>
+    
+        <resultMap id="boardcommentMap" type="BoardComment" autoMapping="true">
+        <id property="board_id" column="board_id"/>
+        <id property="comment_wdate" column="comment_wdate"/>
+        
+        <association property="user" javaType="User" autoMapping="true">
+            <id property="user_id" column="user_id"/>
+        </association>
+    </resultMap>
+    
     <select id="BoardById" resultMap="boardMap">
-      SELECT b.*, u.*, (SELECT COUNT(*) FROM board_up WHERE board_id = #{board_id}) AS board_up
-      FROM board b join users u on (b.user_id = u.user_id) WHERE b.board_id = #{board_id}
-   </select>
+		SELECT b.*, u.*, (SELECT COUNT(*) FROM board_up WHERE board_id = #{board_id}) AS board_up
+		FROM board b join users u on (b.user_id = u.user_id) WHERE b.board_id = #{board_id}
+	</select>
    
-    <select id="BoardAll" parameterType="map" resultMap="boardMap">
-      select B.rnum, B.* , (select count(*) from board) board_total from (select rownum as rnum, A.* from 
-      (select * from board b join users u on b.user_id = u.user_id order by b.board_wdate desc ) 
-      A where rownum <![CDATA[ <= ]]> #{page}) B where B.rnum <![CDATA[ >= ]]> #{num}
-   </select>
+	<select id="BoardAll" parameterType="map" resultMap="boardMap">
+		select B.rnum, B.* , (select count(*) from board) board_total from (select rownum as rnum, A.* from 
+		(select * from board b join users u on b.user_id = u.user_id order by b.board_wdate desc ) 
+		A where rownum <![CDATA[ <= ]]> #{page}) B where B.rnum <![CDATA[ >= ]]> #{num}
+	</select>
+   
+	<select id="CommentAll" resultMap="boardcommentMap">
+		SELECT bc.board_id, bc.user_id, comment_content, comment_wdate, (SELECT u.user_nickname 
+		 FROM users u WHERE u.user_id=bc.user_id)AS user_nickname FROM board_comment bc 
+		 WHERE board_id=#{board_id} ORDER BY comment_wdate asc
+	</select>
+	
+	<insert id="CommentInsert" parameterType="map">
+		INSERT INTO board_comment(board_id, comment_content, comment_wdate, user_id)
+		VALUES (#{board_id}, #{comment_content}, SYSDATE, #{user_id})
+	</insert>
+	
+	<insert id="BoardUpInsert" parameterType="map">
+		INSERT INTO board_up (board_id, user_id) VALUES(#{board_id},#{user_id})
+	</insert>
+	
+	
+	<delete id="BoardUpDelete" parameterType="map">
+		DELETE board_up WHERE board_id =#{board_id} AND user_id = #{user_id}
+	</delete>
+	
+	<insert id="BoardInsert" parameterType="Board">
+		INSERT INTO board(board_id, board_subtitle, board_title, board_content, user_id, board_wdate, board_file) 
+		VALUES (#{board_id} ,#{board_subtitle}, #{board_title}, #{board_content}, #{user_id}, sysdate, #{board_file})
+	</insert>
+	
+	<update id="BoardUpdate" parameterType="Board">
+		UPDATE board SET board_subtitle = #{board_subtitle}, board_title=#{board_title}, board_content = #{board_content}, 
+		board_file = #{board_file}, user_id = #{user_id}, board_wdate =#{board_wdate} WHERE board_id = #{board_id}
+	</update>
+	
+	<delete id="BoardDelete">
+		delete board where board_id = #{board_id}
+	</delete>
+	
+	<select id="NextId" resultMap="int">
+		SELECT AUTO_INCRE_BOARD.NEXTVAL FROM dual
+	</select>
+	
+	<select id="BoardViewChk" resultMap="Board">
+		SELECT board_view FROM board WHERE board_id = #{board_id}
+	</select>
+	
+	<update id="BoardViewUpdate">
+		UPDATE board SET board_view = board_view+1 WHERE board_id = #{board_id}
+	</update>
 </mapper>
