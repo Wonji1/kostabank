@@ -4,7 +4,6 @@ import com.my.exception.AddException;
 import com.my.exception.FindException;
 import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
-import com.my.sql.MyConnection;
 import com.my.vo.Question;
 
 import java.sql.Connection;
