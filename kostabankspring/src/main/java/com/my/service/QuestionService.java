@@ -8,10 +8,19 @@ import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.vo.Question;
 
+import lombok.extern.log4j.Log4j;
+
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+@Log4j
 public class QuestionService {
-    private QuestionDAO dao =new QuestionDAOOracle();
+	
+	@Autowired
+    private QuestionDAO dao;
     public Question findById(String question_id) throws FindException{
         return dao.selectById(question_id);
     }

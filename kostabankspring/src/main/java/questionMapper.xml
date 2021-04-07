@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "=//mybatis.org//DTD Mapper 3.0..EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.questionMapper">
+    <select id="selectById" resultType="Qusetion">
+		SELECT * FROM question WHERE question_id = #{question_id}
+	</select>
+	
+    <select id="selectMNById" parameterType="map" resultType="Qusetion">
+		select B.rnum, B.* , (select count(*) from my_note where user_id= #{user_id}) mn from
+		(select rownum as rnum, A.* from 
+		(select q.* from question q join my_note mn on q.QUESTION_ID = mn.QUESTION_ID 
+		where mn.user_id = #{user_id}
+		order by mn.mn_date desc ) A where rownum <![CDATA[ <= ]]> #{rownum}) B 
+		where B.rnum <![CDATA[ >= ]]> #{rownum}
+	</select>
+	
+	<insert id="insertMNById" parameterType="map">
+		INSERT INTO my_note (user_id,question_id) VALUES (#{user_id},#{question_id})
+	</insert>
+	
+	<delete id="deleteMNById" parameterType="map">
+		delete from my_note where user_id = #{user_id} and question_id = #{question_id}
+	</delete>
+	
+	<select id="selectQAById" parameterType="map" resultType="Question">
+		select * from (select * from question_solved qs join question q on 
+		qs.question_id=q.question_id left join my_note mn on qs.question_id = mn.question_id 
+		and mn.user_id=#{user_id} where qs.user_id=#{user_id}
+		order by qs.solved_date desc) where rownum <![CDATA[ <= ]]> #{n}
+	</select>
+	
+	<select id="selectAll" resultType="Question">
+		select * from question
+	</select>
+	
+	<delete id="insertQTmpDelete">
+		DELETE FROM question_tmp WHERE user_id = #{user_id}
+	</delete>
+	<select id="insertQTmpSelect" resultType="Question">
+		SELECT * FROM question WHERE substr(question_id,0,6) = #{question_year} order by question_id
+	</select>
+	<insert id="insertQTmpInsert" parameterType="map">
+		INSERT INTO question_tmp (question_id, user_id, question_answer) 
+		VALUES (#{question_id},#{user_id},#{question_answer})
+	</insert>
+	
+	<delete id="insertRandomQTmpDelete">
+		DELETE FROM question_tmp WHERE user_id = #{user_id}
+	</delete>
+	<select id="insertRandomQTmpSelect" parameterType="map" resultType="Question">
+		select * from (select q.question_id,q.correct_answer, count(*) cnt from question q 
+		left join question_solved qs on q.question_id = qs.question_id  and qs.user_id = #{user_id} 
+		where substr(q.question_id,8,1) = #{n}  group by q.question_id,q.correct_answer 
+		order by cnt) where rownum <![CDATA[ <= ]]>  100
+	</select>
+	<insert id="insertRandomQTmpInsert" parameterType="map">
+		INSERT INTO question_tmp (question_id, user_id, question_answer) 
+		VALUES (#{question_id},#{user_id},#{question_answer})
+	</insert>
+	
+	<select id="selectQTmpByQId" parameterType="map" resultType="Question">
+		select A.* , (select count(*) from question_tmp where user_id= #{user_id}) mn_total from 
+		(select q.* from question q join question_tmp qt on q.QUESTION_ID = qt.QUESTION_ID 
+		where qt.user_id = #{user_id} and substr(q.question_id,8,1)= #{n}) A  order by question_id
+	</select>
+	
+	<select id="updateQTmpByQSelect" parameterType="map" resultType="Question">
+		SELECT qt.question_answer,qt.question_id, q.total_answer_count, q.correct_answer_count 
+		FROM question_tmp qt join question q on qt.QUESTION_ID = q.question_id 
+		WHERE user_id= #{user_id} and substr(q.question_id,8,1)= #{n} order by question_id
+	</select>
+	<update id="updateQTmpByQUpdate1" parameterType="map">
+		update question_tmp set QUESTION_OX=#{question_ox} 
+		where question_id = #{question_id} and user_id= #{user_id}
+	</update>
+	<update id="updateQTmpByQUpdate2" parameterType="map">
+		update question set total_answer_count = #{total_answer_count}, correct_answer_count = #{correct_answer_count} 
+		where question_id = #{question_id}
+	</update>
+	<insert id="updateQTmpByQInsert" parameterType="map">
+		INSERT INTO question_solved (user_id, question_id, question_ox) 
+		VALUES (#{user_id},#{question_id},#{question_ox})
+	</insert>
+	
+	<select id="selectAfterSolveQByRound" parameterType="map" resultType="Question">
+		select * from question_tmp where substr(question_id,7,2) = #{question_round} and user_id = #{user_id} 
+		order by question_id
+	</select>
+	
+</mapper>
