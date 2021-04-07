@@ -20,7 +20,7 @@
     <mappers>
         <mapper resource="boardMapper.xml"/>
         <mapper resource="userMapper.xml"/>
- <!--       <mapper resource="feedbackMapper.xml"/>
-        <mapper resource="questionMapper.xml"/>	-->
+        <mapper resource="feedbackMapper.xml"/>
+        <mapper resource="questionMapper.xml"/>
     </mappers>
 </configuration>

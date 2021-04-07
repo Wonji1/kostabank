@@ -10,10 +10,19 @@ import com.my.vo.Feedback;
 import com.my.vo.Qa;
 import com.my.vo.Report;
 
+import lombok.extern.log4j.Log4j;
+
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+@Log4j
 public class FeedbackService {
-    private FeedbackDAO dao = new FeedbackDAOOracle();
+	
+	@Autowired
+    private FeedbackDAO dao;
     public Qa qaById(String user_id, int rownum) throws FindException{
         return dao.UserQaById(user_id,rownum);
     }

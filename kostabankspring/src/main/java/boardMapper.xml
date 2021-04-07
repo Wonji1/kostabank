@@ -52,12 +52,12 @@
 	
 	<insert id="BoardInsert" parameterType="Board">
 		INSERT INTO board(board_id, board_subtitle, board_title, board_content, user_id, board_wdate, board_file) 
-		VALUES (#{board_id} ,#{board_subtitle}, #{board_title}, #{board_content}, #{user_id}, sysdate, #{board_file})
+		VALUES (#{board_id} ,#{board_subtitle}, #{board_title}, #{board_content}, #{user.user_id}, sysdate, #{board_file})
 	</insert>
 	
 	<update id="BoardUpdate" parameterType="Board">
 		UPDATE board SET board_subtitle = #{board_subtitle}, board_title=#{board_title}, board_content = #{board_content}, 
-		board_file = #{board_file}, user_id = #{user_id}, board_wdate =#{board_wdate} WHERE board_id = #{board_id}
+		board_file = #{board_file}, user_id = #{user.user_id}, board_wdate =#{board_wdate} WHERE board_id = #{board_id}
 	</update>
 	
 	<delete id="BoardDelete">

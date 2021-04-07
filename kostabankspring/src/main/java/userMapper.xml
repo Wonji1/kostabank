@@ -3,12 +3,6 @@
         PUBLIC "=//mybatis.org//DTD Mapper 3.0..EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mybatis.userMapper">
-    <resultMap id="boardMap" type="Board" autoMapping="true">
-        <id property="board_id" column="board_id"/>
-        <association property="user" javaType="User" autoMapping="true">
-            <id property="user_id" column="user_id"/>
-        </association>
-    </resultMap>
     
     <select id="selectById" resultType="User">
 		SELECT * FROM USERS WHERE user_id = #{user_id}

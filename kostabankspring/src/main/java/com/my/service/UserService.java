@@ -12,12 +12,15 @@ import lombok.extern.log4j.Log4j;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @Log4j
 public class UserService {
-    private UserDAO dao =new UserDAOOracle();
+	
+	@Autowired
+    private UserDAO dao;
     public User findById(String user_id) throws FindException{
         return dao.selectById(user_id);
     }

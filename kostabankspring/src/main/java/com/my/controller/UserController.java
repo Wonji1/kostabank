@@ -29,7 +29,6 @@ import com.my.model.DeleteEmailThread;
 import com.my.model.MyConfig;
 import com.my.service.FeedbackService;
 import com.my.service.UserService;
-import com.my.vo.Board;
 import com.my.vo.Feedback;
 import com.my.vo.User;
 
@@ -40,8 +39,11 @@ public class UserController {
 	@Autowired
 	private UserService service;
 	
+	@Autowired
+	private HttpServletRequest request;
+	
     @RequestMapping("/userinfo")
-    public Map<String, Object> userinfo(HttpServletRequest request) throws FindException {
+    public Map<String, Object> userinfo() throws FindException {
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         String id = (String)session.getAttribute("loginInfo");
@@ -190,8 +192,7 @@ public class UserController {
     
     @RequestMapping("/moduser")
     public Map<String, Object> moduser(@RequestParam(value = "user_nickname") String user_nickname
-    		,@RequestParam(value = "user_pwd") String user_pwd
-    		, HttpServletRequest request){
+    		,@RequestParam(value = "user_pwd") String user_pwd){
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         String id = (String)session.getAttribute("loginInfo");
@@ -283,7 +284,7 @@ public class UserController {
     }
 
     @RequestMapping("/removeuser")
-    public Map<String, Object> removeuser(HttpServletRequest request) throws RemoveException{
+    public Map<String, Object> removeuser() throws RemoveException{
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         String id = (String)session.getAttribute("loginInfo");
@@ -295,7 +296,7 @@ public class UserController {
     }
     
     @RequestMapping("/header")
-    public Map<String, Object> header(HttpServletRequest request){
+    public Map<String, Object> header(){
         List<Map<String,Object>> jacksonList = new ArrayList<>();
         HttpSession session = request.getSession();
         FeedbackService fService = new FeedbackService();
@@ -367,7 +368,7 @@ public class UserController {
     @RequestMapping("/login")
     public Map<String, Object> login(@RequestParam(value = "user_id") String user_id
     		, @RequestParam(value = "user_pwd") String user_pwd
-    		, HttpServletRequest request) throws FindException{
+    		) throws FindException{
         Map<String, Object> jacksonMap = new HashMap<>();
         
         User user = service.login(user_id,user_pwd);
@@ -382,7 +383,7 @@ public class UserController {
     }
     
     @RequestMapping("/logout")
-    public Map<String, Object> logout(HttpServletRequest request){
+    public Map<String, Object> logout(){
     	HttpSession session = request.getSession();
         session.removeAttribute("loginInfo");
         Map<String, Object> jacksonMap = new HashMap<>();

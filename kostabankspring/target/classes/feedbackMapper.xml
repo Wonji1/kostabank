@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "=//mybatis.org//DTD Mapper 3.0..EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.feedbackMapper">
+
+    <resultMap id="reportMap" type="Report" autoMapping="true">
+        <id property="report_id" column="report_id"/>
+        <association property="user" javaType="User" autoMapping="true">
+            <id property="user_id" column="user_id"/>
+        </association>
+        <association property="question" javaType="Question" autoMapping="true">
+            <id property="question_id" column="question_id"/>
+        </association>
+    </resultMap>
+    
+    <resultMap id="qaMap" type="Qa" autoMapping="true">
+        <id property="qa_id" column="qa_id"/>
+        <association property="user" javaType="User" autoMapping="true">
+            <id property="user_id" column="user_id"/>
+        </association>
+    </resultMap>
+    
+    <select id="selectFeedbackById" resultType="Feedback">
+		select * from 
+		( select report_id feedback_id, report_id feedback_sort, report_title feedback_title, 
+		report_sol_wdate feedback_date, report_new 
+		from report where report_user = #{user_id} and report_new =1 
+		union all select qa_id,-1, qa_title, qa_sol_wdate, qa_new 
+        from qa where user_id= #{user_id} and qa_new =1 order by report_sol_wdate desc) where rownum <![CDATA[ <= ]]>10
+	</select>
+	
+	<select id="UserQaById" parameterType="map" resultMap = "qaMap">
+		select B.rnum, B.* , (select count(*) from qa where user_id= #{user_id}) qa from
+		(select rownum as rnum, A.* from 
+		(select * from qa q join users u on q.user_id = u.user_id where q.user_id = #{user_id}
+		order by q.qa_status, q.qa_wdate desc ) A 
+		where rownum <![CDATA[ <= ]]> #{rownum}) B where B.rnum <![CDATA[ >= ]]> #{rownum}
+	</select>
+	
+	<select id="QaByQaId" resultMap = "qaMap">
+		SELECT * FROM qa q join users u on q.user_id = u.user_id WHERE qa_id = #{qa_id}
+	</select>
+	
+	<update id="NweStatusReportUpdate" parameterType="map">
+		update report set report_new = #{report_new} , report_status= #{report_status} where report_id= #{report_id}
+	</update>
+	<update id="NweStatusQaUpdate" parameterType="map">
+		update qa set qa_new = #{qa_new} , qa_status=#{qa_status} where qa_id= #{qa_id}
+	</update>
+	
+	<select id="QaAll" parameterType="map" resultMap="qaMap">
+		select B.rnum, B.* , (select count(*) from qa) qa from
+		(select rownum as rnum, A.* from 
+		(select * from qa q join users u on q.user_id = u.user_id
+		order by q.qa_wdate desc ) A where rownum <![CDATA[ <= ]]> #{rownum1}) B where B.rnum <![CDATA[ >= ]]> #{rownum2}
+	</select>
+	
+	<insert id="QaInsert" parameterType="Qa">
+		INSERT INTO qa(qa_id, user_id, qa_title, qa_content, qa_wdate, qa_file)
+		VALUES (#{qa_id}, #{user.user_id}, #{qa_title}, #{qa_content}, SYSDATE, #{qa_file})
+	</insert>
+	
+	<select id="ReportById" resultMap="reportMap">
+		SELECT * FROM report r join users u on r.report_user = u.user_id 
+		join question q on r.report_question_id = q.question_id WHERE report_id = #{report_id}
+	</select>
+	
+	<select id="ReportAll" parameterType="map" resultMap="reportMap">
+		select B.rnum, B.* , (select count(*) from report) total from
+		(select rownum as rnum, A.* from 
+		(select * from report r join users u on r.report_user = u.user_id 
+		join question q on r.report_question_id = q.question_id 
+		order by r.report_status, r.report_wdate desc ) A where rownum <![CDATA[ <= ]]> #{rownum1}) 
+		B where B.rnum <![CDATA[ >= ]]> #{rownum2}
+	</select>
+	
+	<insert id="ReportInsert" parameterType="Report">
+		INSERT INTO report(report_user, report_title, report_content, report_question_id)
+		VALUES (#{user.user_id}, #{report_title}, #{report_content}, #{question.question_id})
+	</insert>
+	
+	<update id="ReportSolUpdate" parameterType="map">
+		update report set report_sol_content = #{content},report_sol_wdate = current_timestamp 
+		, report_new =1 ,report_status=2 where report_id= #{report_id}
+	</update>
+	
+	<update id="QaSolUpdate" parameterType="map">
+		update qa set qa_sol_content = #{content},qa_sol_wdate = current_timestamp 
+		, qa_new =1 ,qa_status=2 where qa_id= #{qa_id}
+	</update>
+	
+	<delete id="QaDeleteByList">
+		DELETE FROM qa WHERE qa_id = #{qa_id}
+	</delete>
+	
+	<select id="qaNextId" resultType="int">
+		SELECT AUTO_INCRE_QA.NEXTVAL FROM dual
+	</select>
+</mapper>
