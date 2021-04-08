@@ -300,7 +300,7 @@
                         var qaForm = $("div.user_qa>form.qa_form")[0];
                         var formData = new FormData(qaForm);
                         $.ajax({
-                            url: "./addqa",
+                            url: "./feedback/addqa",
                             method: "post",
                             success: function (responseObj) {
                                 location.href="myinfo.html";

@@ -10,6 +10,7 @@ public class Question {
     private int question_ox;
     private int mn_total;
     private String mn_id;
+    private String mn_date;
 
     public Question() {
     }
@@ -95,6 +96,14 @@ public class Question {
 
     public void setMn_id(String mn_id) {
         this.mn_id = mn_id;
+    }
+    
+    public String getMn_date() {
+        return mn_date;
+    }
+
+    public void setMn_date(String mn_date) {
+        this.mn_date = mn_date;
     }
 
     @Override

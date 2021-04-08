@@ -324,7 +324,7 @@
                         var boardForm = $("div.user_board>form.board_form")[0];
                         var formData = new FormData(boardForm);
                         $.ajax({
-                            url: "./addboard",
+                            url: "./board/addboard",
                             method: "post",
                             success: function (responseObj) {
                                 location.reload();

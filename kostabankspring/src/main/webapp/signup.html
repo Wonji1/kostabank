@@ -149,7 +149,7 @@ input#modal_check_btn {
         	var user_id = $('.user_id');
         	user_id.blur(function(event){
         		$.ajax({
-        			url:'./iddupchk',
+        			url:'./user/iddupchk',
         			method: 'post',
         			data : {"user_id": $('.idForm>label>.user_id').val()},
         			success(data){
@@ -187,7 +187,7 @@ input#modal_check_btn {
         	var user_nickname = $('.user_nickname');
         	user_nickname.blur(function(event){
         		$.ajax({
-                    url: './nickdupchk',
+                    url: './user/nickdupchk',
                     method: 'post',
                     data: {"user_nickname": $('.nicknameForm>label>.user_nickname').val()},
                     success(data){
@@ -265,7 +265,7 @@ input#modal_check_btn {
         	var user_email = $('.user_email');
         	user_email.blur(function(event){
                    $.ajax({
-                       url: './emaildupchk',
+                       url: './user/emaildupchk',
                        method: 'post',
                        data: {"user_email": $('.emailForm>label>.user_email').val()},
                         success(data){
@@ -300,7 +300,7 @@ input#modal_check_btn {
         			alert("양식에 맞게 입력해주세요.");
         		} else {
         			$.ajax({
-                       url: './emaildupchk',
+                       url: './user/emaildupchk',
                        method: 'post',
                        data: {"user_email": $('.emailForm>label>.user_email').val()},
                        success(data){
@@ -309,7 +309,7 @@ input#modal_check_btn {
                     		   emailValue = false;
                     	   } else {
 	                    		$.ajax({
-	     		                   url: './addemail',
+	     		                   url: './user/addemail',
 	     		                   method: 'post',
 	     		                   data: {"email": $('.emailForm>label>.user_email').val()},
 	     		                   success(data){
@@ -332,7 +332,7 @@ input#modal_check_btn {
             
         	$('.modalbody>input[type=submit]').click(function () {
                 $.ajax({
-                    url: './chknumchk',
+                    url: './user/chknumchk',
                     method: 'post',
                     data: {"email": $('.emailForm>label>.user_email').val(),
                         "check_number": $('.modalbody>label>.emailchknum').val()},
@@ -358,7 +358,7 @@ input#modal_check_btn {
         	$('.btnarea>#signupbtn').click(function () {
 	        	if(idValue == true && nickValue == true && pwdValue == true && pwdchkValue ==true && emailValue ==true ){       	 
    	        		$.ajax({
-   		                url: './adduser',
+   		                url: './user/adduser',
    		                method: 'post',
    		                data: {"user_id": $('.idForm>label>.user_id').val(),
    		                    "user_nickname": $('.nicknameForm>label>.user_nickname').val(),

@@ -107,7 +107,7 @@
             $('.questionsolve>label:nth-child('+(nth_num+1)+')>input').prop("checked",true);
             //문제 이미지 띄우기
             $.ajax({
-                url: './qtmp',
+                url: './question/qtmp',
                 method: 'post',
                 data: {"row_num": question_num},
                 success(data){
@@ -163,7 +163,7 @@
             //채점하기
             $('.scoringbtn').click(function(){
                $.ajax({
-                    url: './scoringq',
+                    url: './question/scoringq',
                     method: 'post',
                     data: {"answer_list": JSON.parse(sessionStorage.getItem("question_answer_list"))},
                     traditional: true,// 이거 꼭 추가하기

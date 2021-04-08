@@ -6,6 +6,10 @@
     <properties>
         <property name="username" value="kosta"/>
     </properties>
+    <settings> 
+		<setting name="cacheEnabled" value="false" /> 
+		<setting name="jdbcTypeForNull" value="NULL" /> 
+	</settings>
     <typeAliases>
         <typeAlias alias="Board" type="com.my.vo.Board"/>
         <typeAlias alias="BoardComment" type="com.my.vo.BoardComment"/>

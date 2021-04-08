@@ -4,6 +4,7 @@
         <meta charset ="utf-8"/>
         <title>KostaBank</title>
         <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -41,7 +42,7 @@
                 });
                 
                 $.ajax({
-                	url: './header',
+                	url: './user/header',
                     method: 'post',
                     success:function(data){
                     	//로그인에 따른 메뉴와 알람
@@ -88,9 +89,10 @@
                 })
                 
                 $.ajax({
-                    url: './header',
+                    url: './user/header',
                     method: 'post',
                     success:function(data){
+                    	console.log(data);
                     	if(data.status == undefined) {
                     	    $('#alarm-logo').css('color','red');
                     		var $tableObj = $("#alarmTable");
@@ -121,7 +123,7 @@
                                 let feedback_td_id = td.eq(1).attr('class');
                                 if(feedback_td_sort == 0){
                                     $.ajax({
-                                        url: './qa',
+                                        url: './feedback/qa',
                                         method: 'post',
                                         data: {"qa_id": feedback_td_id,
                                             "n": 0,
@@ -131,11 +133,12 @@
                                                                             data.qa_content+ "<hr><br>" +
                                                                             "답변 : " + data.qa_sol_content + "<br>" +
                                                                             "답변날짜 " + data.qa_sol_wdate +"</div>");
+                                            $('.alarm_modal .content').css({"min-height":"370px"},{"height":"auto"});
                                         }
                                     });
                                 } else {
                                     $.ajax({
-                                        url: './report',
+                                        url: './feedback/report',
                                         method: 'post',
                                         data: {"report_id": feedback_td_id,
                                             "n": 0,
@@ -145,6 +148,7 @@
                                                                             data.report_content+ "<hr><br>" +
                                                                             "답변 : " + data.report_sol_content + "<br>" +
                                                                             "답변날짜 " +data.report_sol_wdate+"</div>");
+                                            $('.alarm_modal .content').css({"min-height":"370px"},{"height":"auto"});
                                         }
                                     });
                                 }
@@ -161,7 +165,7 @@
                 
                 let timer = setInterval(function () {
                 	$.ajax({
-                        url: './header',
+                        url: './user/header',
                         method: 'post',
                         success:function(data){                        	
                         	$('.loginInfo-box>.infoId').append(data.user_nickname);
@@ -194,8 +198,6 @@
 
                         			var tr = $(this);
                         			var td = tr.children();
-
-                        			console.log("클릭한 row의 데이터:" + td.eq(1).attr('class'));
                         		});
                         	}
                         	else if (data.status === -1){
@@ -211,7 +213,7 @@
 	                
                 $('.loginInfo-box>a[href=logout]').click(function () {
                     $.ajax({
-                        url: './logout',
+                        url: './user/logout',
                         method: 'post',
                         success:function(data){
                        		location.href='login.html';

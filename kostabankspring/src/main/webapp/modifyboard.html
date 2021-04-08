@@ -272,7 +272,7 @@
 
             //수정할 게시글 번호의 내용 보여주기 
             $.ajax({
-                url: "./boarddetail",
+                url: "./board/boarddetail",
                 method: "post",
                 data: { "board_id": board_id },
                 success: function (data) {
@@ -347,7 +347,7 @@
                         var boardForm = $("div.user_board>form.board_form")[0];
                         var formData = new FormData(boardForm);
                         $.ajax({
-                            url: "./modboard",
+                            url: "./board/modboard",
                             method: "post",
                             success: function (responseObj) {
                                 location.href = 'boarddetail.html'

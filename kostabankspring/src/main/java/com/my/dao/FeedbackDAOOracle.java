@@ -6,11 +6,6 @@ import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.vo.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +116,7 @@ public class FeedbackDAOOracle implements FeedbackDAO {
         try {
             session = sqlSessionFactory.openSession();
             
-            session.insert("mybatis.feedbackMapper.BoardInsert",qa);
+            session.insert("mybatis.feedbackMapper.QaInsert",qa);
             
         } catch (Exception e) {
             throw  new AddException(e.getMessage());
@@ -151,7 +146,7 @@ public class FeedbackDAOOracle implements FeedbackDAO {
             if(report == null){
                 throw new FindException("신고 아이디에 해당하는 값이 없습니다.");
             }
-            NewStatusQaUpdate(session,report_id,n,s);
+            NewStatusReportUpdate(session, report_id, n, s);
             return report;
         } catch (Exception e) {
             throw  new FindException(e.getMessage());

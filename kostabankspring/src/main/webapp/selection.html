@@ -56,7 +56,7 @@
 
             $('.selection .container>div').click(function(event){
                 $.ajax({
-                    url: './addqtmp',
+                    url: './question/addqtmp',
                     method: 'post',
                     data: {"question_year": $(event.target).attr("class")},
                     success(data){

@@ -169,7 +169,7 @@
     	//기억이 안나요
     	$('.modal_content>div>input[type=submit]').click(function () {
     		$.ajax({
-                 url: './modpwdbyemail',
+                 url: './user/modpwdbyemail',
                  method: 'post',
                  data: {"user_email": $('.emailaddress').val()},
                  success(data){
@@ -188,7 +188,7 @@
     	//로그인버튼
 	    $('.loginbutton>input[type=submit]').click(function () {
 	    	$.ajax({
-                url: './login',
+                url: './user/login',
                 method: 'post',
                 data: {"user_id": $('.idForm>label>.user_id').val(),
                     "user_pwd": $('.pwdForm>label>.user_pwd').val()},

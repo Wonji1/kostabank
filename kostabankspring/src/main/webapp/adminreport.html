@@ -307,7 +307,7 @@
                 let $contentImg = $('.reportimg');
                 let $explanationImg = $('.explanation');
                 $.ajax({
-                    url: './report',
+                    url: './feedback/report',
                     method: 'post',
                     data: { "report_id": reportId, "n": 0, "s": 1 },
                     success(data) {//성공응답
@@ -333,7 +333,7 @@
                                 alert("답변을 등록하시겠습니까?");
                                 var reportsolContent = $("#write").val();
                                 $.ajax({
-                                    url: './addreportsol',
+                                    url: './feedback/addreportsol',
                                     method: 'post',
                                     data: { "report_id": reportId, "content": reportsolContent },
                                     success(data) {
@@ -345,7 +345,7 @@
                                 });
                             }
                             $.ajax({
-                                url: './reportlist',
+                                url: './feedback/reportlist',
                                 method: 'post',
                                 data: { "page": 1, "num": 10 },
                                 success(data) {//성공응답
@@ -378,7 +378,7 @@
                     num = 1;
                 }
                 let promisePaging = $.ajax({
-                    url: './reportlist',
+                    url: './feedback/reportlist',
                     data: { "page": num, "num": 10 },
                     method: 'post',
                     success(data) {//성공응답
@@ -442,7 +442,7 @@
                     $('.paging_number>span').click(function (event) {
                         let num = parseInt($(event.target).text());
                         promisePaging = $.ajax({
-                            url: './reportlist',
+                            url: './feedback/reportlist',
                             data: { "page": num, "num": 10 },
                             method: 'post',
                             success(data) {//성공응답
@@ -519,7 +519,7 @@
                             break;
                     }
                     $.ajax({
-                        url: './reportlist',
+                        url: './feedback/reportlist',
                         data: { "page": n, "num": 10 },
                         method: 'post',
                         success(data) {//성공응답

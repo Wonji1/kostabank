@@ -184,7 +184,7 @@
     $(function () {
         sessionStorage.clear();
         let solvedPromise = $.ajax({
-            url: './solved',
+            url: './question/solved',
             method: 'post',
             success(data) {
                 let str='';
@@ -268,7 +268,7 @@
         $('.btn_complete').click(function () {
             let question_list =JSON.parse(sessionStorage.getItem("question_list"));
             $.ajax({
-                url: './addmn',
+                url: './question/addmn',
                 method: 'post',
                 data: {'question_id_list':question_list},
                 traditional: true,

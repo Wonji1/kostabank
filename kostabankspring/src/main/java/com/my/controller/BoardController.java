@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.Session;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -40,15 +38,9 @@ public class BoardController {
     @Autowired
     private BoardService service;
 
-	@Autowired
-	private ServletContext context;
-	
-	@Autowired
-	private HttpServletRequest request;
-
     @RequestMapping("/boarddetail")
     public Map<String, Object> boardDetail(@RequestParam(value = "board_id") String board_id
-    		) throws FindException {
+    		, HttpServletRequest request) throws FindException {
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         session.setAttribute("board_id", board_id);
@@ -113,7 +105,7 @@ public class BoardController {
     @RequestMapping("/addcomment")
     public Map<String, Object> addboardComment(@RequestParam(value = "board_id") String board_id
     		, @RequestParam(value = "comment_w_content") String comment_w_content
-    		) throws AddException {
+    		, HttpServletRequest request) throws AddException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
 		HttpSession session = request.getSession();
@@ -137,7 +129,7 @@ public class BoardController {
     
     @RequestMapping("/boardup")
     public Map<String, Object> addboardup(@RequestParam(value = "board_id") String board_id
-    		) throws AddException {
+    		, HttpServletRequest request) throws AddException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
 		HttpSession session = request.getSession();
@@ -153,7 +145,7 @@ public class BoardController {
     
     @RequestMapping("/removeboardup")
     public void removeboardup(@RequestParam(value = "board_id") String board_id
-    		) throws RemoveException {
+    		, HttpServletRequest request) throws RemoveException {
 		
 		HttpSession session = request.getSession();
         
@@ -164,7 +156,8 @@ public class BoardController {
     }
     
     @RequestMapping("/addboard")
-    public Map<String, Object> addboard() throws AddException, FindException, IOException {
+    public Map<String, Object> addboard(HttpServletRequest request
+    		) throws AddException, FindException, IOException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
 		HttpSession session = request.getSession();
@@ -173,11 +166,11 @@ public class BoardController {
 
 		
 		int nextBoardId = service.findNextBoardId();
-		File uploadFile =  new File(context.getRealPath("/")+ "/boardupload");
+		File uploadFile =  new File(request.getServletContext().getRealPath("/")+ "/boardupload");
 		if(!uploadFile.exists()){
 			uploadFile.mkdir();
 		}
-		String saveDirectory = context.getRealPath("boardupload");
+		String saveDirectory = request.getServletContext().getRealPath("boardupload");
 
 		int maxPostSize = 10*1024*1024;
 		String encoding = "UTF-8";
@@ -207,7 +200,8 @@ public class BoardController {
     }
     
     @RequestMapping("/modboard")
-    public Map<String, Object> modboard() throws ModifyException, FindException, IOException {
+    public Map<String, Object> modboard(HttpServletRequest request
+    		) throws ModifyException, FindException, IOException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
 		HttpSession session = request.getSession();
@@ -216,11 +210,11 @@ public class BoardController {
 		String board_id = (String)session.getAttribute("board_id");
 		
 		int nextBoardId = service.findNextBoardId();
-		File uploadFile =  new File(context.getRealPath("/")+ "/boardupload");
+		File uploadFile =  new File(request.getServletContext().getRealPath("/")+ "/boardupload");
 		if(!uploadFile.exists()){
 			uploadFile.mkdir();
 		}
-		String saveDirectory = context.getRealPath("boardupload");
+		String saveDirectory = request.getServletContext().getRealPath("boardupload");
 
 		int maxPostSize = 10*1024*1024;
 		String encoding = "UTF-8";
@@ -313,7 +307,7 @@ public class BoardController {
     
     @RequestMapping("/findboardup")
     public Map<String, Object> findboardup(@RequestParam(value = "board_id") String board_id
-    		) throws FindException {
+    		, HttpServletRequest request) throws FindException {
 		
 		Map<String, Object> jacksonMap = new HashMap<>();
 		HttpSession session = request.getSession();

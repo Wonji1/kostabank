@@ -100,7 +100,7 @@
             //문제번호 띄우기
             $('.container1>.box>input[type="button"]').click(function(event){
                 $.ajax({
-                    url: './solveresult',
+                    url: './question/solveresult',
                     method: 'post',
                     data: {"question_round": $(event.target).attr("class")},
                     success(data){
@@ -133,7 +133,7 @@
 
                         $('.container2>div>a').click(function (event) {
                             $.ajax({
-                                url: './questioninfo',
+                                url: './question/questioninfo',
                                 method: 'post',
                                 data: {"question_id": $(event.target).attr('id')},
                                 success(data){
@@ -188,7 +188,7 @@
 
                         $('.container3>input').click(function () {
                             $.ajax({
-                                url: './addmn',
+                                url: './question/addmn',
                                 method: 'post',
                                 data: {"question_id_list": JSON.parse(sessionStorage.getItem("test_mn_list"))},
                                 traditional: true,// 이거 꼭 추가하기

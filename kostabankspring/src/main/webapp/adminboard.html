@@ -281,7 +281,7 @@
             $('.delbtn').click(function () {
                 if (confirm("삭제하시겠습니까?")) {
                     $.ajax({
-                        url: "./removeboardbylist",
+                        url: "./board/removeboardbylist",
                         method: "post",
                         data: { "board_id_list": JSON.parse(sessionStorage.getItem("board_id_list")) },
                         traditional: true,
@@ -304,7 +304,7 @@
                 num = 1;
             }
             let promisePaging = $.ajax({
-                url: './boardlist',
+                url: './board/boardlist',
                 data: { "page": num, "num": 10 },
                 method: 'post',
                 success(data) {//성공응답
@@ -373,7 +373,7 @@
                 $('.paging_number>span').click(function (event) {
                     let num = parseInt($(event.target).text());
                     promisePaging = $.ajax({
-                        url: './boardlist',
+                        url: './board/boardlist',
                         data: { "page": num, "num": 10 },
                         method: 'post',
                         success(data) {//성공응답
@@ -452,7 +452,7 @@
                         break;
                 }
                 $.ajax({
-                    url: './boardlist',
+                    url: './board/boardlist',
                     data: { "page": n, "num": 10 },
                     method: 'post',
                     success(data) {//성공응답

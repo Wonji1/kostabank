@@ -33,14 +33,9 @@ public class QuestionController {
 	@Autowired
 	private QuestionService service;
 	
-	@Autowired
-	private ServletContext context;
-	
-	@Autowired
-	private HttpServletRequest request;
-	
     @RequestMapping("/addmn")
-    public Map<String, Object> addmn(@RequestParam(value = "question_id_list") String[] question_id_list) throws AddException {
+    public Map<String, Object> addmn(@RequestParam(value = "question_id_list") String[] question_id_list
+    		, HttpServletRequest request) throws AddException {
 		
 		Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -54,7 +49,7 @@ public class QuestionController {
     
     @RequestMapping("/addqtmp")
     public Map<String, Object> addqtmp(@RequestParam(value = "question_year") String question_year
-    		) throws AddException {
+    		, HttpServletRequest request) throws AddException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -68,7 +63,7 @@ public class QuestionController {
     }
     
     @RequestMapping("/addrandomqtmp")
-    public Map<String, Object> addrandomqtmp() throws AddException {
+    public Map<String, Object> addrandomqtmp(HttpServletRequest request) throws AddException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -83,7 +78,7 @@ public class QuestionController {
     
     @RequestMapping("/mynote")
     public Map<String, Object> mynote(@RequestParam(value = "rownum") int rownum
-    		) throws FindException {
+    		, HttpServletRequest request) throws FindException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -103,7 +98,7 @@ public class QuestionController {
     
     @RequestMapping("/qtmp")
     public Map<String, Object> qtmp(@RequestParam(value = "row_num") String row_num
-    		) throws FindException {
+    		, HttpServletRequest request) throws FindException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -140,7 +135,7 @@ public class QuestionController {
     
     @RequestMapping("/removemn")
     public Map<String, Object> removemn(@RequestParam(value = "question_id") String question_id
-    		) throws RemoveException {
+    		, HttpServletRequest request) throws RemoveException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -155,7 +150,7 @@ public class QuestionController {
     
     @RequestMapping("/scoringq")
     public Map<String, Object> scoringq(@RequestParam(value = "answer_list") String[] answer_list
-    		) throws ModifyException {
+    		, HttpServletRequest request) throws ModifyException {
 		
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -169,7 +164,7 @@ public class QuestionController {
     }
     
     @RequestMapping("/solved")
-    public List<Map<String, Object>> solved() throws FindException {
+    public List<Map<String, Object>> solved(HttpServletRequest request) throws FindException {
 		
     	List<Map<String, Object>> jacksonList = new ArrayList<>();
         HttpSession session = request.getSession();
@@ -194,7 +189,7 @@ public class QuestionController {
     
     @RequestMapping("/solveresult")
     public List<Map<String, Object>> solveresult(@RequestParam(value = "question_round") String question_round
-    		) throws FindException {
+    		, HttpServletRequest request) throws FindException {
 		
     	List<Map<String, Object>> jacksonList = new ArrayList<>();
         HttpSession session = request.getSession();

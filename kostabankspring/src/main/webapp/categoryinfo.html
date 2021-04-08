@@ -93,7 +93,7 @@
     	
         $(function () {
             $.ajax({
-                url: './userinfo',
+                url: './user/userinfo',
                 method: 'post',
                 success(data){
                     $('.value_id').html(data.user_id);
@@ -105,7 +105,7 @@
             var user_nickname = $('.value_nick>input');
             user_nickname.blur(function(event){
                 $.ajax({
-                    url: './nickdupchk',
+                    url: './user/nickdupchk',
                     method: 'post',
                     data: {"user_nickname": $('.value_nick>input').val()},
                     success(data){
@@ -195,7 +195,7 @@
             $('.btn_mod').click(function () {
             	if(nickValue == true && pwdValue == true && pwdchkValue ==true){   	 
   					$.ajax({
-	                    url: './moduser',
+	                    url: './user/moduser',
 	                    method: 'post',
 	                    data: {"user_nickname":$('.value_nick>input').val(),
 	                    "user_pwd":$('.value_pwd>input').val()},

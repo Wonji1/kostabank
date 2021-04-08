@@ -176,7 +176,7 @@
             $(".header").load("headernmenu.html");
             //신고리스트
             $.ajax({
-                url: './reportlist',
+                url: './feedback/reportlist',
                 method: 'post',
                 data: { "page": 1, "num": 10 },
                 success(data) {
@@ -197,7 +197,7 @@
             });
             //문의리스트
             $.ajax({
-                url: './qalist',
+                url: './feedback/qalist',
                 method: 'post',
                 data: { "page": 1, "num": 10 },
                 success(data) {
@@ -218,7 +218,7 @@
             });
             //가입자리스트
             $.ajax({
-                url: './recentreguser',
+                url: './user/recentreguser',
                 method: 'post',
                 data: { "page": 1, "num": 15 },
                 success(data) {

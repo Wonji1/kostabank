@@ -3,12 +3,12 @@
         PUBLIC "=//mybatis.org//DTD Mapper 3.0..EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mybatis.questionMapper">
-    <select id="selectById" resultType="Qusetion">
+    <select id="selectById" resultType="Question">
 		SELECT * FROM question WHERE question_id = #{question_id}
 	</select>
 	
-    <select id="selectMNById" parameterType="map" resultType="Qusetion">
-		select B.rnum, B.* , (select count(*) from my_note where user_id= #{user_id}) mn from
+    <select id="selectMNById" parameterType="map" resultType="Question">
+		select B.rnum, B.* , (select count(*) from my_note where user_id= #{user_id}) mn_total from
 		(select rownum as rnum, A.* from 
 		(select q.* from question q join my_note mn on q.QUESTION_ID = mn.QUESTION_ID 
 		where mn.user_id = #{user_id}
@@ -24,7 +24,7 @@
 		delete from my_note where user_id = #{user_id} and question_id = #{question_id}
 	</delete>
 	
-	<select id="selectQAById" parameterType="map" resultType="Question">
+	<select id="selectSQById" parameterType="map" resultType="Question">
 		select * from (select * from question_solved qs join question q on 
 		qs.question_id=q.question_id left join my_note mn on qs.question_id = mn.question_id 
 		and mn.user_id=#{user_id} where qs.user_id=#{user_id}
@@ -67,7 +67,7 @@
 	</select>
 	
 	<select id="updateQTmpByQSelect" parameterType="map" resultType="Question">
-		SELECT qt.question_answer,qt.question_id, q.total_answer_count, q.correct_answer_count 
+		SELECT qt.question_answer correct_answer,qt.question_id, q.total_answer_count, q.correct_answer_count 
 		FROM question_tmp qt join question q on qt.QUESTION_ID = q.question_id 
 		WHERE user_id= #{user_id} and substr(q.question_id,8,1)= #{n} order by question_id
 	</select>

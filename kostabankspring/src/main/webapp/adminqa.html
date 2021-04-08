@@ -283,7 +283,7 @@
             $('.delbtn').click(function () {
                 if (confirm("삭제하시겠습니까?")) {
                     $.ajax({
-                        url: "./removeqabylist",
+                        url: "./feedback/removeqabylist",
                         method: "post",
                         data: { "qa_id_list": JSON.parse(sessionStorage.getItem("qa_id_list")) },
                         traditional: true,
@@ -303,7 +303,7 @@
                 var $tdObj = $(event.target).prev();
                 var qaId = $tdObj.html().trim();//<td>   52   </td> 공백제거
                 $.ajax({
-                    url: './qa',
+                    url: './feedback/qa',
                     method: 'post',
                     data: { "qa_id": qaId, "n": 0, "s": 1 },
                     success(data) {//성공응답
@@ -329,7 +329,7 @@
                             } else {
                                 var qasolContent = $("#write").val();
                                 $.ajax({
-                                    url: './addqasol',
+                                    url: './feedback/addqasol',
                                     method: 'post',
                                     data: { "qa_id": qaId, "content": qasolContent },
                                     success(data) {
@@ -342,7 +342,7 @@
                                 });
                             }
                             $.ajax({
-                                url: './qalist',
+                                url: './feedback/qalist',
                                 method: 'post',
                                 data: { "page": 1, "num": 10 },
                                 success(data) {//성공응답
@@ -391,7 +391,7 @@
                     num = 1;
                 }
                 let promisePaging = $.ajax({
-                    url: './qalist',
+                    url: './feedback/qalist',
                     data: { "page": num, "num": 10 },
                     method: 'post',
                     success(data) {//성공응답
@@ -406,8 +406,7 @@
                             tableObj += `<td>${data[i].qa_status == 2 ? "해결" : "미해결"}</td>`;
                             $('#articles').html(tableObj);
                         }
-                        let str
-                            = "";
+                        let str = "";
                         let total = data[0].qa_total;
                         let pagePerTen = Math.ceil(total / 10);//소수점 이하 올림
                         let pageLast = pagePerTen % 10;
@@ -456,7 +455,7 @@
                     $('.paging_number>span').click(function (event) {
                         let num = parseInt($(event.target).text());
                         promisePaging = $.ajax({
-                            url: './qalist',
+                            url: './feedback/qalist',
                             data: { "page": num, "num": 10 },
                             method: 'post',
                             success(data) {//성공응답
@@ -534,7 +533,7 @@
                             break;
                     }
                     $.ajax({
-                        url: './qalist',
+                        url: './feedback/qalist',
                         data: { "page": n, "num": 10 },
                         method: 'post',
                         success(data) {//성공응답

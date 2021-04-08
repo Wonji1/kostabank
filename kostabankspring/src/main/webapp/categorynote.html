@@ -114,7 +114,7 @@
             let $pagingNumber = $('.paging_number');
             let num = 1;
             let promisePaging = $.ajax({
-                    url: './mynote',
+                    url: './question/mynote',
                     method: 'post',
                     data:{"rownum":num},
                     success(data){
@@ -168,7 +168,7 @@
                 $('.paging_number>span').click(function (event) {
                     let num = parseInt($(event.target).text());
                     promisePaging = $.ajax({
-                        url: './mynote',
+                        url: './question/mynote',
                         method: 'post',
                         data:{"rownum":num},
                         success(data){
@@ -239,7 +239,7 @@
                         break;
                 }
                 $.ajax({
-                    url: './mynote',
+                    url: './question/mynote',
                     method: 'post',
                     data:{"rownum":n},
                     success(data){
@@ -296,7 +296,7 @@
 
                 $('.btn_delete').click(function () {
                     $.ajax({
-                        url: './removemn',
+                        url: './question/removemn',
                         method: 'post',
                         data: {"question_id": $('.note_content_detail_info>span:nth-child(3)').attr('class')},
                         success(data){

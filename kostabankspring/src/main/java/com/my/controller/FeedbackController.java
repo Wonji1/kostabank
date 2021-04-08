@@ -23,7 +23,6 @@ import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.model.RenamePolicy;
 import com.my.service.FeedbackService;
-import com.my.vo.Board;
 import com.my.vo.Qa;
 import com.my.vo.Question;
 import com.my.vo.Report;
@@ -40,22 +39,17 @@ import lombok.extern.log4j.Log4j;
 public class FeedbackController {
 	@Autowired
 	private FeedbackService service;
-	
-	@Autowired
-	private ServletContext context;
-	
-	@Autowired
-	private HttpServletRequest request;
 
     @RequestMapping("/addqa")
-    public Map<String, Object> addqa() throws AddException, IOException, FindException {
+    public Map<String, Object> addqa(HttpServletRequest request
+    		) throws AddException, IOException, FindException {
         Map<String, Object> jacksonMap = new HashMap<>();
 		int nextBoardId = service.findNextQaId();
-		File uploadFile =  new File(context.getRealPath("/")+ "/qaupload");
+		File uploadFile =  new File(request.getServletContext().getRealPath("/")+ "/qaupload");
 		if(!uploadFile.exists()){
 			uploadFile.mkdir();
 		}
-		String saveDirectory = context.getRealPath("qaupload");
+		String saveDirectory = request.getServletContext().getRealPath("qaupload");
 		int maxPostSize = 10*1024*1024;
 		String encoding = "UTF-8";
 		FileRenamePolicy policy = new RenamePolicy(String.valueOf(nextBoardId));
@@ -94,7 +88,8 @@ public class FeedbackController {
     @RequestMapping("/addreport")
     public Map<String, Object> addreport(@RequestParam(value = "report_title") String report_title
     		, @RequestParam(value = "report_content") String report_content
-    		, @RequestParam(value = "report_question") String report_question) throws AddException {
+    		, @RequestParam(value = "report_question") String report_question
+    		, HttpServletRequest request) throws AddException {
         
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -183,7 +178,7 @@ public class FeedbackController {
     
     @RequestMapping("/myqa")
     public Map<String, Object> myqa(@RequestParam(value = "rownum") int rownum
-    		) throws FindException {
+    		, HttpServletRequest request) throws FindException {
         
     	Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
@@ -235,7 +230,7 @@ public class FeedbackController {
     @RequestMapping("/qa")
     public Map<String, Object> qa(@RequestParam(value = "n") int n
     		, @RequestParam(value = "s") int s
-    		, @RequestParam(value = "report_id") String qa_id) throws FindException {
+    		, @RequestParam(value = "qa_id") String qa_id) throws FindException {
         
     	Map<String, Object> jacksonMap = new HashMap<>();
         

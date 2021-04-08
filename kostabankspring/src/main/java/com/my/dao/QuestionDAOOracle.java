@@ -6,10 +6,6 @@ import com.my.exception.ModifyException;
 import com.my.exception.RemoveException;
 import com.my.vo.Question;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,7 +117,7 @@ public class QuestionDAOOracle implements QuestionDAO {
                 throw new FindException("문제가 없습니다.");
              }
             for(Question question : list) {
-                if (question.getMn_id() == null) {
+                if (question.getMn_date() == null) {
                     question.setMn_id("");
                 } else {
                     question.setMn_id("V");
@@ -140,7 +136,7 @@ public class QuestionDAOOracle implements QuestionDAO {
         SqlSession session = null;
         try {
             session = sqlSessionFactory.openSession();
-            List<Question> list =session.selectList("mybatis.questionMapper.selectSQById");
+            List<Question> list =session.selectList("mybatis.questionMapper.selectAll");
             if (list.size() == 0) {
                 throw new FindException("문제가 없습니다.");
              }
@@ -247,7 +243,7 @@ public class QuestionDAOOracle implements QuestionDAO {
             	map.put("user_id", user_id);
             	map.put("n", i);
             	
-	            List<Question> list =session.selectList("mybatis.questionMapper.selectSQById");
+	            List<Question> list =session.selectList("mybatis.questionMapper.selectQTmpByQId",map);
 	            if (list.size() == 0) {
 	                throw new FindException("문제가 없습니다.");
 	            }
@@ -272,18 +268,21 @@ public class QuestionDAOOracle implements QuestionDAO {
         try {
             session = sqlSessionFactory.openSession();
             List<Question> ox = new ArrayList<>();
+            List<Question> qall = new ArrayList<>();
             for (int i =1; i<=5;i++) {
             	Map<String,Object> map = new HashMap<String, Object>();
             	map.put("user_id", user_id);
             	map.put("n", i);
-                List<Question> qall =session.selectList("mybatis.questionMapper.updateQTmpByQSelect",map);
-                
-                if (qall.size() == 0) {
+                List<Question> list =session.selectList("mybatis.questionMapper.updateQTmpByQSelect",map);
+                for(Question q : list) {
+                	qall.add(q);
+                }
+                if (list.size() == 0) {
                     throw new ModifyException("문제가 하나도 없습니다.");
                 }
-                for (int j = 0; j < qall.size(); j++) {
+                for (int j = 20*(i-1); j < question_answer_list.length; j++) {
                     Question question = qall.get(j);
-                    if (question_answer_list[j+20*(i-1)].equals(question.getCorrect_answer())) {
+                    if (question_answer_list[j].equals(question.getCorrect_answer())) {
                         question.setQuestion_ox(1);
                     } else {
                         question.setQuestion_ox(0);
@@ -329,6 +328,7 @@ public class QuestionDAOOracle implements QuestionDAO {
             	
             	session.insert("mybatis.questionMapper.updateQTmpByQInsert",map);
             }
+            session.commit();
         } catch (Exception e) {
             throw  new ModifyException(e.getMessage());
         }finally {

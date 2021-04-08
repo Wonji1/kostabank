@@ -27,11 +27,11 @@
 		report_sol_wdate feedback_date, report_new 
 		from report where report_user = #{user_id} and report_new =1 
 		union all select qa_id,-1, qa_title, qa_sol_wdate, qa_new 
-        from qa where user_id= #{user_id} and qa_new =1 order by report_sol_wdate desc) where rownum <![CDATA[ <= ]]>10
+        from qa where user_id= #{user_id} and qa_new =1 order by feedback_date desc) where rownum <![CDATA[ <= ]]>10
 	</select>
 	
 	<select id="UserQaById" parameterType="map" resultMap = "qaMap">
-		select B.rnum, B.* , (select count(*) from qa where user_id= #{user_id}) qa from
+		select B.rnum, B.* , (select count(*) from qa where user_id= #{user_id}) qa_total from
 		(select rownum as rnum, A.* from 
 		(select * from qa q join users u on q.user_id = u.user_id where q.user_id = #{user_id}
 		order by q.qa_status, q.qa_wdate desc ) A 
@@ -42,15 +42,15 @@
 		SELECT * FROM qa q join users u on q.user_id = u.user_id WHERE qa_id = #{qa_id}
 	</select>
 	
-	<update id="NweStatusReportUpdate" parameterType="map">
+	<update id="NewStatusReportUpdate" parameterType="map">
 		update report set report_new = #{report_new} , report_status= #{report_status} where report_id= #{report_id}
 	</update>
-	<update id="NweStatusQaUpdate" parameterType="map">
+	<update id="NewStatusQaUpdate" parameterType="map">
 		update qa set qa_new = #{qa_new} , qa_status=#{qa_status} where qa_id= #{qa_id}
 	</update>
 	
 	<select id="QaAll" parameterType="map" resultMap="qaMap">
-		select B.rnum, B.* , (select count(*) from qa) qa from
+		select B.rnum, B.* , (select count(*) from qa) qa_total from
 		(select rownum as rnum, A.* from 
 		(select * from qa q join users u on q.user_id = u.user_id
 		order by q.qa_wdate desc ) A where rownum <![CDATA[ <= ]]> #{rownum1}) B where B.rnum <![CDATA[ >= ]]> #{rownum2}
@@ -67,7 +67,7 @@
 	</select>
 	
 	<select id="ReportAll" parameterType="map" resultMap="reportMap">
-		select B.rnum, B.* , (select count(*) from report) total from
+		select B.rnum, B.* , (select count(*) from report) report_total from
 		(select rownum as rnum, A.* from 
 		(select * from report r join users u on r.report_user = u.user_id 
 		join question q on r.report_question_id = q.question_id 

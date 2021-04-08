@@ -40,10 +40,9 @@ public class UserController {
 	private UserService service;
 	
 	@Autowired
-	private HttpServletRequest request;
-	
+	private FeedbackService fService;
     @RequestMapping("/userinfo")
-    public Map<String, Object> userinfo() throws FindException {
+    public Map<String, Object> userinfo(HttpServletRequest request) throws FindException {
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         String id = (String)session.getAttribute("loginInfo");
@@ -192,7 +191,8 @@ public class UserController {
     
     @RequestMapping("/moduser")
     public Map<String, Object> moduser(@RequestParam(value = "user_nickname") String user_nickname
-    		,@RequestParam(value = "user_pwd") String user_pwd){
+    		,@RequestParam(value = "user_pwd") String user_pwd
+    		,HttpServletRequest request){
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         String id = (String)session.getAttribute("loginInfo");
@@ -284,7 +284,7 @@ public class UserController {
     }
 
     @RequestMapping("/removeuser")
-    public Map<String, Object> removeuser() throws RemoveException{
+    public Map<String, Object> removeuser(HttpServletRequest request) throws RemoveException{
         Map<String, Object> jacksonMap = new HashMap<>();
         HttpSession session = request.getSession();
         String id = (String)session.getAttribute("loginInfo");
@@ -296,10 +296,9 @@ public class UserController {
     }
     
     @RequestMapping("/header")
-    public Map<String, Object> header(){
+    public Map<String, Object> header(HttpServletRequest request){
         List<Map<String,Object>> jacksonList = new ArrayList<>();
         HttpSession session = request.getSession();
-        FeedbackService fService = new FeedbackService();
         String id = (String)session.getAttribute("loginInfo");
         try {
             User user = service.findById(id);
@@ -321,12 +320,6 @@ public class UserController {
             jacksonMap2.put("feedbacks",jacksonList);
             
             return jacksonMap2;
-        } catch (FindException e) {
-            Map<String, Object> jacksonMap = new HashMap<>();
-            jacksonMap.put("status", -1);
-            jacksonMap.put("msg", "로그인을 진행x");
-            
-            return jacksonMap;
         } catch (Exception e) {
             User user = null;
             try {
@@ -368,7 +361,7 @@ public class UserController {
     @RequestMapping("/login")
     public Map<String, Object> login(@RequestParam(value = "user_id") String user_id
     		, @RequestParam(value = "user_pwd") String user_pwd
-    		) throws FindException{
+    		, HttpServletRequest request) throws FindException{
         Map<String, Object> jacksonMap = new HashMap<>();
         
         User user = service.login(user_id,user_pwd);
@@ -383,7 +376,7 @@ public class UserController {
     }
     
     @RequestMapping("/logout")
-    public Map<String, Object> logout(){
+    public Map<String, Object> logout(HttpServletRequest request){
     	HttpSession session = request.getSession();
         session.removeAttribute("loginInfo");
         Map<String, Object> jacksonMap = new HashMap<>();

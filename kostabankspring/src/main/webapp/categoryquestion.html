@@ -91,7 +91,7 @@
         }
         num = parseInt(num);
         let promisePaging = $.ajax({
-            url: './myqa',
+            url: './feedback/myqa',
             method: 'post',
             data: { "rownum": num },
             success(data) {
@@ -175,7 +175,7 @@
                let $fileImg = $('.file');
                 let num = parseInt($(event.target).text());
                 promisePaging = $.ajax({
-                    url: './myqa',
+                    url: './feedback/myqa',
                     method: 'post',
                     data: { "rownum": num },
                     success(data) {
@@ -270,7 +270,7 @@
                     break;
             }
             $.ajax({
-                url: './myqa',
+                url: './feedback/myqa',
                 method: 'post',
                 data: { "rownum": n },
                 success(data) {
